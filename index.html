@@ -21,6 +21,7 @@
         <a href="#page3">الباقات</a>
         <a href="#page2">الخدمات</a>
         <a href="#page1">التعريف</a>
+        <a href="#page1" class="no"><img src="20260107_1632_كلمة_اختيار_remix_01kecdxvq5eb3s3gpbyfzq5xb0-removebg-preview.png" alt="" ></a>
     </nav>
 
     <div id="page1" class="page1">
@@ -39,7 +40,8 @@
         </div>
     </div>
 
-    <div style="background-color: #f5f5f5; padding: 40px 0">
+    <div style="background-color: #f5f5f5; padding: 40px 0"  id="page2">
+        <br>
         <h1 style="text-align: center; color: #5962e8; margin-bottom: 30px">الخدمات الاساسية</h1>
         <div class="cardspage2">
             <div class="cardpage2">
@@ -65,7 +67,7 @@
         </div>
     </div>
 
-    <div class="page2" id="page2">
+    <div class="page2">
         <h1>الخدمات الملحقة</h1>
         <div class="cardspage2">
             <div class="cardpage2">
@@ -161,8 +163,8 @@
             <form id="whatsappForm" class="contact-form">
                 <h2>contact on whatsapp</h2>
                 <label>
-                    الإيميل:
-                    <input type="email" id="email" placeholder="أدخل إيميلك" required />
+                 (optional)الإيميل:
+                    <input type="email" id="email" placeholder="أدخل إيميلك"/>
                 </label>
                 <label>
                     الرسالة:
@@ -224,10 +226,103 @@
         سيتم التواصل معك قريبًا!
     </div>
 
-<script src="script.js"></script>
+    <script>
+        const SECRET_CODE = "1234";
+        let isLoggedIn = false;
 
+        function showToast(message, bgColor) {
+            var toast = document.getElementById("toast");
+            toast.textContent = message;
+            if (bgColor) {
+                toast.style.backgroundColor = bgColor;
+            } else {
+                toast.style.backgroundColor = "#333";
+            }
+            toast.style.visibility = "visible";
+            setTimeout(function () {
+                toast.style.visibility = "hidden";
+            }, 3000);
+        }
+
+        function handleForm(form) {
+            showToast("سيتم التواصل معك قريبًا!");
+            setTimeout(function () {
+                form.submit();
+            }, 500);
+            return false;
+        }
+
+        function openLogin() {
+            document.getElementById("loginBox").style.display = "block";
+            document.getElementById("first-f").style.display = "none";
+            document.getElementById("back").style.display = "block";
+        }
+
+        function login() {
+            const code = document.getElementById("code").value;
+            if (code === SECRET_CODE) {
+                isLoggedIn = true;
+                showToast("✓ تم الدخول بنجاح", "#4CAF50");
+                updateUI();
+                document.getElementById("back").style.display = "none";
+            } else {
+                showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
+            }
+        }
+
+        function logout() {
+            document.getElementById("back").style.display = "none";
+            isLoggedIn = false;
+            showToast("تم تسجيل الخروج بنجاح", "#FF9800");
+            updateUI();
+        }
+
+        function updateUI() {
+            if (isLoggedIn) {
+                document.getElementById("secret").style.display = "block";
+                document.getElementById("first-f").style.display = "none";
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("toexit").style.display = "block";
+            } else {
+                document.getElementById("secret").style.display = "none";
+                document.getElementById("first-f").style.display = "block";
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("toexit").style.display = "none";
+            }
+        }
+
+        function back() {
+            if (isLoggedIn) {
+                document.getElementById("secret").style.display = "block";
+                document.getElementById("first-f").style.display = "none";
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("toexit").style.display = "block";
+                document.getElementById("back").style.display = "none";
+            } else {
+                document.getElementById("secret").style.display = "none";
+                document.getElementById("first-f").style.display = "block";
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("toexit").style.display = "none";
+                document.getElementById("back").style.display = "none";
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            updateUI();
+        });
+
+        document.getElementById("whatsappForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+            const phoneNumber = "201116967317";
+            const finalMessage = "📧 الإيميل: " + email + "\n\n" + "💬 الرسالة:\n" + message;
+            const whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(finalMessage);
+            window.open(whatsappURL, "_blank");
+            showToast("جاري فتح واتساب...", "#25D366");
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+        });
+    </script>
 </body>
-
 </html>
-
-
