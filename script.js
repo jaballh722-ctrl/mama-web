@@ -1,96 +1,294 @@
-        const SECRET_CODE = "1234";
-        let isLoggedIn = false;
+// ============================================
+// 🔑 ضع الـ OpenAI API Key هنا
+// ============================================
+const OPENAI_API_KEY = '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';
+// معلومات الموقع للـ AI
+const WEBSITE_CONTEXT = `
+أنت مساعد ذكي لموقع "متابعة دراسية" - خدمة متابعة دراسية للمرحلة الابتدائية.
 
-        function showToast(message, bgColor) {
-            var toast = document.getElementById("toast");
-            toast.textContent = message;
-            if (bgColor) {
-                toast.style.backgroundColor = bgColor;
-            } else {
-                toast.style.backgroundColor = "#333";
-            }
-            toast.style.visibility = "visible";
-            setTimeout(function () {
-                toast.style.visibility = "hidden";
-            }, 3000);
-        }
+📚 الخدمات الأساسية:
+- تحديد المهام الدراسية اليومية ومتابعتها
+- استخدام مؤقتات زمنية لمتابعة الإنجاز
+- تقييم أكاديمي أسبوعي شامل
+- جلسات تنمية مهارات الانتباه والتركيز
+- جلسات تنمية مهارات التخطيط والتنفيذ
 
-        function handleForm(form) {
-            showToast("سيتم التواصل معك قريبًا!");
-            setTimeout(function () {
-                form.submit();
-            }, 500);
-            return false;
-        }
+🎯 الخدمات الإضافية:
+- توفير مكان هادئ بمكتب للدراسة
+- وجبات صحية مدعمة بأسعار غير ربحية
+- مراقبة بالكاميرات على مدار الساعة
 
-        function openLogin() {
-            document.getElementById("loginBox").style.display = "block";
-            document.getElementById("first-f").style.display = "none";
-            document.getElementById("back").style.display = "block";
-        }
+💰 الباقات المتاحة:
 
-        function login() {
-            const code = document.getElementById("code").value;
-            if (code === SECRET_CODE) {
-                isLoggedIn = true;
-                showToast("✓ تم الدخول بنجاح", "#4CAF50");
-                updateUI();
-                document.getElementById("back").style.display = "none";
-            } else {
-                showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
-            }
-        }
+1️⃣ باقة "صح صح" - 3000 جنيه/شهر
+   ✓ تحديد المهام
+   ✓ متابعة الإنجاز
+   ✓ وجبة مدعمة
 
-        function logout() {
-            document.getElementById("back").style.display = "none";
-            isLoggedIn = false;
-            showToast("تم تسجيل الخروج بنجاح", "#FF9800");
-            updateUI();
-        }
+2️⃣ باقة "خلاويص" - 4000 جنيه/شهر
+   ✓ كل مميزات "صح صح"
+   ✓ مؤقت لمتابعة الإنجاز
 
-        function updateUI() {
-            if (isLoggedIn) {
-                document.getElementById("secret").style.display = "block";
-                document.getElementById("first-f").style.display = "none";
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("toexit").style.display = "block";
-            } else {
-                document.getElementById("secret").style.display = "none";
-                document.getElementById("first-f").style.display = "block";
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("toexit").style.display = "none";
-            }
-        }
+3️⃣ باقة "المحقق" - 5000 جنيه/شهر
+   ✓ كل مميزات "خلاويص"
+   ✓ تقييم أكاديمي أسبوعي
 
-        function back() {
-            if (isLoggedIn) {
-                document.getElementById("secret").style.display = "block";
-                document.getElementById("first-f").style.display = "none";
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("toexit").style.display = "block";
-                document.getElementById("back").style.display = "none";
-            } else {
-                document.getElementById("secret").style.display = "none";
-                document.getElementById("first-f").style.display = "block";
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("toexit").style.display = "none";
-                document.getElementById("back").style.display = "none";
-            }
-        }
+4️⃣ باقة "النووي" - 6000 جنيه/شهر (الأفضل)
+   ✓ كل مميزات "المحقق"
+   ✓ جلسات زيادة التركيز والانتباه
 
-        window.addEventListener("DOMContentLoaded", function () {
-            updateUI();
+📱 للتواصل: واتساب 201116967317
+
+تعليمات:
+- كن ودوداً ومختصراً
+- استخدم إيموجي مناسب
+- أجب بالعربية فقط
+- إذا سألوا عن الحجز، وجههم لنموذج الطلب في الموقع
+`;
+
+// ============================================
+// كود الموقع الأساسي
+// ============================================
+
+const SECRET_CODE = "1234";
+let isLoggedIn = false;
+
+function showToast(message, bgColor) {
+    var toast = document.getElementById("toast");
+    toast.textContent = message;
+    if (bgColor) {
+        toast.style.backgroundColor = bgColor;
+    } else {
+        toast.style.backgroundColor = "#333";
+    }
+    toast.style.visibility = "visible";
+    setTimeout(function () {
+        toast.style.visibility = "hidden";
+    }, 3000);
+}
+
+function handleForm(form) {
+    showToast("سيتم التواصل معك قريبًا!");
+    setTimeout(function () {
+        form.submit();
+    }, 500);
+    return false;
+}
+
+function openLogin() {
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("first-f").style.display = "none";
+    document.getElementById("back").style.display = "block";
+}
+
+function login() {
+    const code = document.getElementById("code").value;
+    if (code === SECRET_CODE) {
+        isLoggedIn = true;
+        showToast("✓ تم الدخول بنجاح", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+    } else {
+        showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
+    }
+}
+
+function logout() {
+    document.getElementById("back").style.display = "none";
+    isLoggedIn = false;
+    showToast("تم تسجيل الخروج بنجاح", "#FF9800");
+    updateUI();
+}
+
+function updateUI() {
+    const menuLink = document.getElementById("menu-link");
+    
+    if (isLoggedIn) {
+        document.getElementById("secret").style.display = "block";
+        document.getElementById("first-f").style.display = "none";
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("toexit").style.display = "block";
+        menuLink.style.display = "block";
+    } else {
+        document.getElementById("secret").style.display = "none";
+        document.getElementById("first-f").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("toexit").style.display = "none";
+        menuLink.style.display = "none";
+    }
+}
+
+function back() {
+    if (isLoggedIn) {
+        document.getElementById("secret").style.display = "block";
+        document.getElementById("first-f").style.display = "none";
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("toexit").style.display = "block";
+        document.getElementById("back").style.display = "none";
+    } else {
+        document.getElementById("secret").style.display = "none";
+        document.getElementById("first-f").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("toexit").style.display = "none";
+        document.getElementById("back").style.display = "none";
+    }
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+    updateUI();
+});
+
+document.getElementById("whatsappForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+    const phoneNumber = "201116967317";
+    const finalMessage = "📧 الإيميل: " + email + "\n\n" + "💬 الرسالة:\n" + message;
+    const whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(finalMessage);
+    window.open(whatsappURL, "_blank");
+    showToast("جاري فتح واتساب...", "#25D366");
+    document.getElementById("email").value = "";
+    document.getElementById("message").value = "";
+});
+
+// ============================================
+// AI CHATBOT CODE
+// ============================================
+
+const chatButton = document.getElementById('chatbotButton');
+const chatWindow = document.getElementById('chatbotWindow');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendButton = document.getElementById('sendButton');
+
+// فتح/إغلاق الشات
+chatButton.addEventListener('click', () => {
+    chatButton.classList.toggle('active');
+    chatWindow.classList.toggle('active');
+    if (chatWindow.classList.contains('active')) {
+        chatInput.focus();
+    }
+});
+
+// إرسال الرسالة
+async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // إضافة رسالة المستخدم
+    addMessage(message, 'user');
+    chatInput.value = '';
+    sendButton.disabled = true;
+
+    // التحقق من API Key
+    if (OPENAI_API_KEY === 'sk-...LJcA' || !OPENAI_API_KEY || OPENAI_API_KEY.length < 20) {
+        setTimeout(() => {
+            addMessage('⚠️ عذراً! يجب إضافة OpenAI API Key أولاً.\n\nاذهب إلى السطر 5 في ملف script.js وضع الـ Key الكامل بتاعك.', 'bot');
+            sendButton.disabled = false;
+        }, 500);
+        return;
+    }
+
+    // إظهار typing indicator
+    const typingDiv = showTypingIndicator();
+
+    try {
+        // استدعاء ChatGPT API
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [
+                    {
+                        role: 'system',
+                        content: WEBSITE_CONTEXT
+                    },
+                    {
+                        role: 'user',
+                        content: message
+                    }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            })
         });
 
-        document.getElementById("whatsappForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const message = document.getElementById("message").value;
-            const phoneNumber = "201116967317";
-            const finalMessage = "📧 الإيميل: " + email + "\n\n" + "💬 الرسالة:\n" + message;
-            const whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(finalMessage);
-            window.open(whatsappURL, "_blank");
-            showToast("جاري فتح واتساب...", "#25D366");
-            document.getElementById("email").value = "";
-            document.getElementById("message").value = "";
-        });
+        const data = await response.json();
+        
+        // إزالة typing indicator
+        typingDiv.remove();
+
+        if (data.error) {
+            addMessage(`❌ خطأ: ${data.error.message}`, 'bot');
+        } else {
+            const botReply = data.choices[0].message.content;
+            addMessage(botReply, 'bot');
+        }
+
+    } catch (error) {
+        typingDiv.remove();
+        addMessage('❌ عذراً، حدث خطأ في الاتصال. تأكد من صحة الـ API Key وحاول مرة أخرى.', 'bot');
+        console.error('Error:', error);
+    }
+
+    sendButton.disabled = false;
+    chatInput.focus();
+}
+
+// إضافة رسالة للشات
+function addMessage(text, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
+    
+    const content = document.createElement('div');
+    content.className = 'message-content';
+    content.textContent = text;
+    
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(content);
+    chatMessages.appendChild(messageDiv);
+    
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Typing indicator
+function showTypingIndicator() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message bot';
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = 'AI';
+    
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message-content typing-indicator active';
+    typingDiv.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    `;
+    
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(typingDiv);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    return messageDiv;
+}
+
+// Events
+sendButton.addEventListener('click', sendMessage);
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
+
+console.log('🤖 AI Chatbot initialized successfully!');
+console.log('💡 Remember to add your OpenAI API Key on line 5 in script.js');
