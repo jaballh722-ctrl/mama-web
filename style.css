@@ -2,25 +2,23 @@
    الإعدادات الأساسية
 ===================================================== */
 
-/* إزالة المسافات الافتراضية */
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-/* الألوان الأساسية للموقع */
 :root {
-	--main-green: #3eb489; /* اللون الأخضر الأساسي */
-	--light-green: #e8f7f2; /* أخضر فاتح للخلفيات */
-	--white: #ffffff; /* أبيض */
-	--dark-text: #1f2937; /* لون النصوص الغامق */
-	--gray-text: #6b7280; /* رمادي للنصوص */
-	--yellow: #8eed91; /* أصفر للباقة المميزة */
+	--main-green: #3eb489;
+	--light-green: #e8f7f2;
+	--white: #ffffff;
+	--dark-text: #1f2937;
+	--gray-text: #6b7280;
+	--yellow: #8eed91;
 }
 
 html {
-	scroll-behavior: smooth; /* تمرير سلس عند الضغط على الروابط */
+	scroll-behavior: smooth;
 }
 
 body {
@@ -31,43 +29,48 @@ body {
 }
 
 /* =====================================================
-   شريط التنقل (الهيدر)
+   شريط التنقل (الهيدر) - محسّن
 ===================================================== */
 
 nav {
 	background: white;
 	padding: 0 50px;
-	position: sticky; /* يلزق في أعلى الشاشة عند التمرير */
+	position: sticky;
 	top: 0;
-	z-index: 1000; /* يظهر فوق كل العناصر */
+	z-index: 1000;
 	height: 75px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
 }
+
 nav img {
 	height: 250px;
-	display: flex;
-	align-items: right;
-	justify-content: right;
 	transition: 0.3s;
 }
+
 nav img:hover {
 	transform: scale(1.05);
-	transition: 0.3s;
 }
-/* روابط التنقل */
+
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
 nav a {
 	color: rgb(0, 0, 0);
 	padding: 12px 30px;
-	border-radius: 50px; /* دائري تماماً */
+	border-radius: 50px;
 	font-weight: 900;
 	transition: 0.3s;
 	text-decoration: none;
-	display: flex;
+	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+	white-space: nowrap;
 }
 
 nav a:not(.no):hover {
@@ -90,7 +93,6 @@ nav a:not(.no):hover {
 	position: relative;
 }
 
-/* الشكل الأخضر المنحني في الخلفية */
 .page1::before {
 	content: "";
 	position: absolute;
@@ -99,24 +101,22 @@ nav a:not(.no):hover {
 	width: 100%;
 	height: 60%;
 	background: var(--main-green);
-	clip-path: ellipse(120% 60% at 50% 0%); /* يعمل شكل منحني */
+	clip-path: ellipse(120% 60% at 50% 0%);
 	z-index: 0;
 }
 
-/* العنوان الرئيسي */
 .page1 h1 {
 	color: var(--dark-text);
 	text-align: center;
-	font-size: clamp(2rem, 4vw, 3.2rem); /* يتغير حسب حجم الشاشة */
+	font-size: clamp(2rem, 4vw, 3.2rem);
 	font-weight: 800;
 	line-height: 1.3;
 	position: relative;
-	z-index: 1; /* يظهر فوق الخلفية */
+	z-index: 1;
 	margin-bottom: 20px;
-	animation: slideUp 0.8s; /* حركة عند الظهور */
+	animation: slideUp 0.8s;
 }
 
-/* النص الوصفي */
 .page1 p {
 	color: var(--gray-text);
 	text-align: center;
@@ -129,17 +129,15 @@ nav a:not(.no):hover {
 	animation: slideUp 0.8s 0.2s backwards;
 }
 
-/* مجموعة الأزرار */
 .miao-container {
 	display: flex;
 	justify-content: center;
 	gap: 20px;
-	flex-wrap: wrap; /* يرتب الأزرار في أكثر من صف إذا لزم الأمر */
+	flex-wrap: wrap;
 	position: relative;
 	z-index: 1;
 }
 
-/* الأزرار البيضاء */
 .miao {
 	background: white;
 	color: var(--dark-text);
@@ -154,7 +152,7 @@ nav a:not(.no):hover {
 }
 
 .miao:hover {
-	transform: translateY(-4px); /* يرتفع لأعلى */
+	transform: translateY(-4px);
 	box-shadow: 0 8px 30px rgba(62, 180, 137, 0.15);
 	border-color: var(--main-green);
 	color: var(--main-green);
@@ -170,7 +168,6 @@ nav a:not(.no):hover {
 	padding: 100px 20px;
 }
 
-/* بطاقات الخدمات */
 .cardpage2 {
 	background: white;
 	border-radius: 30px;
@@ -178,7 +175,7 @@ nav a:not(.no):hover {
 	padding: 60px;
 	margin: 30px auto;
 	max-width: 1200px;
-	direction: rtl; /* من اليمين لليسار */
+	direction: rtl;
 	display: flex;
 	align-items: center;
 	gap: 60px;
@@ -201,14 +198,13 @@ nav a:not(.no):hover {
 	text-align: right;
 }
 
-/* عند التمرير على البطاقة */
 .cardpage2:hover {
 	transform: translateY(-8px);
 	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 .cardpage2:hover img {
-	transform: scale(1.03); /* تكبير الصورة قليلاً */
+	transform: scale(1.03);
 }
 
 /* =====================================================
@@ -221,7 +217,6 @@ nav a:not(.no):hover {
 	padding: 100px 20px;
 }
 
-/* عنوان القسم */
 .page3 > h1 {
 	color: var(--dark-text);
 	font-size: clamp(1.8rem, 3.5vw, 2.8rem);
@@ -232,7 +227,6 @@ nav a:not(.no):hover {
 	padding-bottom: 20px;
 }
 
-/* الخط الأخضر تحت العنوان */
 .page3 > h1::after {
 	content: "";
 	position: absolute;
@@ -245,7 +239,6 @@ nav a:not(.no):hover {
 	border-radius: 3px;
 }
 
-/* شبكة البطاقات */
 .cardspage3 {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -255,7 +248,6 @@ nav a:not(.no):hover {
 	direction: rtl;
 }
 
-/* بطاقة الباقة */
 .card3 {
 	background: white;
 	border-radius: 25px;
@@ -268,20 +260,17 @@ nav a:not(.no):hover {
 	border: 2px solid transparent;
 }
 
-/* البطاقة الوسطى (المميزة) */
 .card3:nth-child(2) {
 	background: var(--main-green);
 	transform: scale(1.02);
 }
 
-/* هوفر */
 .card3:hover {
 	transform: translateY(-10px) scale(1.05);
 	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 	border-color: var(--main-green);
 }
 
-/* رأس البطاقة */
 .cardspage3 h1 {
 	background: var(--light-green);
 	width: 100%;
@@ -294,12 +283,10 @@ nav a:not(.no):hover {
 	font-weight: 800;
 }
 
-/* رأس البطاقة المميزة */
 .card3:nth-child(2) h1 {
 	background: var(--yellow);
 }
 
-/* قائمة المميزات */
 .dot-list {
 	list-style: none;
 	padding: 40px 30px;
@@ -324,7 +311,6 @@ nav a:not(.no):hover {
 	background: rgba(62, 180, 137, 0.05);
 }
 
-/* علامة الصح */
 .dot-list li::before {
 	content: "✓";
 	color: var(--main-green);
@@ -340,7 +326,6 @@ nav a:not(.no):hover {
 	border-radius: 50%;
 }
 
-/* البطاقة المميزة */
 .card3:nth-child(2) .dot-list {
 	background: var(--main-green);
 	color: white;
@@ -355,7 +340,6 @@ nav a:not(.no):hover {
 	color: white;
 }
 
-/* الفورم */
 form {
 	display: flex;
 	flex-direction: column;
@@ -368,7 +352,6 @@ form {
 	background: var(--main-green);
 }
 
-/* الإدخالات */
 .contact-input {
 	width: 100%;
 	padding: 14px 18px;
@@ -387,10 +370,8 @@ form {
 	background: white;
 }
 
-/* زر الإرسال (العادي) */
 .submit {
 	background: var(--yellow);
-	color: var(--main-green);
 	color: #000;
 	border: none;
 	padding: 14px 35px;
@@ -410,10 +391,8 @@ form {
 	box-shadow: 0 6px 20px rgba(62, 180, 137, 0.35);
 }
 
-/* زر البطاقة المميزة (مختلف وواضح) */
 .card3:nth-child(2) .submit {
 	background: var(--yellow);
-	color: var(--main-green);
 	color: #000;
 	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.25);
 }
@@ -448,7 +427,6 @@ form {
 	transition: 0.3s;
 }
 
-/* الأزرار الخضراء */
 #first-f,
 #second-f,
 #back {
@@ -464,7 +442,6 @@ form {
 	transform: translateY(-2px);
 }
 
-/* زر الخروج (أحمر) */
 #toexit {
 	background: #ef4444;
 	color: white;
@@ -476,7 +453,6 @@ form {
 	transform: translateY(-2px);
 }
 
-/* حقل الكود */
 #code {
 	border-radius: 15px;
 	border: 2px solid #e5e7eb;
@@ -514,7 +490,6 @@ form {
 	margin: 0 auto;
 }
 
-/* نموذج التواصل */
 .contact-form {
 	background: white;
 	padding: 60px;
@@ -541,7 +516,6 @@ form {
 	padding-bottom: 20px;
 }
 
-/* الخط الأخضر تحت العنوان */
 .contact-form h2::after {
 	content: "";
 	position: absolute;
@@ -642,7 +616,6 @@ form {
 	text-align: right;
 }
 
-/* بطاقات القائمة */
 .menu-l,
 .menu-r {
 	background: white;
@@ -722,40 +695,61 @@ form {
 @media (max-width: 968px) {
 	nav {
 		height: auto;
-		padding: 20px;
-		flex-wrap: wrap;
+		padding: 15px 20px;
+	}
+
+	.nav-links {
+		width: 100%;
 		justify-content: center;
+		flex-wrap: wrap;
+		gap: 8px;
 	}
 
 	nav a {
-		margin: 8px 12px;
+		padding: 10px 20px;
 		font-size: 15px;
+	}
+
+	nav img {
+		height: 180px;
+		margin-bottom: 10px;
 	}
 
 	.cardpage2 {
 		flex-direction: column;
 		padding: 40px;
 		gap: 35px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.cardpage2 img {
 		max-width: 100%;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 	}
 
 	.cardspage3 {
 		grid-template-columns: 1fr;
+		gap: 30px;
+	}
+
+	.card3 {
+		max-width: 100%;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.card3:nth-child(2) {
 		transform: scale(1);
+		background: var(--main-green);
 	}
 
 	.menu-l,
 	.menu-r {
-		flex-direction: column !important;
-		text-align: center;
+		flex-direction: column;
 		padding: 35px;
 		gap: 30px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.menu-l img,
@@ -764,62 +758,95 @@ form {
 		max-width: 100%;
 		height: auto;
 		max-height: 300px;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.menu-l p,
 	.menu-r p {
-		text-align: center !important;
+		text-align: right;
 		padding: 0;
 	}
 
 	.contact-form {
 		padding: 40px 30px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 }
 
 /* الموبايل */
 @media (max-width: 600px) {
 	nav {
-		padding: 15px;
+		padding: 12px 15px;
+		flex-direction: column;
+	}
+
+	nav img {
+		height: 150px;
+		margin-bottom: 8px;
+	}
+
+	.nav-links {
+		gap: 6px;
 	}
 
 	nav a {
-		margin: 6px 8px;
-		font-size: 14px;
-	}
-
-	nav a:last-child {
-		padding: 10px 20px;
-		margin-top: 8px;
+		padding: 8px 16px;
+		font-size: 13px;
 	}
 
 	.page1 {
 		padding: 50px 15px;
+		background: white;
+	}
+
+	.page1::before {
+		background: var(--main-green);
 	}
 
 	.miao {
 		padding: 12px 28px;
 		font-size: 1rem;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.cardpage2 {
 		padding: 30px;
 		margin: 25px 10px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.contact-form {
 		padding: 35px 25px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	}
 
 	.menu-l,
 	.menu-r {
 		padding: 30px;
 		margin: 25px 10px;
+		background: white;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	}
+
+	.page2 {
+		background: var(--light-green);
+	}
+
+	.page4 {
+		background: var(--light-green);
 	}
 }
 
 /* الموبايل الصغير */
 @media (max-width: 400px) {
+	nav img {
+		height: 130px;
+	}
+
 	.page1 h1 {
 		font-size: 1.8rem;
 	}
@@ -831,5 +858,10 @@ form {
 
 	.contact-form {
 		padding: 30px 20px;
+	}
+
+	nav a {
+		padding: 7px 14px;
+		font-size: 12px;
 	}
 }
