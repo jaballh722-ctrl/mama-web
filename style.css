@@ -6,6 +6,18 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	.page1 h1 {
+		font-size: 1.8rem;
+	}
+
+	.miao {
+		padding: 12px 24px;
+		font-size: 0.95rem;
+	}
+
+	.contact-form {
+		padding: 30px 20px;
+	}
 }
 
 :root {
@@ -695,24 +707,27 @@ form {
 @media (max-width: 968px) {
 	nav {
 		height: auto;
-		padding: 15px 20px;
+		padding: 10px 15px;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	nav img {
+		height: 60px;
+		margin: 0;
 	}
 
 	.nav-links {
 		width: 100%;
 		justify-content: center;
 		flex-wrap: wrap;
-		gap: 8px;
+		gap: 6px;
+		margin-top: 8px;
 	}
 
 	nav a {
-		padding: 10px 20px;
-		font-size: 15px;
-	}
-
-	nav img {
-		height: 180px;
-		margin-bottom: 10px;
+		padding: 8px 16px;
+		font-size: 13px;
 	}
 
 	.cardpage2 {
@@ -777,22 +792,25 @@ form {
 /* الموبايل */
 @media (max-width: 600px) {
 	nav {
-		padding: 12px 15px;
-		flex-direction: column;
+		padding: 8px 10px;
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
 
 	nav img {
-		height: 150px;
-		margin-bottom: 8px;
+		height: 50px;
+		margin: 0;
 	}
 
 	.nav-links {
-		gap: 6px;
+		width: 100%;
+		gap: 5px;
+		margin-top: 6px;
 	}
 
 	nav a {
-		padding: 8px 16px;
-		font-size: 13px;
+		padding: 6px 12px;
+		font-size: 12px;
 	}
 
 	.page1 {
@@ -844,24 +862,11 @@ form {
 /* الموبايل الصغير */
 @media (max-width: 400px) {
 	nav img {
-		height: 130px;
-	}
-
-	.page1 h1 {
-		font-size: 1.8rem;
-	}
-
-	.miao {
-		padding: 12px 24px;
-		font-size: 0.95rem;
-	}
-
-	.contact-form {
-		padding: 30px 20px;
+		height: 45px;
 	}
 
 	nav a {
-		padding: 7px 14px;
-		font-size: 12px;
+		padding: 5px 10px;
+		font-size: 11px;
 	}
 }
