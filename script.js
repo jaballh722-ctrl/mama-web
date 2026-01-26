@@ -1,50 +1,34 @@
 // ============================================
-// 🔑 ضع الـ Anthropic API Key هنا
+// 🔑 ضع API Key هنا
 // ============================================
-const ANTHROPIC_API_KEY = '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';
+const ANTHROPIC_API_KEY = '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'; // من https://console.anthropic.com/
 
-// معلومات الموقع للـ AI
-const WEBSITE_CONTEXT = `أنت مساعد ذكي لموقع "متابعة دراسية" - خدمة متابعة دراسية للمرحلة الابتدائية.
+// معلومات الموقع
+const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية.
 
-📚 الخدمات الأساسية:
+الخدمات الأساسية:
 - تحديد المهام الدراسية اليومية ومتابعتها
-- استخدام مؤقتات زمنية لمتابعة الإنجاز
-- تقييم أكاديمي أسبوعي شامل
-- جلسات تنمية مهارات الانتباه والتركيز
-- جلسات تنمية مهارات التخطيط والتنفيذ
+- استخدام مؤقتات زمنية
+- تقييم أكاديمي أسبوعي
+- جلسات تنمية الانتباه والتركيز
+- جلسات التخطيط والتنفيذ
 
-🎯 الخدمات الإضافية:
-- توفير مكان هادئ بمكتب للدراسة
-- وجبات صحية مدعمة بأسعار غير ربحية
-- مراقبة بالكاميرات على مدار الساعة
+الخدمات الإضافية:
+- مكان هادئ للدراسة
+- وجبات صحية مدعمة
+- مراقبة بالكاميرات
 
-💰 الباقات المتاحة:
+الباقات:
+1. صح صح - 3000ج/شهر: تحديد المهام + متابعة + وجبة
+2. خلاويص - 4000ج/شهر: كل السابق + مؤقت
+3. المحقق - 5000ج/شهر: كل السابق + تقييم أسبوعي
+4. النووي - 6000ج/شهر: كل السابق + جلسات التركيز
 
-1️⃣ باقة "صح صح" - 3000 جنيه/شهر
-✓ تحديد المهام
-✓ متابعة الإنجاز
-✓ وجبة مدعمة
+قائمة الطعام: بطاطس مهروسة، فول مدمس، سلطة خضراء، زبادي، فواكه، بيض أومليت
 
-2️⃣ باقة "خلاويص" - 4000 جنيه/شهر
-✓ كل مميزات "صح صح"
-✓ مؤقت لمتابعة الإنجاز
+للتواصل: واتساب 201116967317
 
-3️⃣ باقة "المحقق" - 5000 جنيه/شهر
-✓ كل مميزات "خلاويص"
-✓ تقييم أكاديمي أسبوعي
-
-4️⃣ باقة "النووي" - 6000 جنيه/شهر (الأفضل)
-✓ كل مميزات "المحقق"
-✓ جلسات زيادة التركيز والانتباه
-
-📱 للتواصل:
-واتساب 201116967317
-
-تعليمات:
-- كن ودوداً ومختصراً
-- استخدم إيموجي مناسب
-- أجب بالعربية فقط
-- إذا سألوا عن الحجز، وجههم لنموذج الطلب في الموقع`;
+أجب بالعربية بشكل ودود ومختصر مع استخدام الإيموجي.`;
 
 // ============================================
 // كود الموقع الأساسي
@@ -53,24 +37,16 @@ const SECRET_CODE = "1234";
 let isLoggedIn = false;
 
 function showToast(message, bgColor) {
-    var toast = document.getElementById("toast");
+    const toast = document.getElementById("toast");
     toast.textContent = message;
-    if (bgColor) {
-        toast.style.backgroundColor = bgColor;
-    } else {
-        toast.style.backgroundColor = "#333";
-    }
+    toast.style.backgroundColor = bgColor || "#333";
     toast.style.visibility = "visible";
-    setTimeout(function () {
-        toast.style.visibility = "hidden";
-    }, 3000);
+    setTimeout(() => toast.style.visibility = "hidden", 3000);
 }
 
 function handleForm(form) {
     showToast("سيتم التواصل معك قريبًا!");
-    setTimeout(function () {
-        form.submit();
-    }, 500);
+    setTimeout(() => form.submit(), 500);
     return false;
 }
 
@@ -132,186 +108,169 @@ function back() {
     }
 }
 
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", () => {
     updateUI();
-});
-
-document.getElementById("whatsappForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
-    const phoneNumber = "201116967317";
-    const finalMessage = "📧 الإيميل: " + email + "\n\n" + "💬 الرسالة:\n" + message;
-    const whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(finalMessage);
-    window.open(whatsappURL, "_blank");
-    showToast("جاري فتح واتساب...", "#25D366");
-    document.getElementById("email").value = "";
-    document.getElementById("message").value = "";
+    
+    // WhatsApp Form
+    const whatsappForm = document.getElementById("whatsappForm");
+    if (whatsappForm) {
+        whatsappForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+            const phoneNumber = "201116967317";
+            const finalMessage = `📧 الإيميل: ${email}\n\n💬 الرسالة:\n${message}`;
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(finalMessage)}`;
+            window.open(whatsappURL, "_blank");
+            showToast("جاري فتح واتساب...", "#25D366");
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+        });
+    }
 });
 
 // ============================================
-// AI CHATBOT CODE - CLAUDE VERSION
+// AI CHATBOT
 // ============================================
+let conversationHistory = [];
+
 const chatButton = document.getElementById('chatbotButton');
 const chatWindow = document.getElementById('chatbotWindow');
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 
-// فتح/إغلاق الشات
-chatButton.addEventListener('click', () => {
-    chatButton.classList.toggle('active');
-    chatWindow.classList.toggle('active');
-    if (chatWindow.classList.contains('active')) {
-        chatInput.focus();
-    }
-});
+if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
+    
+    // فتح/إغلاق النافذة
+    chatButton.addEventListener('click', () => {
+        chatButton.classList.toggle('active');
+        chatWindow.classList.toggle('active');
+        if (chatWindow.classList.contains('active')) {
+            chatInput.focus();
+        }
+    });
 
-// إرسال الرسالة
-async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
+    // إرسال رسالة
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
 
-    // إضافة رسالة المستخدم
-    addMessage(message, 'user');
-    chatInput.value = '';
-    sendButton.disabled = true;
+        addMessage(message, 'user');
+        chatInput.value = '';
+        sendButton.disabled = true;
 
-    // التحقق من API Key
-    if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY.length < 20) {
-        setTimeout(() => {
-            addMessage('⚠️ عذراً! يجب إضافة Anthropic API Key أولاً.', 'bot');
-            sendButton.disabled = false;
-        }, 500);
-        return;
-    }
+        // فحص API Key
+        if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
+            setTimeout(() => {
+                addMessage('⚠️ لازم تحط API Key الأول!\n\n1. روح https://console.anthropic.com/\n2. سجل دخول\n3. اعمل API Key جديد\n4. حطه في السطر 5 في ملف script.js', 'bot');
+                sendButton.disabled = false;
+            }, 500);
+            return;
+        }
 
-    // إظهار typing indicator
-    const typingDiv = showTypingIndicator();
+        const typingDiv = showTyping();
 
-    try {
-        console.log('🔄 جاري إرسال الطلب إلى Claude API...');
-        
-        // استدعاء Claude API
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 1024,
-                system: WEBSITE_CONTEXT,
-                messages: [
-                    {
-                        role: 'user',
-                        content: message
-                    }
-                ]
-            })
-        });
+        try {
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': ANTHROPIC_API_KEY,
+                    'anthropic-version': '2023-06-01'
+                },
+                body: JSON.stringify({
+                    model: 'claude-3-5-sonnet-20241022',
+                    max_tokens: 1024,
+                    messages: [
+                        {
+                            role: 'user',
+                            content: `${WEBSITE_INFO}\n\nسؤال العميل: ${message}`
+                        }
+                    ]
+                })
+            });
 
-        console.log('📊 Response Status:', response.status);
+            typingDiv.remove();
 
-        // قراءة الرد
-        const data = await response.json();
-        console.log('📦 Response Data:', data);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `خطأ ${response.status}`);
+            }
 
-        // إزالة typing indicator
-        typingDiv.remove();
+            const data = await response.json();
+            const reply = data.content[0].text;
+            addMessage(reply, 'bot');
 
-        // معالجة الأخطاء
-        if (!response.ok) {
-            let errorMsg = '❌ حدث خطأ: ';
+        } catch (error) {
+            typingDiv.remove();
+            let errorMsg = '❌ حصل خطأ في الاتصال.\n';
             
-            if (response.status === 401) {
-                errorMsg += 'الـ API Key غير صحيح أو منتهي الصلاحية';
-            } else if (response.status === 429) {
-                errorMsg += 'تم تجاوز الحد المسموح من الطلبات. حاول مرة أخرى بعد قليل';
-            } else if (response.status === 400) {
-                errorMsg += data.error?.message || 'خطأ في البيانات المرسلة';
+            if (error.message.includes('401')) {
+                errorMsg += '\n🔑 API Key غلط! تأكد منه.';
+            } else if (error.message.includes('429')) {
+                errorMsg += '\n⏰ وصلت للحد الأقصى، استنى شوية.';
+            } else if (error.message.includes('network')) {
+                errorMsg += '\n🌐 مشكلة في النت، تأكد من الاتصال.';
             } else {
-                errorMsg += data.error?.message || `خطأ ${response.status}`;
+                errorMsg += `\n${error.message}`;
             }
             
             addMessage(errorMsg, 'bot');
-        } else if (data.content && data.content[0]) {
-            const botReply = data.content[0].text;
-            addMessage(botReply, 'bot');
-        } else {
-            addMessage('❌ عذراً، لم أتمكن من الحصول على رد.', 'bot');
+            console.error('AI Error:', error);
         }
 
-    } catch (error) {
-        typingDiv.remove();
-        console.error('❌ خطأ تفصيلي:', error);
-        
-        let errorMessage = '❌ حدث خطأ: ';
-        if (error.name === 'TypeError' && error.message.includes('fetch')) {
-            errorMessage += 'مشكلة في الاتصال بالإنترنت أو CORS';
-        } else {
-            errorMessage += error.message;
-        }
-        
-        addMessage(errorMessage + '\n\nافتح Console (F12) لمزيد من التفاصيل', 'bot');
+        sendButton.disabled = false;
+        chatInput.focus();
     }
 
-    sendButton.disabled = false;
-    chatInput.focus();
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
+        
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.textContent = text;
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = 'AI';
+        
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message-content typing-indicator active';
+        typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(typingDiv);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        return messageDiv;
+    }
+
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    console.log('✅ AI Chatbot جاهز للاستخدام!');
+    console.log('📝 حط الـ API Key في السطر 5');
+    console.log('🔗 https://console.anthropic.com/settings/keys');
 }
-
-// إضافة رسالة للشات
-function addMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
-
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
-
-    const content = document.createElement('div');
-    content.className = 'message-content';
-    content.textContent = text;
-
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(content);
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Typing indicator
-function showTypingIndicator() {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message bot';
-
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = 'AI';
-
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'message-content typing-indicator active';
-    typingDiv.innerHTML = `
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-    `;
-
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(typingDiv);
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    return messageDiv;
-}
-
-// Events
-sendButton.addEventListener('click', sendMessage);
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-});
-
-console.log('🤖 Claude AI Chatbot initialized successfully!');
-console.log('🔑 API Key length:', ANTHROPIC_API_KEY.length);
-console.log('💡 Ready to chat!');
