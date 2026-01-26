@@ -1,10 +1,10 @@
 // ============================================
-// 🔑 ضع الـ OpenAI API Key هنا
+// 🔑 ضع الـ Anthropic API Key هنا
 // ============================================
-const OPENAI_API_KEY = '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';
+const ANTHROPIC_API_KEY = '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';
+
 // معلومات الموقع للـ AI
-const WEBSITE_CONTEXT = `
-أنت مساعد ذكي لموقع "متابعة دراسية" - خدمة متابعة دراسية للمرحلة الابتدائية.
+const WEBSITE_CONTEXT = `أنت مساعد ذكي لموقع "متابعة دراسية" - خدمة متابعة دراسية للمرحلة الابتدائية.
 
 📚 الخدمات الأساسية:
 - تحديد المهام الدراسية اليومية ومتابعتها
@@ -21,35 +21,34 @@ const WEBSITE_CONTEXT = `
 💰 الباقات المتاحة:
 
 1️⃣ باقة "صح صح" - 3000 جنيه/شهر
-   ✓ تحديد المهام
-   ✓ متابعة الإنجاز
-   ✓ وجبة مدعمة
+✓ تحديد المهام
+✓ متابعة الإنجاز
+✓ وجبة مدعمة
 
 2️⃣ باقة "خلاويص" - 4000 جنيه/شهر
-   ✓ كل مميزات "صح صح"
-   ✓ مؤقت لمتابعة الإنجاز
+✓ كل مميزات "صح صح"
+✓ مؤقت لمتابعة الإنجاز
 
 3️⃣ باقة "المحقق" - 5000 جنيه/شهر
-   ✓ كل مميزات "خلاويص"
-   ✓ تقييم أكاديمي أسبوعي
+✓ كل مميزات "خلاويص"
+✓ تقييم أكاديمي أسبوعي
 
 4️⃣ باقة "النووي" - 6000 جنيه/شهر (الأفضل)
-   ✓ كل مميزات "المحقق"
-   ✓ جلسات زيادة التركيز والانتباه
+✓ كل مميزات "المحقق"
+✓ جلسات زيادة التركيز والانتباه
 
-📱 للتواصل: واتساب 201116967317
+📱 للتواصل:
+واتساب 201116967317
 
 تعليمات:
 - كن ودوداً ومختصراً
 - استخدم إيموجي مناسب
 - أجب بالعربية فقط
-- إذا سألوا عن الحجز، وجههم لنموذج الطلب في الموقع
-`;
+- إذا سألوا عن الحجز، وجههم لنموذج الطلب في الموقع`;
 
 // ============================================
 // كود الموقع الأساسي
 // ============================================
-
 const SECRET_CODE = "1234";
 let isLoggedIn = false;
 
@@ -102,7 +101,6 @@ function logout() {
 
 function updateUI() {
     const menuLink = document.getElementById("menu-link");
-    
     if (isLoggedIn) {
         document.getElementById("secret").style.display = "block";
         document.getElementById("first-f").style.display = "none";
@@ -152,9 +150,8 @@ document.getElementById("whatsappForm").addEventListener("submit", function (e) 
 });
 
 // ============================================
-// AI CHATBOT CODE
+// AI CHATBOT CODE - CLAUDE VERSION
 // ============================================
-
 const chatButton = document.getElementById('chatbotButton');
 const chatWindow = document.getElementById('chatbotWindow');
 const chatMessages = document.getElementById('chatMessages');
@@ -181,9 +178,9 @@ async function sendMessage() {
     sendButton.disabled = true;
 
     // التحقق من API Key
-    if (OPENAI_API_KEY === 'sk-...LJcA' || !OPENAI_API_KEY || OPENAI_API_KEY.length < 20) {
+    if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY.length < 20) {
         setTimeout(() => {
-            addMessage('⚠️ عذراً! يجب إضافة OpenAI API Key أولاً.\n\nاذهب إلى السطر 5 في ملف script.js وضع الـ Key الكامل بتاعك.', 'bot');
+            addMessage('⚠️ عذراً! يجب إضافة Anthropic API Key أولاً.\n\nاذهب إلى السطر 5 في ملف script.js وضع الـ Key الكامل بتاعك.', 'bot');
             sendButton.disabled = false;
         }, 500);
         return;
@@ -193,40 +190,39 @@ async function sendMessage() {
     const typingDiv = showTypingIndicator();
 
     try {
-        // استدعاء ChatGPT API
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        // استدعاء Claude API
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
+                'x-api-key': ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01'
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 1024,
+                system: WEBSITE_CONTEXT,
                 messages: [
-                    {
-                        role: 'system',
-                        content: WEBSITE_CONTEXT
-                    },
                     {
                         role: 'user',
                         content: message
                     }
-                ],
-                max_tokens: 500,
-                temperature: 0.7
+                ]
             })
         });
 
         const data = await response.json();
-        
+
         // إزالة typing indicator
         typingDiv.remove();
 
         if (data.error) {
             addMessage(`❌ خطأ: ${data.error.message}`, 'bot');
-        } else {
-            const botReply = data.choices[0].message.content;
+        } else if (data.content && data.content[0]) {
+            const botReply = data.content[0].text;
             addMessage(botReply, 'bot');
+        } else {
+            addMessage('❌ عذراً، لم أتمكن من الحصول على رد.', 'bot');
         }
 
     } catch (error) {
@@ -243,19 +239,18 @@ async function sendMessage() {
 function addMessage(text, sender) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
-    
+
     const avatar = document.createElement('div');
     avatar.className = 'message-avatar';
     avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
-    
+
     const content = document.createElement('div');
     content.className = 'message-content';
     content.textContent = text;
-    
+
     messageDiv.appendChild(avatar);
     messageDiv.appendChild(content);
     chatMessages.appendChild(messageDiv);
-    
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
@@ -263,11 +258,11 @@ function addMessage(text, sender) {
 function showTypingIndicator() {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message bot';
-    
+
     const avatar = document.createElement('div');
     avatar.className = 'message-avatar';
     avatar.textContent = 'AI';
-    
+
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message-content typing-indicator active';
     typingDiv.innerHTML = `
@@ -275,12 +270,12 @@ function showTypingIndicator() {
         <div class="typing-dot"></div>
         <div class="typing-dot"></div>
     `;
-    
+
     messageDiv.appendChild(avatar);
     messageDiv.appendChild(typingDiv);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
+
     return messageDiv;
 }
 
@@ -290,5 +285,5 @@ chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
-console.log('🤖 AI Chatbot initialized successfully!');
-console.log('💡 Remember to add your OpenAI API Key on line 5 in script.js');
+console.log('🤖 Claude AI Chatbot initialized successfully!');
+console.log('💡 API Key is set and ready to use!');
