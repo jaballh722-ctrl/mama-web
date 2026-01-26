@@ -1,7 +1,7 @@
 // ============================================
 // 🔑 ضع API Key هنا
 // ============================================
-const ANTHROPIC_API_KEY = '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'; // من https://console.anthropic.com/
+const ANTHROPIC_API_KEY = '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';
 
 // معلومات الموقع
 const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية.
@@ -38,10 +38,12 @@ let isLoggedIn = false;
 
 function showToast(message, bgColor) {
     const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.style.backgroundColor = bgColor || "#333";
-    toast.style.visibility = "visible";
-    setTimeout(() => toast.style.visibility = "hidden", 3000);
+    if (toast) {
+        toast.textContent = message;
+        toast.style.backgroundColor = bgColor || "#333";
+        toast.style.visibility = "visible";
+        setTimeout(() => toast.style.visibility = "hidden", 3000);
+    }
 }
 
 function handleForm(form) {
@@ -82,13 +84,13 @@ function updateUI() {
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
-        menuLink.style.display = "block";
+        if (menuLink) menuLink.style.display = "block";
     } else {
         document.getElementById("secret").style.display = "none";
         document.getElementById("first-f").style.display = "block";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "none";
-        menuLink.style.display = "none";
+        if (menuLink) menuLink.style.display = "none";
     }
 }
 
@@ -130,10 +132,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================
-// AI CHATBOT
+// AI CHATBOT - مش هيشتغل بسبب CORS
 // ============================================
-let conversationHistory = [];
-
 const chatButton = document.getElementById('chatbotButton');
 const chatWindow = document.getElementById('chatbotWindow');
 const chatMessages = document.getElementById('chatMessages');
@@ -142,16 +142,18 @@ const sendButton = document.getElementById('sendButton');
 
 if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
     
-    // فتح/إغلاق النافذة
     chatButton.addEventListener('click', () => {
         chatButton.classList.toggle('active');
         chatWindow.classList.toggle('active');
         if (chatWindow.classList.contains('active')) {
             chatInput.focus();
+            // رسالة توضيحية للمستخدم
+            if (chatMessages.children.length === 0) {
+                addMessage('⚠️ تنبيه: الـ AI مش هيشتغل على GitHub Pages بسبب CORS\n\n✅ الحل: ارفع الموقع على Netlify أو Vercel', 'bot');
+            }
         }
     });
 
-    // إرسال رسالة
     async function sendMessage() {
         const message = chatInput.value.trim();
         if (!message) return;
@@ -160,18 +162,10 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         chatInput.value = '';
         sendButton.disabled = true;
 
-        // فحص API Key
-        if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
-            setTimeout(() => {
-                addMessage('⚠️ لازم تحط API Key الأول!\n\n1. روح https://console.anthropic.com/\n2. سجل دخول\n3. اعمل API Key جديد\n4. حطه في السطر 5 في ملف script.js', 'bot');
-                sendButton.disabled = false;
-            }, 500);
-            return;
-        }
-
         const typingDiv = showTyping();
 
         try {
+            // محاولة الاتصال (مش هتنجح بسبب CORS)
             const response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 headers: {
@@ -204,19 +198,14 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
 
         } catch (error) {
             typingDiv.remove();
-            let errorMsg = '❌ حصل خطأ في الاتصال.\n';
             
-            if (error.message.includes('401')) {
-                errorMsg += '\n🔑 API Key غلط! تأكد منه.';
-            } else if (error.message.includes('429')) {
-                errorMsg += '\n⏰ وصلت للحد الأقصى، استنى شوية.';
-            } else if (error.message.includes('network')) {
-                errorMsg += '\n🌐 مشكلة في النت، تأكد من الاتصال.';
+            // رسالة خطأ CORS
+            if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+                addMessage('❌ مشكلة CORS!\n\n🔧 الحل:\n\n1. ارفع الموقع على Netlify\n2. اعمل ملف netlify/functions/chat.js\n3. حط فيه الـ API Key\n4. هيشتغل تمام!\n\n📺 شوف الفيديو: bit.ly/netlify-claude', 'bot');
             } else {
-                errorMsg += `\n${error.message}`;
+                addMessage(`❌ حصل خطأ: ${error.message}`, 'bot');
             }
             
-            addMessage(errorMsg, 'bot');
             console.error('AI Error:', error);
         }
 
@@ -270,7 +259,6 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         }
     });
 
-    console.log('✅ AI Chatbot جاهز للاستخدام!');
-    console.log('📝 حط الـ API Key في السطر 5');
-    console.log('🔗 https://console.anthropic.com/settings/keys');
+    console.log('⚠️ AI Chatbot مش هيشتغل على GitHub Pages بسبب CORS');
+    console.log('✅ ارفع الموقع على Netlify عشان يشتغل');
 }
