@@ -180,7 +180,7 @@ async function sendMessage() {
     // التحقق من API Key
     if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY.length < 20) {
         setTimeout(() => {
-            addMessage('⚠️ عذراً! يجب إضافة Anthropic API Key أولاً.\n\nاذهب إلى السطر 5 في ملف script.js وضع الـ Key الكامل بتاعك.', 'bot');
+            addMessage('⚠️ عذراً! يجب إضافة Anthropic API Key أولاً.', 'bot');
             sendButton.disabled = false;
         }, 500);
         return;
@@ -190,6 +190,8 @@ async function sendMessage() {
     const typingDiv = showTypingIndicator();
 
     try {
+        console.log('🔄 جاري إرسال الطلب إلى Claude API...');
+        
         // استدعاء Claude API
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
@@ -211,13 +213,30 @@ async function sendMessage() {
             })
         });
 
+        console.log('📊 Response Status:', response.status);
+
+        // قراءة الرد
         const data = await response.json();
+        console.log('📦 Response Data:', data);
 
         // إزالة typing indicator
         typingDiv.remove();
 
-        if (data.error) {
-            addMessage(`❌ خطأ: ${data.error.message}`, 'bot');
+        // معالجة الأخطاء
+        if (!response.ok) {
+            let errorMsg = '❌ حدث خطأ: ';
+            
+            if (response.status === 401) {
+                errorMsg += 'الـ API Key غير صحيح أو منتهي الصلاحية';
+            } else if (response.status === 429) {
+                errorMsg += 'تم تجاوز الحد المسموح من الطلبات. حاول مرة أخرى بعد قليل';
+            } else if (response.status === 400) {
+                errorMsg += data.error?.message || 'خطأ في البيانات المرسلة';
+            } else {
+                errorMsg += data.error?.message || `خطأ ${response.status}`;
+            }
+            
+            addMessage(errorMsg, 'bot');
         } else if (data.content && data.content[0]) {
             const botReply = data.content[0].text;
             addMessage(botReply, 'bot');
@@ -227,8 +246,16 @@ async function sendMessage() {
 
     } catch (error) {
         typingDiv.remove();
-        addMessage('❌ عذراً، حدث خطأ في الاتصال. تأكد من صحة الـ API Key وحاول مرة أخرى.', 'bot');
-        console.error('Error:', error);
+        console.error('❌ خطأ تفصيلي:', error);
+        
+        let errorMessage = '❌ حدث خطأ: ';
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            errorMessage += 'مشكلة في الاتصال بالإنترنت أو CORS';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        addMessage(errorMessage + '\n\nافتح Console (F12) لمزيد من التفاصيل', 'bot');
     }
 
     sendButton.disabled = false;
@@ -286,4 +313,5 @@ chatInput.addEventListener('keypress', (e) => {
 });
 
 console.log('🤖 Claude AI Chatbot initialized successfully!');
-console.log('💡 API Key is set and ready to use!');
+console.log('🔑 API Key length:', ANTHROPIC_API_KEY.length);
+console.log('💡 Ready to chat!');
