@@ -1,372 +1,874 @@
-// ============================================
-// 🔑 ضع الـ API Key هنا (مهم جداً!)
-// ============================================
-// اختر واحد من الاثنين:
+/* =====================================================
+   الإعدادات الأساسية
+===================================================== */
 
-// 1. استخدام Claude API (موصى به - أفضل وأسرع)
-const CLAUDE_API_KEY = 'ضع_الكلود_API_key_هنا'; 
-// اجيبه من: https://console.anthropic.com/settings/keys
-
-// 2. أو استخدام OpenAI API
-const OPENAI_API_KEY = 'ضع_الاوبن_AI_API_key_هنا';
-// اجيبه من: https://platform.openai.com/api-keys
-
-// اختر أي API هتستخدم (true = Claude, false = OpenAI)
-const USE_CLAUDE = true;
-
-// ============================================
-// معلومات الموقع للـ AI
-// ============================================
-const WEBSITE_CONTEXT = `
-أنت مساعد ذكي لموقع "متابعة دراسية" - خدمة متابعة دراسية للمرحلة الابتدائية.
-
-📚 الخدمات الأساسية:
-- تحديد المهام الدراسية اليومية ومتابعتها
-- استخدام مؤقتات زمنية لمتابعة الإنجاز
-- تقييم أكاديمي أسبوعي شامل
-- جلسات تنمية مهارات الانتباه والتركيز
-- جلسات تنمية مهارات التخطيط والتنفيذ
-
-🎯 الخدمات الإضافية:
-- توفير مكان هادئ بمكتب للدراسة
-- وجبات صحية مدعمة بأسعار غير ربحية
-- مراقبة بالكاميرات على مدار الساعة
-
-💰 الباقات المتاحة:
-
-1️⃣ باقة "صح صح" - 3000 جنيه/شهر
-   ✓ تحديد المهام
-   ✓ متابعة الإنجاز
-   ✓ وجبة مدعمة
-
-2️⃣ باقة "خلاويص" - 4000 جنيه/شهر
-   ✓ كل مميزات "صح صح"
-   ✓ مؤقت لمتابعة الإنجاز
-
-3️⃣ باقة "المحقق" - 5000 جنيه/شهر
-   ✓ كل مميزات "خلاويص"
-   ✓ تقييم أكاديمي أسبوعي
-
-4️⃣ باقة "النووي" - 6000 جنيه/شهر (الأفضل)
-   ✓ كل مميزات "المحقق"
-   ✓ جلسات زيادة التركيز والانتباه
-
-🍽️ قائمة الطعام المدعمة:
-- بطاطس مهروسة مسلوقة بالتوابل
-- فول مدمس مصري بالبهارات
-- سلطة خضراء طازجة
-- زبادي طبيعي
-- تشكيلة فواكه متنوعة
-- بيض أومليت بالخضراوات
-
-📱 للتواصل: واتساب 201116967317
-
-تعليمات الرد:
-- كن ودوداً ومختصراً
-- استخدم إيموجي مناسب
-- أجب بالعربية فقط
-- إذا سألوا عن الحجز، وجههم لنموذج الطلب في الموقع
-- إذا سألوا عن قائمة الطعام، اذكر الوجبات المتاحة
-`;
-
-// ============================================
-// كود الموقع الأساسي
-// ============================================
-
-const SECRET_CODE = "1234";
-let isLoggedIn = false;
-
-function showToast(message, bgColor) {
-    var toast = document.getElementById("toast");
-    toast.textContent = message;
-    if (bgColor) {
-        toast.style.backgroundColor = bgColor;
-    } else {
-        toast.style.backgroundColor = "#333";
-    }
-    toast.style.visibility = "visible";
-    setTimeout(function () {
-        toast.style.visibility = "hidden";
-    }, 3000);
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-function handleForm(form) {
-    showToast("سيتم التواصل معك قريبًا!");
-    setTimeout(function () {
-        form.submit();
-    }, 500);
-    return false;
+:root {
+	--main-green: #3eb489;
+	--light-green: #e8f7f2;
+	--white: #ffffff;
+	--dark-text: #1f2937;
+	--gray-text: #6b7280;
+	--yellow: #8eed91;
 }
 
-function openLogin() {
-    document.getElementById("loginBox").style.display = "block";
-    document.getElementById("first-f").style.display = "none";
-    document.getElementById("back").style.display = "block";
+html {
+	scroll-behavior: smooth;
 }
 
-function login() {
-    const code = document.getElementById("code").value;
-    if (code === SECRET_CODE) {
-        isLoggedIn = true;
-        showToast("✓ تم الدخول بنجاح", "#4CAF50");
-        updateUI();
-        document.getElementById("back").style.display = "none";
-    } else {
-        showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
-    }
+body {
+	font-family: "Cairo", sans-serif;
+	line-height: 1.7;
+	color: var(--dark-text);
+	background: var(--white);
 }
 
-function logout() {
-    document.getElementById("back").style.display = "none";
-    isLoggedIn = false;
-    showToast("تم تسجيل الخروج بنجاح", "#FF9800");
-    updateUI();
+/* =====================================================
+   شريط التنقل (الهيدر) - محسّن
+===================================================== */
+
+nav {
+	background: white;
+	padding: 0 50px;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	height: 75px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
 }
 
-function updateUI() {
-    const menuLink = document.getElementById("menu-link");
-    
-    if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
-        document.getElementById("first-f").style.display = "none";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "block";
-        menuLink.style.display = "block";
-    } else {
-        document.getElementById("secret").style.display = "none";
-        document.getElementById("first-f").style.display = "block";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "none";
-        menuLink.style.display = "none";
-    }
+nav img {
+	height: 250px;
+	transition: 0.3s;
 }
 
-function back() {
-    if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
-        document.getElementById("first-f").style.display = "none";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "block";
-        document.getElementById("back").style.display = "none";
-    } else {
-        document.getElementById("secret").style.display = "none";
-        document.getElementById("first-f").style.display = "block";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "none";
-        document.getElementById("back").style.display = "none";
-    }
+nav img:hover {
+	transform: scale(1.05);
 }
 
-window.addEventListener("DOMContentLoaded", function () {
-    updateUI();
-});
-
-document.getElementById("whatsappForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
-    const phoneNumber = "201116967317";
-    const finalMessage = "📧 الإيميل: " + email + "\n\n" + "💬 الرسالة:\n" + message;
-    const whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(finalMessage);
-    window.open(whatsappURL, "_blank");
-    showToast("جاري فتح واتساب...", "#25D366");
-    document.getElementById("email").value = "";
-    document.getElementById("message").value = "";
-});
-
-// ============================================
-// AI CHATBOT CODE
-// ============================================
-
-const chatButton = document.getElementById('chatbotButton');
-const chatWindow = document.getElementById('chatbotWindow');
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
-const sendButton = document.getElementById('sendButton');
-
-// فتح/إغلاق الشات
-chatButton.addEventListener('click', () => {
-    chatButton.classList.toggle('active');
-    chatWindow.classList.toggle('active');
-    if (chatWindow.classList.contains('active')) {
-        chatInput.focus();
-    }
-});
-
-// إرسال الرسالة
-async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
-
-    // إضافة رسالة المستخدم
-    addMessage(message, 'user');
-    chatInput.value = '';
-    sendButton.disabled = true;
-
-    // التحقق من API Key
-    const apiKey = USE_CLAUDE ? CLAUDE_API_KEY : OPENAI_API_KEY;
-    if (!apiKey || apiKey.includes('ضع_') || apiKey.length < 20) {
-        setTimeout(() => {
-            const apiName = USE_CLAUDE ? 'Claude' : 'OpenAI';
-            const apiUrl = USE_CLAUDE ? 'https://console.anthropic.com/settings/keys' : 'https://platform.openai.com/api-keys';
-            addMessage(`⚠️ عذراً! يجب إضافة ${apiName} API Key أولاً.\n\nاذهب إلى السطر ${USE_CLAUDE ? '10' : '13'} في ملف script.js وضع الـ Key الكامل.\n\nاحصل عليه من:\n${apiUrl}`, 'bot');
-            sendButton.disabled = false;
-        }, 500);
-        return;
-    }
-
-    // إظهار typing indicator
-    const typingDiv = showTypingIndicator();
-
-    try {
-        let botReply;
-        
-        if (USE_CLAUDE) {
-            // استدعاء Claude API
-            botReply = await callClaudeAPI(message);
-        } else {
-            // استدعاء OpenAI API
-            botReply = await callOpenAIAPI(message);
-        }
-        
-        // إزالة typing indicator
-        typingDiv.remove();
-        
-        // إضافة رد الـ AI
-        addMessage(botReply, 'bot');
-
-    } catch (error) {
-        typingDiv.remove();
-        addMessage('❌ عذراً، حدث خطأ في الاتصال. تأكد من صحة الـ API Key وحاول مرة أخرى.\n\nالخطأ: ' + error.message, 'bot');
-        console.error('Error:', error);
-    }
-
-    sendButton.disabled = false;
-    chatInput.focus();
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
-// استدعاء Claude API
-async function callClaudeAPI(userMessage) {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': CLAUDE_API_KEY,
-            'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-            model: 'claude-3-5-sonnet-20241022',
-            max_tokens: 1024,
-            messages: [
-                {
-                    role: 'user',
-                    content: WEBSITE_CONTEXT + '\n\nسؤال العميل: ' + userMessage
-                }
-            ]
-        })
-    });
-
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(data.error.message || 'Claude API Error');
-    }
-    
-    return data.content[0].text;
+nav a {
+	color: rgb(0, 0, 0);
+	padding: 12px 30px;
+	border-radius: 50px;
+	font-weight: 900;
+	transition: 0.3s;
+	text-decoration: none;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	white-space: nowrap;
 }
 
-// استدعاء OpenAI API
-async function callOpenAIAPI(userMessage) {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-                {
-                    role: 'system',
-                    content: WEBSITE_CONTEXT
-                },
-                {
-                    role: 'user',
-                    content: userMessage
-                }
-            ],
-            max_tokens: 500,
-            temperature: 0.7
-        })
-    });
-
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(data.error.message || 'OpenAI API Error');
-    }
-    
-    return data.choices[0].message.content;
+nav a:not(.no):hover {
+	background: #a7deb0;
+	transform: translateY(-2px);
 }
 
-// إضافة رسالة للشات
-function addMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
-    
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
-    
-    const content = document.createElement('div');
-    content.className = 'message-content';
-    content.textContent = text;
-    
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(content);
-    chatMessages.appendChild(messageDiv);
-    
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+/* =====================================================
+   الصفحة الأولى (Hero)
+===================================================== */
+
+.page1 {
+	background: white;
+	min-height: calc(100vh - 75px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 80px 20px 60px;
+	position: relative;
 }
 
-// Typing indicator
-function showTypingIndicator() {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message bot';
-    
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = 'AI';
-    
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'message-content typing-indicator active';
-    typingDiv.innerHTML = `
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-    `;
-    
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(typingDiv);
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    return messageDiv;
+.page1::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 60%;
+	background: var(--main-green);
+	clip-path: ellipse(120% 60% at 50% 0%);
+	z-index: 0;
 }
 
-// Events
-sendButton.addEventListener('click', sendMessage);
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-});
+.page1 h1 {
+	color: var(--dark-text);
+	text-align: center;
+	font-size: clamp(2rem, 4vw, 3.2rem);
+	font-weight: 800;
+	line-height: 1.3;
+	position: relative;
+	z-index: 1;
+	margin-bottom: 20px;
+	animation: slideUp 0.8s;
+}
 
-// رسالة في الكونسول
-console.log('🤖 AI Chatbot initialized successfully!');
-console.log(`💡 Using: ${USE_CLAUDE ? 'Claude API' : 'OpenAI API'}`);
-console.log('⚠️  Remember to add your API Key in script.js');
-console.log('📖 Documentation:');
-if (USE_CLAUDE) {
-    console.log('   Claude: https://docs.anthropic.com/');
-} else {
-    console.log('   OpenAI: https://platform.openai.com/docs/');
+.page1 p {
+	color: var(--gray-text);
+	text-align: center;
+	font-size: clamp(1rem, 2vw, 1.25rem);
+	max-width: 700px;
+	line-height: 1.8;
+	position: relative;
+	z-index: 1;
+	margin-bottom: 40px;
+	animation: slideUp 0.8s 0.2s backwards;
+}
+
+.miao-container {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+	position: relative;
+	z-index: 1;
+}
+
+.miao {
+	background: white;
+	color: var(--dark-text);
+	font-size: clamp(1rem, 1.8vw, 1.2rem);
+	padding: 14px 35px;
+	font-weight: 600;
+	border-radius: 50px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	cursor: pointer;
+	border: 2px solid transparent;
+	transition: 0.3s;
+}
+
+.miao:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 8px 30px rgba(62, 180, 137, 0.15);
+	border-color: var(--main-green);
+	color: var(--main-green);
+}
+
+/* =====================================================
+   الصفحة الثانية (الخدمات)
+===================================================== */
+
+.page2 {
+	background: var(--light-green);
+	min-height: 100vh;
+	padding: 100px 20px;
+}
+
+.cardpage2 {
+	background: white;
+	border-radius: 30px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	padding: 60px;
+	margin: 30px auto;
+	max-width: 1200px;
+	direction: rtl;
+	display: flex;
+	align-items: center;
+	gap: 60px;
+	transition: 0.3s;
+}
+
+.cardpage2 img {
+	width: 100%;
+	max-width: 450px;
+	border-radius: 25px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+	transition: 0.3s;
+}
+
+.cardpage2 p {
+	flex: 1;
+	font-size: clamp(1.1rem, 2vw, 1.4rem);
+	font-weight: 500;
+	line-height: 1.9;
+	text-align: right;
+}
+
+.cardpage2:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.cardpage2:hover img {
+	transform: scale(1.03);
+}
+
+/* =====================================================
+   الصفحة الثالثة (الباقات)
+===================================================== */
+
+.page3 {
+	background: white;
+	min-height: 100vh;
+	padding: 100px 20px;
+}
+
+.page3 > h1 {
+	color: var(--dark-text);
+	font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+	margin-bottom: 70px;
+	text-align: center;
+	font-weight: 800;
+	position: relative;
+	padding-bottom: 20px;
+}
+
+.page3 > h1::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 70px;
+	height: 4px;
+	background: var(--main-green);
+	border-radius: 3px;
+}
+
+.cardspage3 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 40px;
+	max-width: 1500px;
+	margin: 0 auto;
+	direction: rtl;
+}
+
+.card3 {
+	background: white;
+	border-radius: 25px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	max-width: 400px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	transition: 0.3s;
+	border: 2px solid transparent;
+}
+
+.card3:nth-child(2) {
+	background: var(--main-green);
+	transform: scale(1.02);
+}
+
+.card3:hover {
+	transform: translateY(-10px) scale(1.05);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+	border-color: var(--main-green);
+}
+
+.cardspage3 h1 {
+	background: var(--light-green);
+	width: 100%;
+	height: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--dark-text);
+	font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+	font-weight: 800;
+}
+
+.card3:nth-child(2) h1 {
+	background: var(--yellow);
+}
+
+.dot-list {
+	list-style: none;
+	padding: 40px 30px;
+	background: #fafafa;
+	flex-grow: 1;
+}
+
+.dot-list li {
+	font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+	font-weight: 500;
+	margin: 16px 0;
+	display: flex;
+	align-items: center;
+	text-align: right;
+	padding: 8px;
+	border-radius: 10px;
+	transition: 0.3s;
+}
+
+.dot-list li:hover {
+	transform: translateX(-5px);
+	background: rgba(62, 180, 137, 0.05);
+}
+
+.dot-list li::before {
+	content: "✓";
+	color: var(--main-green);
+	font-size: 16px;
+	margin-left: 12px;
+	font-weight: bold;
+	background: rgba(62, 180, 137, 0.15);
+	width: 26px;
+	height: 26px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+}
+
+.card3:nth-child(2) .dot-list {
+	background: var(--main-green);
+	color: white;
+}
+
+.card3:nth-child(2) .dot-list li {
+	color: white;
+}
+
+.card3:nth-child(2) .dot-list li::before {
+	background: rgba(255, 255, 255, 0.2);
+	color: white;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	padding: 30px;
+	gap: 15px;
+	background: white;
+}
+
+.card3:nth-child(2) form {
+	background: var(--main-green);
+}
+
+.contact-input {
+	width: 100%;
+	padding: 14px 18px;
+	border: 2px solid #e5e7eb;
+	border-radius: 15px;
+	font-size: 1rem;
+	font-family: "Cairo", sans-serif;
+	background: #fafafa;
+	transition: 0.3s;
+}
+
+.contact-input:focus {
+	outline: none;
+	border-color: var(--main-green);
+	box-shadow: 0 0 0 4px rgba(62, 180, 137, 0.1);
+	background: white;
+}
+
+.submit {
+	background: var(--yellow);
+	color: #000;
+	border: none;
+	padding: 14px 35px;
+	font-size: 1.1rem;
+	border-radius: 50px;
+	font-weight: 700;
+	cursor: pointer;
+	font-family: "Cairo", sans-serif;
+	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.25);
+	min-width: 200px;
+	transition: 0.3s;
+}
+
+.submit:hover {
+	background: #00d483;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(62, 180, 137, 0.35);
+}
+
+.card3:nth-child(2) .submit {
+	background: var(--yellow);
+	color: #000;
+	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.25);
+}
+
+.card3:nth-child(2) .submit:hover {
+	background: var(--yellow);
+	color: #000;
+	transform: translateY(-3px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.package-name {
+	display: none;
+}
+
+/* =====================================================
+   الأزرار العامة
+===================================================== */
+
+#first-f,
+#second-f,
+#toexit,
+#back {
+	border: none;
+	border-radius: 50px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	padding: 14px 35px;
+	margin: 10px;
+	font-family: "Cairo", sans-serif;
+	transition: 0.3s;
+}
+
+#first-f,
+#second-f,
+#back {
+	background: var(--main-green);
+	color: white;
+	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.2);
+}
+
+#first-f:hover,
+#second-f:hover,
+#back:hover {
+	background: #35a077;
+	transform: translateY(-2px);
+}
+
+#toexit {
+	background: #ef4444;
+	color: white;
+	box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+#toexit:hover {
+	background: #dc2626;
+	transform: translateY(-2px);
+}
+
+#code {
+	border-radius: 15px;
+	border: 2px solid #e5e7eb;
+	font-size: 16px;
+	font-weight: 600;
+	padding: 12px 18px;
+	font-family: "Cairo", sans-serif;
+	background: #fafafa;
+	transition: 0.3s;
+}
+
+#code:focus {
+	outline: none;
+	border-color: var(--main-green);
+	box-shadow: 0 0 0 4px rgba(62, 180, 137, 0.1);
+	background: white;
+}
+
+/* =====================================================
+   صفحة التواصل
+===================================================== */
+
+.page4 {
+	background: var(--light-green);
+	min-height: 100vh;
+	padding: 100px 20px;
+}
+
+.contact-container {
+	display: flex;
+	justify-content: center;
+	gap: 50px;
+	flex-wrap: wrap;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.contact-form {
+	background: white;
+	padding: 60px;
+	border-radius: 30px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	width: 100%;
+	max-width: 650px;
+	direction: rtl;
+	transition: 0.3s;
+}
+
+.contact-form:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.contact-form h2 {
+	color: var(--dark-text);
+	margin-bottom: 45px;
+	text-align: center;
+	font-size: clamp(1.7rem, 3vw, 2.3rem);
+	font-weight: 800;
+	position: relative;
+	padding-bottom: 20px;
+}
+
+.contact-form h2::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 4px;
+	background: var(--main-green);
+	border-radius: 3px;
+}
+
+.contact-form label {
+	display: block;
+	margin-bottom: 25px;
+	color: var(--dark-text);
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+	width: 100%;
+	padding: 15px 18px;
+	margin-top: 10px;
+	border: 2px solid #e5e7eb;
+	border-radius: 15px;
+	font-size: 1rem;
+	font-family: "Cairo", sans-serif;
+	background: #fafafa;
+	transition: 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+	outline: none;
+	border-color: var(--main-green);
+	box-shadow: 0 0 0 4px rgba(62, 180, 137, 0.1);
+	background: white;
+}
+
+.contact-form textarea {
+	resize: vertical;
+	min-height: 140px;
+}
+
+.txt {
+	resize: vertical;
+	min-height: 140px;
+}
+
+.contact-container button {
+	width: 100%;
+	padding: 16px;
+	margin-top: 30px;
+	background: var(--main-green);
+	border: none;
+	border-radius: 50px;
+	color: white;
+	font-size: 17px;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.25);
+	font-family: "Cairo", sans-serif;
+	transition: 0.3s;
+}
+
+.contact-container button:hover {
+	background: #35a077;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(62, 180, 137, 0.35);
+}
+
+/* =====================================================
+   قسم القائمة
+===================================================== */
+
+.Video-container {
+	display: flex;
+	justify-content: center;
+	margin: 50px auto;
+	max-width: 1200px;
+	padding: 0 20px;
+}
+
+.menu-c {
+	margin-top: 80px;
+	padding: 60px 20px;
+	max-width: 1400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.menu-c p {
+	font-size: clamp(1.1rem, 2vw, 1.4rem);
+	font-weight: 500;
+	line-height: 1.9;
+	text-align: right;
+}
+
+.menu-l,
+.menu-r {
+	background: white;
+	border-radius: 30px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	padding: 50px;
+	margin: 40px auto;
+	max-width: 1200px;
+	min-height: 250px;
+	direction: rtl;
+	display: flex;
+	align-items: center;
+	gap: 50px;
+	transition: 0.3s;
+}
+
+.menu-l img,
+.menu-r img {
+	max-width: 350px;
+	height: 220px;
+	border-radius: 20px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+	object-fit: cover;
+	transition: 0.3s;
+}
+
+.menu-l p,
+.menu-r p {
+	flex: 1;
+	padding: 0 20px;
+	text-align: right;
+}
+
+.menu-l:hover,
+.menu-r:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.menu-l:hover img,
+.menu-r:hover img {
+	transform: scale(1.05);
+}
+
+/* =====================================================
+   الحركات
+===================================================== */
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* =====================================================
+   التصميم على الموبايل والتابلت - متجاوب فقط
+===================================================== */
+
+/* الشاشات الكبيرة */
+@media (max-width: 1200px) {
+	.cardspage3 {
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	}
+
+	.menu-l,
+	.menu-r {
+		padding: 40px;
+	}
+}
+
+	/* التابلت */
+@media (max-width: 968px) {
+	/* الناف بار - مضغوط ومنظم */
+	nav {
+		height: auto;
+		padding: 8px 10px;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+	}
+
+	nav img {
+		height: 42px;
+		margin: 0;
+	}
+
+	.nav-links {
+		display: flex;
+		justify-content: center;
+		flex-wrap: nowrap;
+		gap: 4px;
+		order: 3;
+		width: 100%;
+		overflow-x: auto;
+		padding: 4px 0;
+	}
+
+	.nav-links::-webkit-scrollbar {
+		height: 3px;
+	}
+
+	.nav-links::-webkit-scrollbar-thumb {
+		background: var(--main-green);
+		border-radius: 10px;
+	}
+
+	nav a {
+		padding: 6px 10px;
+		font-size: 10.5px;
+		font-weight: 900;
+		white-space: nowrap;
+	}
+
+	#first-f, #second-f, #toexit, #back, #loginBox {
+		order: 2;
+	}
+
+	nav a.no {
+		order: 1;
+	}
+
+	/* باقي الصفحات - نفس التصميم بأحجام متجاوبة */
+	.page1 {
+		min-height: calc(100vh - 60px);
+	}
+
+	.cardpage2 {
+		flex-direction: column;
+		padding: 40px;
+		gap: 35px;
+	}
+
+	.cardpage2 img {
+		max-width: 100%;
+	}
+
+	.cardspage3 {
+		grid-template-columns: 1fr;
+		gap: 30px;
+	}
+
+	.card3 {
+		max-width: 100%;
+	}
+
+	.card3:nth-child(2) {
+		transform: scale(1);
+	}
+
+	.menu-l,
+	.menu-r {
+		flex-direction: column;
+		padding: 35px;
+		gap: 30px;
+	}
+
+	.menu-l img,
+	.menu-r img {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		max-height: 300px;
+	}
+
+	.menu-l p,
+	.menu-r p {
+		text-align: right;
+		padding: 0;
+	}
+
+	.contact-form {
+		padding: 40px 30px;
+	}
+}
+
+	/* الموبايل */
+@media (max-width: 600px) {
+	/* الناف بار - أصغر حجم */
+	nav {
+		padding: 6px 8px;
+		gap: 6px;
+	}
+
+	nav img {
+		height: 36px;
+	}
+
+	.nav-links {
+		gap: 3px;
+		padding: 3px 0;
+	}
+
+	nav a {
+		padding: 5px 8px;
+		font-size: 9.5px;
+	}
+
+	/* الصفحات - نفس الستايل بأحجام أصغر */
+	.page1 {
+		padding: 50px 15px;
+	}
+
+	.miao {
+		padding: 12px 24px;
+		font-size: 0.95rem;
+	}
+
+	.cardpage2 {
+		padding: 30px;
+		margin: 25px 10px;
+	}
+
+	.contact-form {
+		padding: 30px 20px;
+	}
+
+	.menu-l,
+	.menu-r {
+		padding: 30px;
+		margin: 25px 10px;
+	}
+}
+
+	/* الموبايل الصغير */
+@media (max-width: 400px) {
+	/* الناف بار - مضغوط جداً */
+	nav {
+		padding: 5px 6px;
+	}
+
+	nav img {
+		height: 32px;
+	}
+
+	nav a {
+		padding: 4px 7px;
+		font-size: 9px;
+	}
+
+	.page1 h1 {
+		font-size: 1.8rem;
+	}
+
+	.miao {
+		padding: 10px 20px;
+		font-size: 0.9rem;
+	}
 }
