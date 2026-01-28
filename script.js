@@ -3,28 +3,21 @@
 // ============================================
 const ANTHROPIC_API_KEY = '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';
 
-// معلومات الموقع
-const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية.
+// معلومات الموقع - محدّثة للنسخة الأونلاين
+const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية أونلاين" للمرحلة الابتدائية.
 
-الخدمات الأساسية:
-- تحديد المهام الدراسية اليومية ومتابعتها
-- استخدام مؤقتات زمنية
+الخدمات الأساسية (أونلاين):
+- تحديد المهام الدراسية اليومية ومتابعتها عن بُعد
+- استخدام مؤقتات زمنية لمتابعة الإنجاز
 - تقييم أكاديمي أسبوعي
-- جلسات تنمية الانتباه والتركيز
-- جلسات التخطيط والتنفيذ
+- جلسات تنمية الانتباه والتركيز (أونلاين)
+- جلسات التخطيط والتنفيذ (أونلاين)
 
-الخدمات الإضافية:
-- مكان هادئ للدراسة
-- وجبات صحية مدعمة
-- مراقبة بالكاميرات
-
-الباقات:
-1. صح صح - 3000ج/شهر: تحديد المهام + متابعة + وجبة
-2. خلاويص - 4000ج/شهر: كل السابق + مؤقت
-3. المحقق - 5000ج/شهر: كل السابق + تقييم أسبوعي
-4. النووي - 6000ج/شهر: كل السابق + جلسات التركيز
-
-قائمة الطعام: بطاطس مهروسة، فول مدمس، سلطة خضراء، زبادي، فواكه، بيض أومليت
+الباقات (للأعضاء فقط):
+1. صح صح: تحديد المهام + متابعة
+2. خلاويص: كل السابق + مؤقت
+3. المحقق: كل السابق + تقييم أسبوعي
+4. النووي: كل السابق + جلسات التركيز
 
 للتواصل: واتساب 201116967317
 
@@ -79,30 +72,39 @@ function logout() {
 
 function updateUI() {
     const menuLink = document.getElementById("menu-link");
+    const priceElements = document.querySelectorAll(".package-price");
+    
     if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
+        // إظهار المحتوى الخاص بالأعضاء
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
-        if (menuLink) menuLink.style.display = "block";
+        
+        // إظهار الأسعار
+        priceElements.forEach(el => {
+            el.style.display = "block";
+        });
+        
     } else {
-        document.getElementById("secret").style.display = "none";
+        // إخفاء المحتوى عن غير الأعضاء
         document.getElementById("first-f").style.display = "block";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "none";
-        if (menuLink) menuLink.style.display = "none";
+        
+        // إخفاء الأسعار
+        priceElements.forEach(el => {
+            el.style.display = "none";
+        });
     }
 }
 
 function back() {
     if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
         document.getElementById("back").style.display = "none";
     } else {
-        document.getElementById("secret").style.display = "none";
         document.getElementById("first-f").style.display = "block";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "none";
@@ -132,7 +134,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================
-// AI CHATBOT - مش هيشتغل بسبب CORS
+// AI CHATBOT
 // ============================================
 const chatButton = document.getElementById('chatbotButton');
 const chatWindow = document.getElementById('chatbotWindow');
@@ -147,7 +149,6 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         chatWindow.classList.toggle('active');
         if (chatWindow.classList.contains('active')) {
             chatInput.focus();
-            // رسالة توضيحية للمستخدم
             if (chatMessages.children.length === 0) {
                 addMessage('⚠️ تنبيه: الـ AI مش هيشتغل على GitHub Pages بسبب CORS\n\n✅ الحل: ارفع الموقع على Netlify أو Vercel', 'bot');
             }
@@ -165,7 +166,6 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         const typingDiv = showTyping();
 
         try {
-            // محاولة الاتصال (مش هتنجح بسبب CORS)
             const response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 headers: {
@@ -199,9 +199,8 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         } catch (error) {
             typingDiv.remove();
             
-            // رسالة خطأ CORS
             if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-                addMessage('❌ مشكلة CORS!\n\n🔧 الحل:\n\n1. ارفع الموقع على Netlify\n2. اعمل ملف netlify/functions/chat.js\n3. حط فيه الـ API Key\n4. هيشتغل تمام!\n\n📺 شوف الفيديو: bit.ly/netlify-claude', 'bot');
+                addMessage('❌ مشكلة CORS!\n\n🔧 الحل:\n\n1. ارفع الموقع على Netlify\n2. اعمل ملف netlify/functions/chat.js\n3. حط فيه الـ API Key\n4. هيشتغل تمام!', 'bot');
             } else {
                 addMessage(`❌ حصل خطأ: ${error.message}`, 'bot');
             }
@@ -258,7 +257,4 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
             sendMessage();
         }
     });
-
-    console.log('⚠️ AI Chatbot مش هيشتغل على GitHub Pages بسبب CORS');
-    console.log('✅ ارفع الموقع على Netlify عشان يشتغل');
 }
