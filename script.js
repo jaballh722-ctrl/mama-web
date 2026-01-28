@@ -261,3 +261,4 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
 
     console.log('⚠️ AI Chatbot مش هيشتغل على GitHub Pages بسبب CORS');
     console.log('✅ ارفع الموقع على Netlify عشان يشتغل');
+}
