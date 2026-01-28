@@ -71,11 +71,11 @@ function logout() {
 }
 
 function updateUI() {
-    const menuLink = document.getElementById("menu-link");
     const priceElements = document.querySelectorAll(".package-price");
+    const nonMemberMessage = document.querySelectorAll(".non-member-msg");
     
     if (isLoggedIn) {
-        // إظهار المحتوى الخاص بالأعضاء
+        // إظهار الأسعار للأعضاء
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
@@ -85,8 +85,13 @@ function updateUI() {
             el.style.display = "block";
         });
         
+        // إخفاء رسالة غير الأعضاء
+        nonMemberMessage.forEach(el => {
+            el.style.display = "none";
+        });
+        
     } else {
-        // إخفاء المحتوى عن غير الأعضاء
+        // إخفاء الأسعار عن غير الأعضاء
         document.getElementById("first-f").style.display = "block";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "none";
@@ -94,6 +99,11 @@ function updateUI() {
         // إخفاء الأسعار
         priceElements.forEach(el => {
             el.style.display = "none";
+        });
+        
+        // إظهار رسالة غير الأعضاء
+        nonMemberMessage.forEach(el => {
+            el.style.display = "block";
         });
     }
 }
