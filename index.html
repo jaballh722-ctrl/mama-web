@@ -18,7 +18,6 @@
             <input type="text" id="code" placeholder="ادخل كود الدخول" />
             <button onclick="login()" id="second-f">ادخال</button>
         </div>
-        <a href="#secret" id="menu-link" style="display: none">قائمة الطعام</a>
         <a href="#page4">التواصل</a>
         <a href="#page3">الباقات</a>
         <a href="#page2">الخدمات</a>
@@ -29,10 +28,10 @@
     <div id="page1" class="page1">
         <h1>نحو التفوق الدراسي</h1>
         <p>
-            ميس المتابعة الدراسية المتميزة للمرحلة الابتدائية <br />
+            المتابعة الدراسية المتميزة للمرحلة الابتدائية (أونلاين) <br />
             هل تبحث عن مَن يساعد طفلك على التفوق الدراسي؟ <br />
             مع المتابعة الدراسيه، طفلك في أيدٍ أمينة! نقدم متابعة دراسية شاملة لطلاب
-            المرحلة الابتدائية بأسلوب تعليمي مبتكر يجمع بين البساطة والفعالية.
+            المرحلة الابتدائية بأسلوب تعليمي مبتكر يجمع بين البساطة والفعالية عن بُعد.
             <br />
         </p>
 
@@ -59,30 +58,12 @@
                 <img src="premium_vector-1682310575839-a2c0e49edb1a.avif" alt="" />
             </div>
             <div class="cardpage2">
-                <p>عمل جلسات متخصصة ومخطط لها بعناية لتنمية مهارات الانتباه وزيادة مستوى التركيز لدى الطلاب، بما يساعدهم على تحسين الأداء الذهني والسلوكي بشكل عام.</p>
+                <p>عمل جلسات متخصصة ومخطط لها بعناية (أونلاين) لتنمية مهارات الانتباه وزيادة مستوى التركيز لدى الطلاب، بما يساعدهم على تحسين الأداء الذهني والسلوكي بشكل عام.</p>
                 <img src="انتباه.avif" alt="" />
             </div>
             <div class="cardpage2">
-                <p>عقد جلسات منتظمة تهدف إلى تنمية مهارات التخطيط والتنفيذ الفعّال للمهام بشكل عام، لتعزيز القدرة على الإنجاز وزيادة الكفاءة في إدارة الوقت والموارد.</p>
+                <p>عقد جلسات منتظمة (أونلاين) تهدف إلى تنمية مهارات التخطيط والتنفيذ الفعّال للمهام بشكل عام، لتعزيز القدرة على الإنجاز وزيادة الكفاءة في إدارة الوقت والموارد.</p>
                 <img src="زياده2.avif" alt="" />
-            </div>
-        </div>
-    </div>
-
-    <div class="page2">
-        <h1 style="display:flex; justify-content:center; align-items:center;">الخدمات الملحقة</h1>
-        <div class="cardspage2">
-            <div class="cardpage2">
-                <p>توفير مكان هادئ بمكتب لانجاز المهام الدراسية</p>
-                <img src="istockphoto-607495254-612x612.jpg" alt="" />
-            </div>
-            <div class="cardpage2">
-                <p>توفير وجبات صحية مدعمة باسعار غير ربحية</p>
-                <img src="istockphoto-2157551787-612x612.jpg" />
-            </div>
-            <div class="cardpage2">
-                <p>مراقبة شاملة بالكاميرات عن بُعد على مدار الساعة</p>
-                <img src="istockphoto-2241669580-612x612.jpg" />
             </div>
         </div>
     </div>
@@ -91,13 +72,14 @@
         <h1>الباقات</h1>
         <div class="cardspage3">
             <div class="card3">
-                <h1>✓صح✓صح<br />3000EG/Per 1Mounth</h1>
+                <h1>✓صح✓صح</h1>
+                <h2 class="package-price" style="display: none; color: #5962e8; margin: 10px 0;">3000EG/Per 1Month</h2>
                 <ul class="dot-list">
                     <li>البدء بتحديد المهام</li>
                     <li>متابعة انجاز المهام</li>
-                    <li>وجبة مدعمة</li>
                 </ul>
-                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)">
+                <p class="package-price" style="display: none; color: #666; font-size: 0.9rem; margin: 15px 0;">سجل دخول كعضو لرؤية السعر والطلب</p>
+                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)" class="package-price" style="display: none;">
                     <input type="hidden" name="access_key" value="c4c5f5cd-58d1-4f43-8bde-06abddb8187e">
                     <input type="hidden" name="الباقة المطلوبة" value="صح صح">
                     <textarea name="contact" class="contact-input" placeholder="رقم الواتساب أو الإيميل للتواصل" rows="3" required></textarea>
@@ -106,14 +88,15 @@
             </div>
 
             <div class="card3">
-                <h1>خلاويص<br />4000EG/Per 1Mounth</h1>
+                <h1>خلاويص</h1>
+                <h2 class="package-price" style="display: none; color: #5962e8; margin: 10px 0;">4000EG/Per 1Month</h2>
                 <ul class="dot-list">
                     <li>البدء بتحديد المهام</li>
                     <li>متابعة انجاز المهام</li>
-                    <li>وجبة مدعمة</li>
                     <li>استخدام مؤقت لمتابعة انجاز المهام</li>
                 </ul>
-                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)">
+                <p class="package-price" style="display: none; color: #666; font-size: 0.9rem; margin: 15px 0;">سجل دخول كعضو لرؤية السعر والطلب</p>
+                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)" class="package-price" style="display: none;">
                     <input type="hidden" name="access_key" value="c4c5f5cd-58d1-4f43-8bde-06abddb8187e">
                     <input type="hidden" name="الباقة المطلوبة" value="خلاويص">
                     <textarea name="contact" class="contact-input" placeholder="رقم الواتساب أو الإيميل للتواصل" rows="3" required></textarea>
@@ -122,15 +105,16 @@
             </div>
 
             <div class="card3">
-                <h1>المحقق<br />5000EG/Per 1Mounth</h1>
+                <h1>المحقق</h1>
+                <h2 class="package-price" style="display: none; color: #5962e8; margin: 10px 0;">5000EG/Per 1Month</h2>
                 <ul class="dot-list">
                     <li>البدء بتحديد المهام</li>
                     <li>متابعة انجاز المهام</li>
-                    <li>وجبة مدعمة</li>
                     <li>استخدام مؤقت لمتابعة انجاز المهام</li>
                     <li>تقييم اكاديمي اسبوعي للمهام المنجزة</li>
                 </ul>
-                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)">
+                <p class="package-price" style="display: none; color: #666; font-size: 0.9rem; margin: 15px 0;">سجل دخول كعضو لرؤية السعر والطلب</p>
+                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)" class="package-price" style="display: none;">
                     <input type="hidden" name="access_key" value="c4c5f5cd-58d1-4f43-8bde-06abddb8187e">
                     <input type="hidden" name="الباقة المطلوبة" value="المحقق">
                     <textarea name="contact" class="contact-input" placeholder="رقم الواتساب أو الإيميل للتواصل" rows="3" required></textarea>
@@ -139,16 +123,17 @@
             </div>
 
             <div class="card3">
-                <h1>النووي<br />6000EG/Per 1Mounth</h1>
+                <h1>النووي</h1>
+                <h2 class="package-price" style="display: none; color: #5962e8; margin: 10px 0;">6000EG/Per 1Month</h2>
                 <ul class="dot-list">
                     <li>البدء بتحديد المهام</li>
                     <li>متابعة انجاز المهام</li>
-                    <li>وجبة مدعمة</li>
                     <li>استخدام مؤقت لمتابعة انجاز المهام</li>
                     <li>تقييم اكاديمي اسبوعي للمهام المنجزة</li>
                     <li>عمل جلسات لزيادة التركيز والانتباة</li>
                 </ul>
-                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)">
+                <p class="package-price" style="display: none; color: #666; font-size: 0.9rem; margin: 15px 0;">سجل دخول كعضو لرؤية السعر والطلب</p>
+                <form action="https://api.web3forms.com/submit" method="POST" onsubmit="return handleForm(this)" class="package-price" style="display: none;">
                     <input type="hidden" name="access_key" value="c4c5f5cd-58d1-4f43-8bde-06abddb8187e">
                     <input type="hidden" name="الباقة المطلوبة" value="النووي">
                     <textarea name="contact" class="contact-input" placeholder="رقم الواتساب أو الإيميل للتواصل" rows="3" required></textarea>
@@ -191,46 +176,10 @@
         </div>
     </div>
 
-    <div id="secret" style="display: none">
-        <h1 style="text-align: center; padding: 40px; color: #5962e8">قائمة الطعام</h1>
-        <div class="menu-c">
-            <div class="menu-l">
-                <p>بطاطس مهروسة مسلوقة مضاف اليها التوابل</p>
-                <img src="potato-removebg-preview.png" alt="بطاطس مهروسة" />
-            </div>
-            <div class="menu-r">
-                <p>فول مدمس مصري بالبهارات والتتبيلة جاهز للاكل</p>
-                <img src="فول مدمس.jpg" alt="فول مدمس" />
-            </div>
-            <div class="menu-l">
-                <p>سلطة خضراء طازجة مع الخس والطماطم والخيار</p>
-                <img src="سلطة خضراء.jpg" alt="سلطة خضراء" />
-            </div>
-            <div class="menu-r">
-                <p>زبادي طبيعي طازج</p>
-                <img src="yougrt.jpg" alt="زبادي" />
-            </div>
-            <div class="menu-l">
-                <p>تشكيلة فواكه طازجة ومتنوعة غنية بالفيتامينات</p>
-                <img src="فواكه متنوعه.jpg" alt="فواكه متنوعة" />
-            </div>
-            <div class="menu-r">
-                <p>بيض اومليت بالخضراوات</p>
-                <img src="omlet.jpg" alt="بيض اومليت" />
-            </div>
-        </div>
-    </div>
-
     <div id="toast" style="visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; top: 30px; right: 30px; z-index: 1000; font-family: 'Cairo', sans-serif; transition: all 0.3s ease;">
         سيتم التواصل معك قريبًا!
-    </div>
-
-    
-        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
-
