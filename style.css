@@ -144,6 +144,10 @@ nav a {
 	white-space: nowrap;
 }
 
+nav > a:not(.no) {
+	flex-shrink: 0;
+}
+
 nav a:not(.no):hover {
 	background: #a7deb0;
 	transform: translateY(-2px);
@@ -807,53 +811,58 @@ form {
 	/* الناف بار - مضغوط ومنظم */
 	nav {
 		height: auto;
-		padding: 8px 10px;
+		padding: 10px;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap;
 		gap: 8px;
 		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
 	}
 
+	nav > a.no {
+		order: 1;
+	}
+
+	nav > button,
+	nav > #loginBox {
+		order: 2;
+	}
+
+	nav > a:not(.no) {
+		order: 3;
+	}
+
 	nav img {
-		height: 42px;
+		height: 52px;
 		margin: 0;
 	}
 
-	.nav-links {
-		display: flex;
-		justify-content: center;
-		flex-wrap: nowrap;
-		gap: 4px;
-		order: 3;
-		width: 100%;
-		overflow-x: auto;
-		padding: 4px 0;
+	nav > a:not(.no),
+	nav > #menu-link {
+		display: inline-flex;
 	}
 
-	.nav-links::-webkit-scrollbar {
+	nav > a:not(.no) {
+		padding: 7px 12px;
+		font-size: 11px;
+		font-weight: 900;
+	}
+
+	nav::-webkit-scrollbar {
 		height: 3px;
 	}
 
-	.nav-links::-webkit-scrollbar-thumb {
+	nav::-webkit-scrollbar-thumb {
 		background: var(--main-green);
 		border-radius: 10px;
 	}
 
-	nav a {
-		padding: 6px 10px;
-		font-size: 10.5px;
-		font-weight: 900;
-		white-space: nowrap;
-	}
-
-	#first-f, #second-f, #toexit, #back, #loginBox {
-		order: 2;
-	}
-
-	nav a.no {
-		order: 1;
+	#loginBox {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		gap: 8px;
 	}
 
 	/* باقي الصفحات - نفس التصميم بأحجام متجاوبة */
@@ -914,22 +923,31 @@ form {
 @media (max-width: 600px) {
 	/* الناف بار - أصغر حجم */
 	nav {
-		padding: 6px 8px;
+		padding: 8px;
 		gap: 6px;
+		overflow-x: auto;
+		align-items: flex-start;
 	}
 
 	nav img {
-		height: 36px;
+		height: 44px;
 	}
 
-	.nav-links {
-		gap: 3px;
-		padding: 3px 0;
+	nav > a:not(.no) {
+		padding: 6px 10px;
+		font-size: 10px;
 	}
 
-	nav a {
-		padding: 5px 8px;
-		font-size: 9.5px;
+	#first-f,
+	#second-f,
+	#toexit,
+	#back {
+		padding: 10px 20px;
+		font-size: 14px;
+	}
+
+	#code {
+		width: 100%;
 	}
 
 	/* الصفحات - نفس الستايل بأحجام أصغر */
@@ -968,15 +986,15 @@ form {
 @media (max-width: 400px) {
 	/* الناف بار - مضغوط جداً */
 	nav {
-		padding: 5px 6px;
+		padding: 7px;
 	}
 
 	nav img {
-		height: 32px;
+		height: 40px;
 	}
 
-	nav a {
-		padding: 4px 7px;
+	nav > a:not(.no) {
+		padding: 5px 8px;
 		font-size: 9px;
 	}
 
@@ -992,5 +1010,17 @@ form {
 	.cardspage3 h1 {
 		font-size: 1rem;
 		min-height: 95px;
+	}
+}
+
+/* أيقونة الدردشة (Tidio) */
+@media (max-width: 968px) {
+	iframe[id*="tidio"],
+	div[id*="tidio"],
+	div[class*="tidio"] {
+		right: max(12px, env(safe-area-inset-right)) !important;
+		left: auto !important;
+		bottom: max(12px, env(safe-area-inset-bottom)) !important;
+		transform: none !important;
 	}
 }
