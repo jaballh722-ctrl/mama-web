@@ -11,19 +11,27 @@
 </head>
 <body>
     <nav>
-        <button onclick="logout()" id="toexit" style="display: none">خروج من العضوية</button>
-        <button onclick="openLogin()" id="first-f">دخول كـ عضو</button>
-        <button onclick="back()" id="back" style="display: none">رجوع</button>
-        <div id="loginBox" style="display: none">
-            <input type="text" id="code" placeholder="ادخل كود الدخول" />
-            <button onclick="login()" id="second-f">ادخال</button>
+        <a href="#page1" class="no nav-brand"><img src="20260107_1632_كلمة_اختيار_remix_01kecdxvq5eb3s3gpbyfzq5xb0-removebg-preview.png" alt="اختيار" /></a>
+
+        <div class="nav-tabs-wrapper">
+            <div class="nav-tabs">
+                <a href="#page1">التعريف</a>
+                <a href="#page2">الخدمات</a>
+                <a href="#page3">الباقات</a>
+                <a href="#page4">التواصل</a>
+            </div>
+            <a href="#secret" id="menu-link" style="display: none">قائمة الطعام</a>
         </div>
-        <a href="#secret" id="menu-link" style="display: none">قائمة الطعام</a>
-        <a href="#page4">التواصل</a>
-        <a href="#page3">الباقات</a>
-        <a href="#page2">الخدمات</a>
-        <a href="#page1">التعريف</a>
-        <a href="#page1" class="no"><img src="تصميم_بدون_عنوان-removebg-preview.png" alt="" ></a>
+
+        <div class="nav-auth">
+            <button onclick="logout()" id="toexit" style="display: none">خروج من العضوية</button>
+            <button onclick="openLogin()" id="first-f">دخول كـ عضو</button>
+            <button onclick="back()" id="back" style="display: none">رجوع</button>
+            <div id="loginBox" style="display: none">
+                <input type="text" id="code" placeholder="ادخل كود الدخول" />
+                <button onclick="login()" id="second-f">ادخال</button>
+            </div>
+        </div>
     </nav>
 
     <div id="page1" class="page1">

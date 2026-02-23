@@ -93,47 +93,65 @@ body {
 
 nav {
 	background: white;
-	padding: 0 50px;
+	padding: 0 36px;
 	position: sticky;
 	top: 0;
 	z-index: 1000;
-	height: 75px;
+	height: 90px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 18px;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.nav-brand {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
 }
 
 nav img {
-	height: 250px;
+	height: 82px;
+	width: auto;
 	transition: 0.3s;
 }
 
 nav img:hover {
-	transform: scale(1.05);
+	transform: scale(1.04);
 }
 
-.nav-links {
+.nav-tabs-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+}
+
+.nav-tabs {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 6px;
+	border-radius: 999px;
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+}
+
+.nav-auth {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 	gap: 10px;
-}
-
-/* =====================================================
-   الفوتر
-===================================================== */
-
-.site-footer {
-	background: #000;
-	padding: 24px 16px;
-	text-align: center;
-	color: #fff;
-	font-weight: 600;
+	flex-shrink: 0;
 }
 
 nav a {
 	color: rgb(0, 0, 0);
-	padding: 12px 30px;
+	padding: 10px 24px;
 	border-radius: 50px;
 	font-weight: 900;
 	transition: 0.3s;
@@ -144,13 +162,21 @@ nav a {
 	white-space: nowrap;
 }
 
-nav > a:not(.no) {
-	flex-shrink: 0;
-}
-
-nav a:not(.no):hover {
+.nav-tabs a:hover,
+#menu-link:hover {
 	background: #a7deb0;
 	transform: translateY(-2px);
+}
+/* =====================================================
+   الفوتر
+===================================================== */
+
+.site-footer {
+	background: #000;
+	padding: 24px 16px;
+	text-align: center;
+	color: #fff;
+	font-weight: 600;
 }
 
 /* =====================================================
@@ -808,54 +834,69 @@ form {
 
 /* التابلت */
 @media (max-width: 968px) {
-	/* الناف بار - مضغوط ومنظم */
+	/* الناف بار على الموبايل/التابلت = نفس شكل الموكاب */
 	nav {
 		height: auto;
-		padding: 10px;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
+		padding: 0;
+		margin: 12px 10px 0;
+		gap: 0;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-areas:
+			"brand auth"
+			"tabs tabs";
+		border: 1px solid #e5e7eb;
+		border-radius: 28px;
+		overflow: hidden;
+	}
+
+	.nav-brand {
+		grid-area: brand;
+		padding: 16px 18px;
+	}
+
+	.nav-auth {
+		grid-area: auth;
+		padding: 16px 18px;
+		justify-content: flex-end;
 		flex-wrap: wrap;
-		gap: 8px;
-		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
 	}
 
-	nav > a.no {
-		order: 1;
-	}
-
-	nav > button,
-	nav > #loginBox {
-		order: 2;
-	}
-
-	nav > a:not(.no) {
-		order: 3;
+	.nav-tabs-wrapper {
+		grid-area: tabs;
+		width: 100%;
+		gap: 0;
+		padding: 0 10px 6px;
+		border-top: 1px solid #e5e7eb;
 	}
 
 	nav img {
-		height: 52px;
+		height: 72px;
 		margin: 0;
 	}
 
-	nav > a:not(.no),
-	nav > #menu-link {
-		display: inline-flex;
+	.nav-tabs {
+		width: 100%;
+		background: transparent;
+		border: none;
+		border-radius: 0;
+		padding: 0;
+		gap: 0;
 	}
 
-	nav > a:not(.no) {
-		padding: 7px 12px;
-		font-size: 11px;
-		font-weight: 900;
+	.nav-tabs a {
+		flex: 1;
+		padding: 16px 8px;
+		font-size: 16px;
+		font-weight: 800;
+		border-radius: 0;
 	}
 
-	nav::-webkit-scrollbar {
-		height: 3px;
-	}
-
-	nav::-webkit-scrollbar-thumb {
-		background: var(--main-green);
-		border-radius: 10px;
+	#menu-link {
+		align-self: flex-start;
+		margin: 4px 8px 0 0;
+		padding: 8px 14px;
+		font-size: 12px;
 	}
 
 	#loginBox {
@@ -923,19 +964,31 @@ form {
 @media (max-width: 600px) {
 	/* الناف بار - أصغر حجم */
 	nav {
-		padding: 8px;
-		gap: 6px;
-		overflow-x: auto;
-		align-items: flex-start;
+		margin: 8px 6px 0;
+		border-radius: 22px;
 	}
 
 	nav img {
-		height: 44px;
+		height: 60px;
 	}
 
-	nav > a:not(.no) {
-		padding: 6px 10px;
-		font-size: 10px;
+	.nav-brand,
+	.nav-auth {
+		padding: 12px;
+	}
+
+	.nav-tabs-wrapper {
+		padding: 0 4px 4px;
+	}
+
+	.nav-tabs a {
+		padding: 12px 4px;
+		font-size: 13px;
+	}
+
+	#menu-link {
+		padding: 7px 10px;
+		font-size: 11px;
 	}
 
 	#first-f,
@@ -990,12 +1043,17 @@ form {
 	}
 
 	nav img {
-		height: 40px;
+		height: 50px;
 	}
 
-	nav > a:not(.no) {
-		padding: 5px 8px;
-		font-size: 9px;
+	.nav-tabs a {
+		font-size: 11px;
+		padding: 10px 3px;
+	}
+
+	#menu-link {
+		padding: 6px 9px;
+		font-size: 10px;
 	}
 
 	.page1 h1 {
