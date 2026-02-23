@@ -93,30 +93,86 @@ body {
 
 nav {
 	background: white;
-	padding: 0 50px;
+	padding: 18px 22px 14px;
 	position: sticky;
 	top: 0;
 	z-index: 1000;
-	height: 75px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.nav-top {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+	gap: 16px;
+}
+
+.nav-brand {
+	display: inline-flex;
+	align-items: center;
 }
 
 nav img {
-	height: 250px;
+	height: 66px;
+	width: auto;
 	transition: 0.3s;
 }
 
 nav img:hover {
-	transform: scale(1.05);
+	transform: scale(1.04);
 }
 
-.nav-links {
+.nav-auth {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+}
+
+.nav-tabs-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	min-height: 48px;
+}
+
+#menu-link {
+	position: absolute;
+	inset-inline-start: 0;
+}
+
+.nav-tabs {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 6px;
+	border-radius: 999px;
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+}
+
+nav a {
+	color: rgb(0, 0, 0);
+	padding: 10px 24px;
+	border-radius: 50px;
+	font-weight: 900;
+	transition: 0.3s;
+	text-decoration: none;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.nav-tabs a:hover,
+#menu-link:hover {
+	background: #a7deb0;
+	transform: translateY(-2px);
 }
 
 /* =====================================================
@@ -129,28 +185,6 @@ nav img:hover {
 	text-align: center;
 	color: #fff;
 	font-weight: 600;
-}
-
-nav a {
-	color: rgb(0, 0, 0);
-	padding: 12px 30px;
-	border-radius: 50px;
-	font-weight: 900;
-	transition: 0.3s;
-	text-decoration: none;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	white-space: nowrap;
-}
-
-nav > a:not(.no) {
-	flex-shrink: 0;
-}
-
-nav a:not(.no):hover {
-	background: #a7deb0;
-	transform: translateY(-2px);
 }
 
 /* =====================================================
@@ -810,27 +844,28 @@ form {
 @media (max-width: 968px) {
 	/* الناف بار - مضغوط ومنظم */
 	nav {
-		height: auto;
-		padding: 10px;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 8px;
+		padding: 12px;
+		gap: 10px;
 		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
 	}
 
-	nav > a.no {
-		order: 1;
+	.nav-top {
+		flex-direction: column;
+		justify-content: center;
 	}
 
-	nav > button,
-	nav > #loginBox {
-		order: 2;
+	.nav-auth {
+		justify-content: center;
+		flex-wrap: wrap;
 	}
 
-	nav > a:not(.no) {
-		order: 3;
+	#menu-link {
+		position: static;
+	}
+
+	.nav-tabs-wrapper {
+		flex-direction: column;
+		gap: 8px;
 	}
 
 	nav img {
@@ -838,24 +873,11 @@ form {
 		margin: 0;
 	}
 
-	nav > a:not(.no),
-	nav > #menu-link {
-		display: inline-flex;
-	}
-
-	nav > a:not(.no) {
+	.nav-tabs a,
+	#menu-link {
 		padding: 7px 12px;
 		font-size: 11px;
 		font-weight: 900;
-	}
-
-	nav::-webkit-scrollbar {
-		height: 3px;
-	}
-
-	nav::-webkit-scrollbar-thumb {
-		background: var(--main-green);
-		border-radius: 10px;
 	}
 
 	#loginBox {
@@ -925,15 +947,20 @@ form {
 	nav {
 		padding: 8px;
 		gap: 6px;
-		overflow-x: auto;
-		align-items: flex-start;
+		align-items: center;
 	}
 
 	nav img {
 		height: 44px;
 	}
 
-	nav > a:not(.no) {
+	.nav-tabs {
+		gap: 2px;
+		padding: 5px;
+	}
+
+	.nav-tabs a,
+	#menu-link {
 		padding: 6px 10px;
 		font-size: 10px;
 	}
@@ -993,7 +1020,8 @@ form {
 		height: 40px;
 	}
 
-	nav > a:not(.no) {
+	.nav-tabs a,
+	#menu-link {
 		padding: 5px 8px;
 		font-size: 9px;
 	}
