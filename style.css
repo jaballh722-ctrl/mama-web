@@ -110,6 +110,7 @@ nav {
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
+	position: fixed
 }
 
 .nav-top {
