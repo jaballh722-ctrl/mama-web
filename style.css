@@ -37,7 +37,6 @@ body {
 	transform: translateY(50px);
 	transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-
 .scroll-reveal.active {
 	opacity: 1;
 	transform: translateY(0);
@@ -48,7 +47,6 @@ body {
 	transform: translateX(-80px);
 	transition: opacity 0.9s ease-out, transform 0.9s ease-out;
 }
-
 .scroll-reveal-left.active {
 	opacity: 1;
 	transform: translateX(0);
@@ -59,7 +57,6 @@ body {
 	transform: translateX(80px);
 	transition: opacity 0.9s ease-out, transform 0.9s ease-out;
 }
-
 .scroll-reveal-right.active {
 	opacity: 1;
 	transform: translateX(0);
@@ -69,6 +66,10 @@ body {
 	opacity: 0;
 	transform: scale(0.85);
 	transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.scroll-reveal-scale.active {
+	opacity: 1;
+	transform: scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -82,88 +83,106 @@ body {
 	}
 }
 
-.scroll-reveal-scale.active {
-	opacity: 1;
-	transform: scale(1);
-}
-
 /* =====================================================
-   شريط التنقل (الهيدر) - محسّن
+   شريط التنقل
+   - اللاب: كل حاجة في صف واحد
+   - الموبايل: صفين (لوجو+دخول فوق، روابط تحت)
 ===================================================== */
 
 nav {
 	background: white;
-	padding: 14px 22px;
 	position: sticky;
 	top: 0;
 	z-index: 1000;
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+	border-bottom: 1px solid #e5e7eb;
+	padding: 10px 24px;
+
+	/* اللاب: صف واحد */
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-	border-bottom: 1px solid #e5e7eb;
-	flex-wrap: nowrap;
+}
+
+/* اللوجو + أزرار الدخول (اليمين) */
+.nav-top {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 12px;
+	flex-shrink: 0;
 }
 
 .nav-brand {
 	display: inline-flex;
 	align-items: center;
-	flex-shrink: 0;
+	text-decoration: none;
 }
 
 nav img {
-	height: 70px;
+	height: 80px;
 	width: auto;
-	transition: 0.3s;
+	transition: transform 0.3s;
 }
-
 nav img:hover {
 	transform: scale(1.04);
 }
 
 .nav-auth {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
-	gap: 10px;
-	flex-shrink: 0;
+	gap: 8px;
+	flex-wrap: nowrap;
 }
 
-.nav-tabs-wrapper {
+#loginBox {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	gap: 8px;
+}
+
+/* الروابط (اليسار / المنتصف) */
+.nav-tabs-wrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
 	flex: 1;
-	position: relative;
+	justify-content: flex-end;
 }
 
 #menu-link {
-	position: static;
-	margin-inline-end: 8px;
+	white-space: nowrap;
+	flex-shrink: 0;
 }
 
 .nav-tabs {
 	display: inline-flex;
+	flex-direction: row;
 	align-items: center;
-	justify-content: center;
-	gap: 6px;
+	gap: 4px;
 	padding: 6px;
 	border-radius: 999px;
 	background: #f8fafc;
 	border: 1px solid #e5e7eb;
+	flex-shrink: 0;
 }
 
 nav a {
-	color: rgb(0, 0, 0);
-	padding: 10px 20px;
+	color: #000;
+	padding: 9px 18px;
 	border-radius: 50px;
 	font-weight: 900;
 	transition: 0.3s;
 	text-decoration: none;
 	display: inline-flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
 	white-space: nowrap;
+	font-size: 0.9rem;
 }
 
 .nav-tabs a:hover,
@@ -190,7 +209,7 @@ nav a {
 
 .page1 {
 	background: white;
-	min-height: calc(100vh - 75px);
+	min-height: calc(100vh - 100px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -314,7 +333,7 @@ nav a {
 }
 
 /* =====================================================
-   الصفحة الثالثة (الباقات) - محسّنة
+   الصفحة الثالثة (الباقات)
 ===================================================== */
 
 .page3 {
@@ -507,12 +526,9 @@ form {
 .card3:nth-child(2) .submit {
 	background: var(--yellow);
 	color: #000;
-	box-shadow: 0 4px 15px rgba(62, 180, 137, 0.25);
 }
 
 .card3:nth-child(2) .submit:hover {
-	background: var(--yellow);
-	color: #000;
 	transform: translateY(-3px);
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
@@ -531,13 +547,13 @@ form {
 #back {
 	border: none;
 	border-radius: 50px;
-	font-size: 16px;
+	font-size: 13px;
 	font-weight: 700;
 	cursor: pointer;
-	padding: 14px 35px;
-	margin: 10px;
+	padding: 10px 20px;
 	font-family: "Cairo", sans-serif;
 	transition: 0.3s;
+	white-space: nowrap;
 }
 
 #first-f,
@@ -566,15 +582,22 @@ form {
 	transform: translateY(-2px);
 }
 
+#loginBox {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
 #code {
-	border-radius: 15px;
+	border-radius: 12px;
 	border: 2px solid #e5e7eb;
-	font-size: 16px;
+	font-size: 13px;
 	font-weight: 600;
-	padding: 12px 18px;
+	padding: 9px 12px;
 	font-family: "Cairo", sans-serif;
 	background: #fafafa;
 	transition: 0.3s;
+	width: 150px;
 }
 
 #code:focus {
@@ -715,11 +738,9 @@ form {
 }
 
 .menu-c {
-	margin-top: 80px;
 	padding: 60px 20px;
 	max-width: 1400px;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 auto;
 }
 
 .menu-c p {
@@ -778,206 +799,141 @@ form {
 ===================================================== */
 
 @keyframes slideUp {
-	from {
-		opacity: 0;
-		transform: translateY(30px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+	from { opacity: 0; transform: translateY(30px); }
+	to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-	from {
-		opacity: 0;
-		transform: translateY(40px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+	from { opacity: 0; transform: translateY(40px); }
+	to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInLeft {
-	from {
-		opacity: 0;
-		transform: translateX(-60px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
+	from { opacity: 0; transform: translateX(-60px); }
+	to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes fadeInRight {
-	from {
-		opacity: 0;
-		transform: translateX(60px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
+	from { opacity: 0; transform: translateX(60px); }
+	to   { opacity: 1; transform: translateX(0); }
 }
 
 /* =====================================================
-   التصميم المتجاوب
+   RESPONSIVE
 ===================================================== */
 
-/* الشاشات الكبيرة */
-@media (max-width: 1200px) {
-	.cardspage3 {
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-	}
-
-	.menu-l,
-	.menu-r {
-		padding: 40px;
-	}
-}
-
-/* التابلت */
-@media (max-width: 968px) {
+/* تابلت - الناف بار لسه صف واحد بس أحجام أصغر */
+@media (max-width: 1024px) {
 	nav {
-		padding: 10px 14px;
+		padding: 8px 16px;
 		gap: 10px;
 	}
 
 	nav img {
-		height: 55px;
+		height: 65px;
 	}
 
-	.nav-tabs a,
-	#menu-link {
-		padding: 7px 12px;
-		font-size: 11px;
-		font-weight: 900;
+	nav a {
+		padding: 8px 13px;
+		font-size: 0.82rem;
 	}
 
-	.page1 {
-		min-height: calc(100vh - 60px);
+	#first-f, #second-f, #toexit, #back {
+		padding: 8px 14px;
+		font-size: 12px;
 	}
 
-	.cardpage2 {
-		flex-direction: column;
-		padding: 40px;
-		gap: 35px;
-	}
-
-	.cardpage2 img {
-		max-width: 100%;
+	#code {
+		width: 120px;
+		font-size: 12px;
+		padding: 8px 10px;
 	}
 
 	.cardspage3 {
-		grid-template-columns: 1fr;
-		gap: 30px;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 	}
 
-	.card3 {
-		max-width: 100%;
+	.menu-l, .menu-r {
+		padding: 40px;
 	}
 
-	.card3:nth-child(2) {
-		transform: scale(1);
-	}
-
-	.menu-l,
-	.menu-r {
-		flex-direction: column;
-		padding: 35px;
-		gap: 30px;
-	}
-
-	.menu-l img,
-	.menu-r img {
-		width: 100%;
-		max-width: 100%;
-		height: auto;
-		max-height: 300px;
-	}
-
-	.menu-l p,
-	.menu-r p {
-		text-align: right;
-		padding: 0;
-	}
-
-	.contact-form {
-		padding: 40px 30px;
-	}
-
-	/* Tidio */
-	iframe[id*="tidio"],
-	div[id*="tidio"],
-	div[class*="tidio"] {
-		right: max(12px, env(safe-area-inset-right)) !important;
-		left: auto !important;
-		bottom: max(12px, env(safe-area-inset-bottom)) !important;
-		transform: none !important;
+	.cardpage2 {
+		padding: 40px;
+		gap: 40px;
 	}
 }
 
-/* الموبايل - صفين في الناف بار */
-@media (max-width: 600px) {
-	/* الناف بار - صفين */
+/* =====================================================
+   موبايل (أقل من 640px)
+   الناف بار: صفين
+   صف 1 → اللوجو + أزرار الدخول
+   صف 2 → روابط التنقل
+===================================================== */
+
+@media (max-width: 640px) {
+
 	nav {
-		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: stretch;
 		padding: 10px 12px;
 		gap: 8px;
 	}
 
-	/* الصف الأول: اللوجو على اليمين + زر الدخول على اليسار */
-	.nav-brand {
-		order: 1;
-	}
-
-	.nav-auth {
-		order: 2;
-		margin-inline-start: auto;
-	}
-
-	/* الصف الثاني: روابط التنقل بعرض كامل */
-	.nav-tabs-wrapper {
-		order: 3;
+	/* الصف الأول: لوجو يمين + أزرار يسار */
+	.nav-top {
 		width: 100%;
-		flex-basis: 100%;
-		justify-content: center;
-	}
-
-	#menu-link {
-		position: static;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
 	}
 
 	/* اللوجو أكبر على الموبايل */
 	nav img {
-		height: 60px;
+		height: 68px;
+	}
+
+	.nav-auth {
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 5px;
+	}
+
+	#first-f, #second-f, #toexit, #back {
+		padding: 7px 12px;
+		font-size: 11px;
+	}
+
+	#code {
+		width: 100px;
+		font-size: 11px;
+		padding: 7px 9px;
+	}
+
+	/* الصف الثاني: روابط في المنتصف */
+	.nav-tabs-wrapper {
+		width: 100%;
+		justify-content: center;
+		gap: 5px;
 	}
 
 	.nav-tabs {
 		gap: 2px;
-		padding: 5px;
+		padding: 4px;
 	}
 
-	.nav-tabs a,
-	#menu-link {
-		padding: 6px 10px;
+	.nav-tabs a {
+		padding: 6px 9px;
 		font-size: 10px;
 	}
 
+	#menu-link {
+		font-size: 10px;
+		padding: 6px 9px;
+	}
+
 	/* باقي الصفحات */
-	#first-f,
-	#second-f,
-	#toexit,
-	#back {
-		padding: 10px 20px;
-		font-size: 14px;
-	}
-
-	#code {
-		width: 100%;
-	}
-
 	.page1 {
 		padding: 50px 15px;
 	}
@@ -988,41 +944,77 @@ form {
 	}
 
 	.cardpage2 {
-		padding: 30px;
-		margin: 25px 10px;
+		flex-direction: column;
+		padding: 28px;
+		margin: 20px 8px;
+		gap: 22px;
 	}
 
-	.contact-form {
-		padding: 30px 20px;
+	.cardpage2 img {
+		max-width: 100%;
 	}
 
-	.menu-l,
-	.menu-r {
-		padding: 30px;
-		margin: 25px 10px;
+	.cardspage3 {
+		grid-template-columns: 1fr;
+		gap: 22px;
+	}
+
+	.card3 {
+		max-width: 100%;
+	}
+
+	.card3:nth-child(2) {
+		transform: scale(1);
 	}
 
 	.cardspage3 h1 {
-		font-size: 1.1rem;
-		padding: 15px 10px;
-		min-height: 100px;
+		font-size: 1rem;
+		padding: 14px 10px;
+		min-height: 90px;
+	}
+
+	.contact-form {
+		padding: 28px 18px;
+	}
+
+	.menu-l, .menu-r {
+		flex-direction: column;
+		padding: 28px;
+		margin: 18px 8px;
+		gap: 18px;
+	}
+
+	.menu-l img, .menu-r img {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		max-height: 240px;
+	}
+
+	.menu-l p, .menu-r p {
+		padding: 0;
 	}
 }
 
-/* الموبايل الصغير جداً */
-@media (max-width: 400px) {
-	nav {
-		padding: 7px;
-	}
-
+/* موبايل صغير جداً */
+@media (max-width: 380px) {
 	nav img {
-		height: 52px;
+		height: 55px;
 	}
 
-	.nav-tabs a,
-	#menu-link {
-		padding: 5px 8px;
+	.nav-tabs a, #menu-link {
+		padding: 5px 7px;
 		font-size: 9px;
+	}
+
+	#first-f, #second-f, #toexit, #back {
+		padding: 6px 10px;
+		font-size: 10px;
+	}
+
+	#code {
+		width: 85px;
+		font-size: 10px;
 	}
 
 	.page1 h1 {
@@ -1030,12 +1022,7 @@ form {
 	}
 
 	.miao {
-		padding: 10px 20px;
-		font-size: 0.9rem;
-	}
-
-	.cardspage3 h1 {
-		font-size: 1rem;
-		min-height: 95px;
+		padding: 10px 18px;
+		font-size: 0.88rem;
 	}
 }
