@@ -19,6 +19,7 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: hidden;
 }
 
 body {
@@ -26,6 +27,14 @@ body {
 	line-height: 1.7;
 	color: var(--dark-text);
 	background: var(--white);
+	overflow-x: hidden;
+	position: relative;
+	width: 100%;
+}
+
+/* منع أي عنصر من الخروج عن عرض الشاشة */
+section, div, footer, header, main {
+	max-width: 100%;
 }
 
 /* =====================================================
@@ -84,9 +93,7 @@ body {
 }
 
 /* =====================================================
-   شريط التنقل
-   - اللاب: كل حاجة في صف واحد
-   - الموبايل: صفين (لوجو+دخول فوق، روابط تحت)
+   شريط التنقل — لاب: صف واحد
 ===================================================== */
 
 nav {
@@ -97,8 +104,7 @@ nav {
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
 	border-bottom: 1px solid #e5e7eb;
 	padding: 10px 24px;
-
-	/* اللاب: صف واحد */
+	width: 100%;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -106,7 +112,6 @@ nav {
 	gap: 16px;
 }
 
-/* اللوجو + أزرار الدخول (اليمين) */
 .nav-top {
 	display: flex;
 	flex-direction: row;
@@ -122,10 +127,12 @@ nav {
 }
 
 nav img {
-	height: 80px;
+	height: 110px;
 	width: auto;
 	transition: transform 0.3s;
+	flex-shrink: 0;
 }
+
 nav img:hover {
 	transform: scale(1.04);
 }
@@ -135,7 +142,6 @@ nav img:hover {
 	flex-direction: row;
 	align-items: center;
 	gap: 8px;
-	flex-wrap: nowrap;
 }
 
 #loginBox {
@@ -144,7 +150,6 @@ nav img:hover {
 	gap: 8px;
 }
 
-/* الروابط (اليسار / المنتصف) */
 .nav-tabs-wrapper {
 	display: flex;
 	flex-direction: row;
@@ -201,21 +206,24 @@ nav a {
 	text-align: center;
 	color: #fff;
 	font-weight: 600;
+	width: 100%;
 }
 
 /* =====================================================
-   الصفحة الأولى (Hero)
+   الصفحة الأولى
 ===================================================== */
 
 .page1 {
 	background: white;
-	min-height: calc(100vh - 100px);
+	min-height: calc(100vh - 130px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	padding: 80px 20px 60px;
 	position: relative;
+	width: 100%;
+	overflow: hidden;
 }
 
 .page1::before {
@@ -284,13 +292,15 @@ nav a {
 }
 
 /* =====================================================
-   الصفحة الثانية (الخدمات)
+   الصفحة الثانية
 ===================================================== */
 
 .page2 {
 	background: var(--light-green);
 	min-height: 100vh;
 	padding: 100px 20px;
+	width: 100%;
+	overflow: hidden;
 }
 
 .cardpage2 {
@@ -333,13 +343,15 @@ nav a {
 }
 
 /* =====================================================
-   الصفحة الثالثة (الباقات)
+   الصفحة الثالثة
 ===================================================== */
 
 .page3 {
 	background: white;
 	min-height: 100vh;
 	padding: 100px 20px;
+	width: 100%;
+	overflow: hidden;
 }
 
 .page3 > h1 {
@@ -615,6 +627,8 @@ form {
 	background: var(--light-green);
 	min-height: 100vh;
 	padding: 100px 20px;
+	width: 100%;
+	overflow: hidden;
 }
 
 .contact-container {
@@ -802,209 +816,75 @@ form {
 	from { opacity: 0; transform: translateY(30px); }
 	to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeInUp {
 	from { opacity: 0; transform: translateY(40px); }
 	to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeInLeft {
 	from { opacity: 0; transform: translateX(-60px); }
 	to   { opacity: 1; transform: translateX(0); }
 }
-
 @keyframes fadeInRight {
 	from { opacity: 0; transform: translateX(60px); }
 	to   { opacity: 1; transform: translateX(0); }
 }
 
 /* =====================================================
-   RESPONSIVE
+   تابلت — صف واحد
 ===================================================== */
 
-/* تابلت - الناف بار لسه صف واحد بس أحجام أصغر */
 @media (max-width: 1024px) {
-	nav {
-		padding: 8px 16px;
-		gap: 10px;
-	}
-
-	nav img {
-		height: 65px;
-	}
-
-	nav a {
-		padding: 8px 13px;
-		font-size: 0.82rem;
-	}
-
-	#first-f, #second-f, #toexit, #back {
-		padding: 8px 14px;
-		font-size: 12px;
-	}
-
-	#code {
-		width: 120px;
-		font-size: 12px;
-		padding: 8px 10px;
-	}
-
-	.cardspage3 {
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-	}
-
-	.menu-l, .menu-r {
-		padding: 40px;
-	}
-
-	.cardpage2 {
-		padding: 40px;
-		gap: 40px;
-	}
+	nav { padding: 8px 16px; gap: 10px; }
+	nav img { height: 85px; }
+	nav a { padding: 8px 12px; font-size: 0.82rem; }
+	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
+	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
+	.cardspage3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+	.cardpage2 { padding: 40px; gap: 40px; }
+	.menu-l, .menu-r { padding: 40px; }
 }
 
 /* =====================================================
-   موبايل (أقل من 640px)
-   الناف بار: صفين
-   صف 1 → اللوجو + أزرار الدخول
-   صف 2 → روابط التنقل
+   موبايل — صفين في الناف بار + منع overflow
 ===================================================== */
 
 @media (max-width: 640px) {
 
+	/* إجبار كل حاجة تفضل جوه الشاشة */
+	html, body {
+		overflow-x: hidden;
+		width: 100%;
+	}
+
 	nav {
 		flex-direction: column;
 		align-items: stretch;
-		padding: 10px 12px;
-		gap: 8px;
+		padding: 8px 10px;
+		gap: 6px;
+		width: 100%;
+		overflow: hidden;
 	}
 
-	/* الصف الأول: لوجو يمين + أزرار يسار */
+	/* الصف الأول: لوجو + دخول */
 	.nav-top {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		gap: 8px;
+		gap: 6px;
 	}
 
-	/* اللوجو أكبر على الموبايل */
 	nav img {
-		height: 68px;
+		height: 85px;
+		width: auto;
+		flex-shrink: 0;
 	}
 
 	.nav-auth {
 		flex-wrap: wrap;
 		justify-content: flex-end;
-		gap: 5px;
-	}
-
-	#first-f, #second-f, #toexit, #back {
-		padding: 7px 12px;
-		font-size: 11px;
-	}
-
-	#code {
-		width: 100px;
-		font-size: 11px;
-		padding: 7px 9px;
-	}
-
-	/* الصف الثاني: روابط في المنتصف */
-	.nav-tabs-wrapper {
-		width: 100%;
-		justify-content: center;
-		gap: 5px;
-	}
-
-	.nav-tabs {
-		gap: 2px;
-		padding: 4px;
-	}
-
-	.nav-tabs a {
-		padding: 6px 9px;
-		font-size: 10px;
-	}
-
-	#menu-link {
-		font-size: 10px;
-		padding: 6px 9px;
-	}
-
-	/* باقي الصفحات */
-	.page1 {
-		padding: 50px 15px;
-	}
-
-	.miao {
-		padding: 12px 24px;
-		font-size: 0.95rem;
-	}
-
-	.cardpage2 {
-		flex-direction: column;
-		padding: 28px;
-		margin: 20px 8px;
-		gap: 22px;
-	}
-
-	.cardpage2 img {
-		max-width: 100%;
-	}
-
-	.cardspage3 {
-		grid-template-columns: 1fr;
-		gap: 22px;
-	}
-
-	.card3 {
-		max-width: 100%;
-	}
-
-	.card3:nth-child(2) {
-		transform: scale(1);
-	}
-
-	.cardspage3 h1 {
-		font-size: 1rem;
-		padding: 14px 10px;
-		min-height: 90px;
-	}
-
-	.contact-form {
-		padding: 28px 18px;
-	}
-
-	.menu-l, .menu-r {
-		flex-direction: column;
-		padding: 28px;
-		margin: 18px 8px;
-		gap: 18px;
-	}
-
-	.menu-l img, .menu-r img {
-		width: 100%;
-		max-width: 100%;
-		height: auto;
-		max-height: 240px;
-	}
-
-	.menu-l p, .menu-r p {
-		padding: 0;
-	}
-}
-
-/* موبايل صغير جداً */
-@media (max-width: 380px) {
-	nav img {
-		height: 55px;
-	}
-
-	.nav-tabs a, #menu-link {
-		padding: 5px 7px;
-		font-size: 9px;
+		gap: 4px;
 	}
 
 	#first-f, #second-f, #toexit, #back {
@@ -1012,17 +892,71 @@ form {
 		font-size: 10px;
 	}
 
-	#code {
-		width: 85px;
-		font-size: 10px;
+	#code { width: 85px; font-size: 10px; padding: 6px 8px; }
+
+	/* الصف الثاني: روابط */
+	.nav-tabs-wrapper {
+		width: 100%;
+		justify-content: center;
+		gap: 4px;
+		overflow: hidden;
 	}
 
-	.page1 h1 {
-		font-size: 1.8rem;
+	.nav-tabs { gap: 1px; padding: 3px; }
+	.nav-tabs a { padding: 5px 8px; font-size: 9px; }
+	#menu-link { font-size: 9px; padding: 5px 8px; }
+
+	/* الصفحات */
+	.page1 { padding: 40px 12px; overflow: hidden; }
+	.page2 { padding: 50px 12px; overflow: hidden; }
+	.page3 { padding: 50px 12px; overflow: hidden; }
+	.page4 { padding: 50px 12px; overflow: hidden; }
+
+	.miao { padding: 10px 20px; font-size: 0.9rem; }
+
+	.cardpage2 {
+		flex-direction: column;
+		padding: 20px;
+		margin: 12px 0;
+		gap: 16px;
 	}
 
-	.miao {
-		padding: 10px 18px;
-		font-size: 0.88rem;
+	.cardpage2 img { max-width: 100%; width: 100%; }
+
+	.cardspage3 { grid-template-columns: 1fr; gap: 16px; }
+	.card3 { max-width: 100%; }
+	.card3:nth-child(2) { transform: none; }
+
+	.cardspage3 h1 {
+		font-size: 0.95rem;
+		padding: 12px 10px;
+		min-height: 80px;
 	}
+
+	.contact-form { padding: 24px 16px; }
+
+	.menu-l, .menu-r {
+		flex-direction: column;
+		padding: 20px;
+		margin: 12px 0;
+		gap: 14px;
+	}
+
+	.menu-l img, .menu-r img {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		max-height: 200px;
+	}
+
+	.menu-l p, .menu-r p { padding: 0; }
+}
+
+/* موبايل صغير جداً */
+@media (max-width: 380px) {
+	nav img { height: 70px; }
+	.nav-tabs a, #menu-link { padding: 4px 6px; font-size: 8px; }
+	#first-f, #second-f, #toexit, #back { padding: 5px 8px; font-size: 9px; }
+	#code { width: 75px; font-size: 9px; }
+	.page1 h1 { font-size: 1.6rem; }
 }
