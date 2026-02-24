@@ -93,31 +93,27 @@ body {
 
 nav {
 	background: white;
-	padding: 18px 22px 14px;
+	padding: 14px 22px;
 	position: sticky;
 	top: 0;
 	z-index: 1000;
 	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-	border-bottom: 1px solid #e5e7eb;
-}
-
-.nav-top {
-	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+	border-bottom: 1px solid #e5e7eb;
+	flex-wrap: nowrap;
 }
 
 .nav-brand {
 	display: inline-flex;
 	align-items: center;
+	flex-shrink: 0;
 }
 
 nav img {
-	height: 66px;
+	height: 70px;
 	width: auto;
 	transition: 0.3s;
 }
@@ -130,19 +126,20 @@ nav img:hover {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+	flex-shrink: 0;
 }
 
 .nav-tabs-wrapper {
 	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
+	flex: 1;
 	position: relative;
-	min-height: 48px;
 }
 
 #menu-link {
-	position: absolute;
-	inset-inline-start: 0;
+	position: static;
+	margin-inline-end: 8px;
 }
 
 .nav-tabs {
@@ -158,7 +155,7 @@ nav img:hover {
 
 nav a {
 	color: rgb(0, 0, 0);
-	padding: 10px 24px;
+	padding: 10px 20px;
 	border-radius: 50px;
 	font-weight: 900;
 	transition: 0.3s;
@@ -825,7 +822,7 @@ form {
 }
 
 /* =====================================================
-   التصميم على الموبايل والتابلت - متجاوب فقط
+   التصميم المتجاوب
 ===================================================== */
 
 /* الشاشات الكبيرة */
@@ -842,35 +839,13 @@ form {
 
 /* التابلت */
 @media (max-width: 968px) {
-	/* الناف بار - مضغوط ومنظم */
 	nav {
-		padding: 12px;
+		padding: 10px 14px;
 		gap: 10px;
-		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-	}
-
-	.nav-top {
-		flex-direction: column;
-		justify-content: center;
-	}
-
-	.nav-auth {
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	#menu-link {
-		position: static;
-	}
-
-	.nav-tabs-wrapper {
-		flex-direction: column;
-		gap: 8px;
 	}
 
 	nav img {
-		height: 52px;
-		margin: 0;
+		height: 55px;
 	}
 
 	.nav-tabs a,
@@ -880,14 +855,6 @@ form {
 		font-weight: 900;
 	}
 
-	#loginBox {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		gap: 8px;
-	}
-
-	/* باقي الصفحات - نفس التصميم بأحجام متجاوبة */
 	.page1 {
 		min-height: calc(100vh - 60px);
 	}
@@ -939,19 +906,52 @@ form {
 	.contact-form {
 		padding: 40px 30px;
 	}
+
+	/* Tidio */
+	iframe[id*="tidio"],
+	div[id*="tidio"],
+	div[class*="tidio"] {
+		right: max(12px, env(safe-area-inset-right)) !important;
+		left: auto !important;
+		bottom: max(12px, env(safe-area-inset-bottom)) !important;
+		transform: none !important;
+	}
 }
 
-/* الموبايل */
+/* الموبايل - صفين في الناف بار */
 @media (max-width: 600px) {
-	/* الناف بار - أصغر حجم */
+	/* الناف بار - صفين */
 	nav {
-		padding: 8px;
-		gap: 6px;
-		align-items: center;
+		flex-wrap: wrap;
+		padding: 10px 12px;
+		gap: 8px;
 	}
 
+	/* الصف الأول: اللوجو على اليمين + زر الدخول على اليسار */
+	.nav-brand {
+		order: 1;
+	}
+
+	.nav-auth {
+		order: 2;
+		margin-inline-start: auto;
+	}
+
+	/* الصف الثاني: روابط التنقل بعرض كامل */
+	.nav-tabs-wrapper {
+		order: 3;
+		width: 100%;
+		flex-basis: 100%;
+		justify-content: center;
+	}
+
+	#menu-link {
+		position: static;
+	}
+
+	/* اللوجو أكبر على الموبايل */
 	nav img {
-		height: 44px;
+		height: 60px;
 	}
 
 	.nav-tabs {
@@ -965,6 +965,7 @@ form {
 		font-size: 10px;
 	}
 
+	/* باقي الصفحات */
 	#first-f,
 	#second-f,
 	#toexit,
@@ -977,7 +978,6 @@ form {
 		width: 100%;
 	}
 
-	/* الصفحات - نفس الستايل بأحجام أصغر */
 	.page1 {
 		padding: 50px 15px;
 	}
@@ -1001,7 +1001,7 @@ form {
 		padding: 30px;
 		margin: 25px 10px;
 	}
-	
+
 	.cardspage3 h1 {
 		font-size: 1.1rem;
 		padding: 15px 10px;
@@ -1009,15 +1009,14 @@ form {
 	}
 }
 
-/* الموبايل الصغير */
+/* الموبايل الصغير جداً */
 @media (max-width: 400px) {
-	/* الناف بار - مضغوط جداً */
 	nav {
 		padding: 7px;
 	}
 
 	nav img {
-		height: 40px;
+		height: 52px;
 	}
 
 	.nav-tabs a,
@@ -1034,21 +1033,9 @@ form {
 		padding: 10px 20px;
 		font-size: 0.9rem;
 	}
-	
+
 	.cardspage3 h1 {
 		font-size: 1rem;
 		min-height: 95px;
-	}
-}
-
-/* أيقونة الدردشة (Tidio) */
-@media (max-width: 968px) {
-	iframe[id*="tidio"],
-	div[id*="tidio"],
-	div[class*="tidio"] {
-		right: max(12px, env(safe-area-inset-right)) !important;
-		left: auto !important;
-		bottom: max(12px, env(safe-area-inset-bottom)) !important;
-		transform: none !important;
 	}
 }
