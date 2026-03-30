@@ -860,14 +860,24 @@ form {
 	nav {
 		flex-direction: column;
 		align-items: stretch;
-		padding: 8px 10px;
-		gap: 6px;
+		padding: 6px 10px;
+		gap: 4px;
 		width: 100%;
 		overflow: hidden;
 	}
 
-	/* الصف الأول: لوجو + دخول */
+	/* الصف الأول: التابات */
+	.nav-tabs-wrapper {
+		order: 1;
+		width: 100%;
+		justify-content: center;
+		gap: 6px;
+		overflow: hidden;
+	}
+
+	/* الصف الثاني: لوجو + دخول */
 	.nav-top {
+		order: 2;
 		width: 100%;
 		display: flex;
 		flex-direction: row;
@@ -877,7 +887,7 @@ form {
 	}
 
 	nav img {
-		height: 85px;
+		height: 96px;
 		width: auto;
 		flex-shrink: 0;
 	}
@@ -895,17 +905,9 @@ form {
 
 	#code { width: 85px; font-size: 10px; padding: 6px 8px; }
 
-	/* الصف الثاني: روابط */
-	.nav-tabs-wrapper {
-		width: 100%;
-		justify-content: center;
-		gap: 4px;
-		overflow: hidden;
-	}
-
-	.nav-tabs { gap: 1px; padding: 3px; }
-	.nav-tabs a { padding: 5px 8px; font-size: 9px; }
-	#menu-link { font-size: 9px; padding: 5px 8px; }
+	.nav-tabs { gap: 2px; padding: 4px; }
+	.nav-tabs a { padding: 6px 10px; font-size: 11px; }
+	#menu-link { font-size: 11px; padding: 6px 10px; }
 
 	/* الصفحات */
 	.page1 { padding: 40px 12px; overflow: hidden; }
@@ -955,8 +957,8 @@ form {
 
 /* موبايل صغير جداً */
 @media (max-width: 380px) {
-	nav img { height: 70px; }
-	.nav-tabs a, #menu-link { padding: 4px 6px; font-size: 8px; }
+	nav img { height: 82px; }
+	.nav-tabs a, #menu-link { padding: 5px 8px; font-size: 10px; }
 	#first-f, #second-f, #toexit, #back { padding: 5px 8px; font-size: 9px; }
 	#code { width: 75px; font-size: 9px; }
 	.page1 h1 { font-size: 1.6rem; }
