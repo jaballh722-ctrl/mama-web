@@ -15,6 +15,7 @@
 	--dark-text: #1f2937;
 	--gray-text: #6b7280;
 	--yellow: #8eed91;
+	--nav-height: 100px; /* ارتفاع الناف بار */
 }
 
 html {
@@ -30,6 +31,7 @@ body {
 	overflow-x: hidden;
 	position: relative;
 	width: 100%;
+	padding-top: var(--nav-height); /* مسافة علشان الناف بار الفيكسد */
 }
 
 /* منع أي عنصر من الخروج عن عرض الشاشة */
@@ -93,25 +95,28 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   شريط التنقل — صف واحد: لوجو | تابس | دخول
+   شريط التنقل — FIXED دايماً فوق
 ===================================================== */
 
 nav {
-	background: rgba(255, 255, 255, 0.94);
-	backdrop-filter: blur(10px);
-	position: sticky;
+	background: rgba(255, 255, 255, 0.97);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	position: fixed;           /* ← فيكسد بدل sticky */
 	top: 0;
-	z-index: 1000;
+	left: 0;
+	right: 0;
+	z-index: 9999;
 	border-bottom: 1px solid #dfe9e3;
-	box-shadow: 0 8px 25px rgba(28, 56, 43, 0.08);
-	padding: 8px 22px;
+	box-shadow: 0 4px 20px rgba(28, 56, 43, 0.10);
+	padding: 6px 28px;
 	width: 100%;
-	/* صف واحد أفقي */
+	height: var(--nav-height);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	gap: 12px;
+	gap: 14px;
 }
 
 /* --- اللوجو على اليمين --- */
@@ -127,15 +132,16 @@ nav {
 	text-decoration: none;
 }
 
+/* لوجو الناف بار — أكبر على اللاب */
 nav img {
-	height: 86px;
+	height: 90px;          /* ← كان 86 */
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
 }
 
 nav img:hover {
-	transform: scale(1.04);
+	transform: scale(1.05);
 }
 
 /* --- التابس + دخول في المنتصف والشمال --- */
@@ -145,7 +151,7 @@ nav img:hover {
 	align-items: center;
 	gap: 10px;
 	flex: 1;
-	justify-content: flex-end;   /* تابس ودخول على الشمال */
+	justify-content: flex-end;
 }
 
 #menu-link {
@@ -167,7 +173,7 @@ nav img:hover {
 
 nav a {
 	color: #25322c;
-	padding: 9px 15px;
+	padding: 9px 16px;
 	border-radius: 50px;
 	font-weight: 800;
 	transition: 0.3s;
@@ -176,7 +182,7 @@ nav a {
 	align-items: center;
 	justify-content: center;
 	white-space: nowrap;
-	font-size: 0.9rem;
+	font-size: 0.92rem;
 }
 
 .nav-tabs a:hover,
@@ -225,7 +231,7 @@ nav a {
 
 .page1 {
 	background: #f5f7f6;
-	min-height: calc(100vh - 120px);
+	min-height: calc(100vh - var(--nav-height));
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -240,9 +246,9 @@ nav a {
 	margin-bottom: -115px;
 }
 
-/* ← الصورة الكبيرة في الهيرو: 6 أضعاف لوجو الناف (100px × 6 = 600px) */
+/* لوجو الهيرو — أكبر */
 .page1 .nav-brand img {
-	height: 600px;
+	height: 680px;            /* ← كان 600 */
 	width: auto;
 	margin-top: -10px;
 }
@@ -659,7 +665,7 @@ form {
 #code:focus {
 	outline: none;
 	border-color: var(--main-green);
-	box-shadow: 0 0 0 4px rgba(62, 180, 137, 0.1);
+	box-shadow: 0 0 0 4px rgba(62, 180, 127, 0.1);
 	background: white;
 }
 
@@ -878,103 +884,119 @@ form {
 ===================================================== */
 
 @media (max-width: 1024px) {
-	nav { padding: 7px 12px; }
-	nav img { height: 72px; }
+	:root { --nav-height: 88px; }
+	nav { padding: 7px 14px; }
+	nav img { height: 76px; }          /* أكبر شوية على التابلت */
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
 	.cardspage3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 	.cardpage2 { padding: 40px; gap: 40px; }
 	.menu-l, .menu-r { padding: 40px; }
-	.page1 .nav-brand img { height: 460px; }
+	.page1 .nav-brand img { height: 520px; }   /* أكبر على التابلت */
 }
 
 /* =====================================================
-   موبايل — ناف بار صف واحد
+   موبايل — الناف بار صف واحد مضغوط
 ===================================================== */
 
 @media (max-width: 640px) {
+
+	:root { --nav-height: 72px; }        /* ارتفاع الناف بار على الموبايل */
 
 	html, body {
 		overflow-x: hidden;
 		width: 100%;
 	}
 
+	/* ====== الناف بار ====== */
 	nav {
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-between;
-		padding: 7px 7px;
+		height: var(--nav-height);
+		padding: 0 10px;
 		gap: 6px;
-		width: 100%;
-		overflow: hidden;
 		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
 	}
 
+	/* لوجو الناف — أكبر على الموبايل */
+	nav .nav-top img {
+		height: 62px;                    /* ← كان 54 */
+	}
+
+	/* التابس wrapper */
 	.nav-tabs-wrapper {
-		order: 0;
-		width: auto;
-		justify-content: flex-end;
-		gap: 4px;
-		overflow: hidden;
-		flex-wrap: nowrap;
 		flex: 1;
-		min-width: 0;
-	}
-
-	.nav-top {
-		order: 0;
-		width: auto;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: flex-end;
-		gap: 4px;
-	}
-
-	.nav-auth {
+		gap: 5px;
+		overflow: hidden;
 		flex-wrap: nowrap;
-		justify-content: flex-start;
-		gap: 4px;
 		min-width: 0;
 	}
 
-	nav img {
-		height: 54px;
-		width: auto;
-		flex-shrink: 0;
-	}
-
-	#first-f, #second-f, #toexit, #back {
-		padding: 6px 8px;
-		font-size: 10px;
-	}
-
-	#code { width: 80px; font-size: 10px; padding: 6px 7px; }
-
+	/* التابس نفسه — يسكرول أفقياً لو ضاق المكان */
 	.nav-tabs {
 		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: nowrap;
-		gap: 4px;
-		padding: 4px;
+		gap: 2px;
+		padding: 4px 5px;
 		width: auto;
-		max-width: 100%;
 		overflow-x: auto;
 		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
 	}
 	.nav-tabs::-webkit-scrollbar { display: none; }
-	.nav-tabs a {
-		padding: 6px 7px;
-		font-size: 10px;
-		text-align: center;
-	}
-	#menu-link { font-size: 10px; padding: 6px 8px; }
 
-	/* الصفحات */
-	.page1 { padding: 22px 12px 40px; overflow: hidden; }
-	.page1 .nav-brand img { height: 320px; }
+	.nav-tabs a {
+		padding: 6px 9px;
+		font-size: 10px;
+		white-space: nowrap;
+	}
+
+	#menu-link {
+		font-size: 10px;
+		padding: 6px 9px;
+		white-space: nowrap;
+	}
+
+	/* أزرار الدخول */
+	.nav-auth {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 4px;
+		flex-shrink: 0;
+	}
+
+	#first-f, #second-f, #toexit, #back {
+		padding: 6px 9px;
+		font-size: 10px;
+		white-space: nowrap;
+	}
+
+	#code {
+		width: 85px;
+		font-size: 10px;
+		padding: 6px 8px;
+	}
+
+	/* ====== الصفحات ====== */
+	.page1 {
+		padding: 22px 12px 40px;
+		overflow: hidden;
+		min-height: calc(100vh - var(--nav-height));
+	}
+
+	/* لوجو الهيرو على الموبايل — أكبر */
+	.page1 .nav-brand img {
+		height: 370px;                   /* ← كان 320 */
+	}
+
 	.page2 { padding: 50px 12px; overflow: hidden; }
 	.page3 { padding: 50px 12px; overflow: hidden; }
 	.page4 { padding: 50px 12px; overflow: hidden; }
@@ -1021,10 +1043,11 @@ form {
 
 /* موبايل صغير جداً */
 @media (max-width: 380px) {
-	nav img { height: 68px; }
-	.nav-tabs a, #menu-link { padding: 5px 8px; font-size: 10px; }
-	#first-f, #second-f, #toexit, #back { padding: 5px 8px; font-size: 9px; }
-	#code { width: 75px; font-size: 9px; }
+	:root { --nav-height: 66px; }
+	nav .nav-top img { height: 54px; }
+	.nav-tabs a, #menu-link { padding: 5px 7px; font-size: 9.5px; }
+	#first-f, #second-f, #toexit, #back { padding: 5px 7px; font-size: 9px; }
+	#code { width: 72px; font-size: 9px; }
 	.page1 h1 { font-size: 1.6rem; }
-	.page1 .nav-brand img { height: 260px; }
+	.page1 .nav-brand img { height: 300px; }
 }
