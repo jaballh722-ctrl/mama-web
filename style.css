@@ -97,12 +97,14 @@ section, div, footer, header, main {
 ===================================================== */
 
 nav {
-	background: white;
+	background: rgba(255, 255, 255, 0.94);
+	backdrop-filter: blur(10px);
 	position: sticky;
 	top: 0;
 	z-index: 1000;
-	border-bottom: 1px solid #e6eee8;
-	padding: 6px 20px;
+	border-bottom: 1px solid #dfe9e3;
+	box-shadow: 0 8px 25px rgba(28, 56, 43, 0.08);
+	padding: 8px 22px;
 	width: 100%;
 	/* صف واحد أفقي */
 	display: flex;
@@ -126,7 +128,7 @@ nav {
 }
 
 nav img {
-	height: 120px;
+	height: 86px;
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
@@ -155,17 +157,17 @@ nav img:hover {
 	display: inline-flex;
 	flex-direction: row;
 	align-items: center;
-	gap: 4px;
-	padding: 5px;
+	gap: 6px;
+	padding: 6px;
 	border-radius: 999px;
-	background: #ffffff;
-	border: 1px solid #d9e5dc;
+	background: #f5faf7;
+	border: 1px solid #d2e2d8;
 	flex-shrink: 0;
 }
 
 nav a {
 	color: #25322c;
-	padding: 8px 14px;
+	padding: 9px 15px;
 	border-radius: 50px;
 	font-weight: 800;
 	transition: 0.3s;
@@ -180,11 +182,13 @@ nav a {
 .nav-tabs a:hover,
 #menu-link:hover {
 	background: #dff3df;
+	color: #1f6d52;
 }
 
 #menu-link {
 	background: #2ea97f;
 	color: #fff;
+	box-shadow: 0 6px 16px rgba(46, 169, 127, 0.25);
 }
 
 /* --- أزرار الدخول --- */
@@ -874,8 +878,8 @@ form {
 ===================================================== */
 
 @media (max-width: 1024px) {
-	nav { padding: 6px 14px; }
-	nav img { height: 108px; }
+	nav { padding: 7px 12px; }
+	nav img { height: 72px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
@@ -900,7 +904,7 @@ form {
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		padding: 8px 8px;
+		padding: 7px 7px;
 		gap: 6px;
 		width: 100%;
 		overflow: hidden;
@@ -936,7 +940,7 @@ form {
 	}
 
 	nav img {
-		height: 84px;
+		height: 54px;
 		width: auto;
 		flex-shrink: 0;
 	}
