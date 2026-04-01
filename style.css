@@ -93,7 +93,7 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   شريط التنقل — لاب: صف واحد
+   شريط التنقل — صف واحد: لوجو | تابس | دخول
 ===================================================== */
 
 nav {
@@ -102,20 +102,20 @@ nav {
 	top: 0;
 	z-index: 1000;
 	border-bottom: 1px solid #e6eee8;
-	padding: 8px 14px;
+	padding: 6px 20px;
 	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-}
-
-.nav-top {
+	/* صف واحد أفقي */
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 	gap: 12px;
+}
+
+/* --- اللوجو على اليمين --- */
+.nav-top {
+	display: flex;
+	align-items: center;
 	flex-shrink: 0;
 }
 
@@ -126,7 +126,7 @@ nav {
 }
 
 nav img {
-	height: 82px;
+	height: 100px;   /* ← أكبر شوية من 82px */
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
@@ -136,26 +136,14 @@ nav img:hover {
 	transform: scale(1.04);
 }
 
-.nav-auth {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-}
-
-#loginBox {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-
+/* --- التابس + دخول في المنتصف والشمال --- */
 .nav-tabs-wrapper {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	gap: 8px;
+	gap: 10px;
 	flex: 1;
-	justify-content: center;
+	justify-content: flex-end;   /* تابس ودخول على الشمال */
 }
 
 #menu-link {
@@ -199,6 +187,21 @@ nav a {
 	color: #fff;
 }
 
+/* --- أزرار الدخول --- */
+.nav-auth {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+#loginBox {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
 /* =====================================================
    الفوتر
 ===================================================== */
@@ -233,8 +236,9 @@ nav a {
 	margin-bottom: 4px;
 }
 
+/* ← الصورة الكبيرة في الهيرو: 6 أضعاف لوجو الناف (100px × 6 = 600px) */
 .page1 .nav-brand img {
-	height: 180px;
+	height: 600px;
 	width: auto;
 }
 
@@ -865,28 +869,27 @@ form {
 }
 
 /* =====================================================
-   تابلت — صف واحد
+   تابلت
 ===================================================== */
 
 @media (max-width: 1024px) {
-	nav { padding: 7px 14px; gap: 8px; }
-	nav img { height: 78px; }
+	nav { padding: 6px 14px; }
+	nav img { height: 88px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
 	.cardspage3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 	.cardpage2 { padding: 40px; gap: 40px; }
 	.menu-l, .menu-r { padding: 40px; }
-	.page1 .nav-brand img { height: 160px; }
+	.page1 .nav-brand img { height: 460px; }
 }
 
 /* =====================================================
-   موبايل — صفين في الناف بار + منع overflow
+   موبايل — يرجع لصفين لأن المساحة ضيقة
 ===================================================== */
 
 @media (max-width: 640px) {
 
-	/* إجبار كل حاجة تفضل جوه الشاشة */
 	html, body {
 		overflow-x: hidden;
 		width: 100%;
@@ -901,13 +904,14 @@ form {
 		overflow: hidden;
 	}
 
-	/* الصف الأول: التابات */
+	/* الصف الأول: التابس */
 	.nav-tabs-wrapper {
 		order: 1;
 		width: 100%;
 		justify-content: center;
 		gap: 6px;
 		overflow: hidden;
+		flex-wrap: wrap;
 	}
 
 	/* الصف الثاني: لوجو + دخول */
@@ -917,7 +921,13 @@ form {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-start;
+		gap: 6px;
+	}
+
+	.nav-auth {
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 6px;
 	}
 
@@ -925,12 +935,6 @@ form {
 		height: 70px;
 		width: auto;
 		flex-shrink: 0;
-	}
-
-	.nav-auth {
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 6px;
 	}
 
 	#first-f, #second-f, #toexit, #back {
@@ -956,7 +960,7 @@ form {
 
 	/* الصفحات */
 	.page1 { padding: 22px 12px 40px; overflow: hidden; }
-	.page1 .nav-brand img { height: 130px; }
+	.page1 .nav-brand img { height: 280px; }  /* ← تصغير للموبايل */
 	.page2 { padding: 50px 12px; overflow: hidden; }
 	.page3 { padding: 50px 12px; overflow: hidden; }
 	.page4 { padding: 50px 12px; overflow: hidden; }
@@ -1008,4 +1012,5 @@ form {
 	#first-f, #second-f, #toexit, #back { padding: 5px 8px; font-size: 9px; }
 	#code { width: 75px; font-size: 9px; }
 	.page1 h1 { font-size: 1.6rem; }
+	.page1 .nav-brand img { height: 220px; }
 }
