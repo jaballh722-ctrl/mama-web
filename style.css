@@ -103,14 +103,13 @@ nav {
 	z-index: 1000;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
 	border-bottom: 1px solid #e5e7eb;
-	padding: 10px 24px;
+	padding: 8px 20px;
 	width: 100%;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	position: fixed
 }
 
 .nav-top {
@@ -128,7 +127,7 @@ nav {
 }
 
 nav img {
-	height: 160px;
+	height: 88px;
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
@@ -170,7 +169,7 @@ nav img:hover {
 	flex-direction: row;
 	align-items: center;
 	gap: 4px;
-	padding: 6px;
+	padding: 5px;
 	border-radius: 999px;
 	background: #f8fafc;
 	border: 1px solid #e5e7eb;
@@ -179,9 +178,9 @@ nav img:hover {
 
 nav a {
 	color: #000;
-	padding: 9px 18px;
+	padding: 8px 14px;
 	border-radius: 50px;
-	font-weight: 900;
+	font-weight: 800;
 	transition: 0.3s;
 	text-decoration: none;
 	display: inline-flex;
@@ -216,7 +215,7 @@ nav a {
 
 .page1 {
 	background: white;
-	min-height: calc(100vh - 130px);
+	min-height: calc(100vh - 96px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -835,8 +834,8 @@ form {
 ===================================================== */
 
 @media (max-width: 1024px) {
-	nav { padding: 8px 16px; gap: 10px; }
-	nav img { height: 85px; }
+	nav { padding: 7px 14px; gap: 8px; }
+	nav img { height: 72px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
@@ -860,8 +859,8 @@ form {
 	nav {
 		flex-direction: column;
 		align-items: stretch;
-		padding: 6px 10px;
-		gap: 4px;
+		padding: 8px 10px;
+		gap: 6px;
 		width: 100%;
 		overflow: hidden;
 	}
@@ -887,7 +886,7 @@ form {
 	}
 
 	nav img {
-		height: 96px;
+		height: 60px;
 		width: auto;
 		flex-shrink: 0;
 	}
@@ -895,19 +894,29 @@ form {
 	.nav-auth {
 		flex-wrap: wrap;
 		justify-content: flex-end;
-		gap: 4px;
+		gap: 6px;
 	}
 
 	#first-f, #second-f, #toexit, #back {
-		padding: 6px 10px;
-		font-size: 10px;
+		padding: 7px 10px;
+		font-size: 11px;
 	}
 
-	#code { width: 85px; font-size: 10px; padding: 6px 8px; }
+	#code { width: 95px; font-size: 11px; padding: 7px 8px; }
 
-	.nav-tabs { gap: 2px; padding: 4px; }
-	.nav-tabs a { padding: 6px 10px; font-size: 11px; }
-	#menu-link { font-size: 11px; padding: 6px 10px; }
+	.nav-tabs {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 4px;
+		padding: 4px;
+		width: 100%;
+	}
+	.nav-tabs a {
+		padding: 7px 6px;
+		font-size: 11px;
+		text-align: center;
+	}
+	#menu-link { font-size: 11px; padding: 7px 10px; }
 
 	/* الصفحات */
 	.page1 { padding: 40px 12px; overflow: hidden; }
@@ -957,7 +966,7 @@ form {
 
 /* موبايل صغير جداً */
 @media (max-width: 380px) {
-	nav img { height: 82px; }
+	nav img { height: 52px; }
 	.nav-tabs a, #menu-link { padding: 5px 8px; font-size: 10px; }
 	#first-f, #second-f, #toexit, #back { padding: 5px 8px; font-size: 9px; }
 	#code { width: 75px; font-size: 9px; }
