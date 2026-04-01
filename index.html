@@ -11,8 +11,20 @@
 </head>
 <body>
     <nav>
+        <!-- اللوجو على اليمين -->
         <div class="nav-top">
             <a href="#page1" class="no nav-brand"><img src="20260223_1936_Image_Generation_remix_01kj5s5jwfeqyr2jc7r0jsz42g-removebg-preview.png" alt="اختيار" /></a>
+        </div>
+
+        <!-- التابس في النص + دخول على الشمال -->
+        <div class="nav-tabs-wrapper">
+            <a href="#secret" id="menu-link" style="display: none">قائمة الطعام</a>
+            <div class="nav-tabs">
+                <a href="#page4">التواصل</a>
+                <a href="#page3">البرامج</a>
+                <a href="#page2">الخدمات</a>
+                <a href="#page1">التعريف</a>
+            </div>
             <div class="nav-auth">
                 <button onclick="logout()" id="toexit" style="display: none">خروج من العضوية</button>
                 <button onclick="openLogin()" id="first-f">دخول كـ عضو</button>
@@ -21,16 +33,6 @@
                     <input type="text" id="code" placeholder="ادخل كود الدخول" />
                     <button onclick="login()" id="second-f">ادخال</button>
                 </div>
-            </div>
-        </div>
-
-        <div class="nav-tabs-wrapper">
-            <a href="#secret" id="menu-link" style="display: none">قائمة الطعام</a>
-            <div class="nav-tabs">
-                <a href="#page4">التواصل</a>
-                <a href="#page3">البرامج</a>
-                <a href="#page2">الخدمات</a>
-                <a href="#page1">التعريف</a>
             </div>
         </div>
     </nav>
@@ -212,4 +214,3 @@ Created by Abdelrahman
 
 </body>
 </html>
-
