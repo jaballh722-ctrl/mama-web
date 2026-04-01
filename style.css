@@ -126,7 +126,7 @@ nav {
 }
 
 nav img {
-	height: 72px;
+	height: 82px;
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
@@ -194,7 +194,6 @@ nav a {
 	background: #dff3df;
 }
 
-.nav-tabs a:first-child,
 #menu-link {
 	background: #2ea97f;
 	color: #fff;
@@ -230,6 +229,15 @@ nav a {
 	overflow: hidden;
 }
 
+.page1 .nav-brand {
+	margin-bottom: 4px;
+}
+
+.page1 .nav-brand img {
+	height: 180px;
+	width: auto;
+}
+
 .page1::before {
 	content: "";
 	position: absolute;
@@ -263,6 +271,7 @@ nav a {
 	line-height: 1.9;
 	position: relative;
 	z-index: 1;
+	margin-top: 2px;
 	margin-bottom: 12px;
 }
 
@@ -861,13 +870,14 @@ form {
 
 @media (max-width: 1024px) {
 	nav { padding: 7px 14px; gap: 8px; }
-	nav img { height: 72px; }
+	nav img { height: 78px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
 	.cardspage3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 	.cardpage2 { padding: 40px; gap: 40px; }
 	.menu-l, .menu-r { padding: 40px; }
+	.page1 .nav-brand img { height: 160px; }
 }
 
 /* =====================================================
@@ -912,7 +922,7 @@ form {
 	}
 
 	nav img {
-		height: 74px;
+		height: 70px;
 		width: auto;
 		flex-shrink: 0;
 	}
@@ -946,6 +956,7 @@ form {
 
 	/* الصفحات */
 	.page1 { padding: 22px 12px 40px; overflow: hidden; }
+	.page1 .nav-brand img { height: 130px; }
 	.page2 { padding: 50px 12px; overflow: hidden; }
 	.page3 { padding: 50px 12px; overflow: hidden; }
 	.page4 { padding: 50px 12px; overflow: hidden; }
