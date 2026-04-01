@@ -233,14 +233,14 @@ nav a {
 }
 
 .page1 .nav-brand {
-	margin-bottom: 4px;
+	margin-bottom: -115px;
 }
 
 /* ← الصورة الكبيرة في الهيرو: 6 أضعاف لوجو الناف (100px × 6 = 600px) */
 .page1 .nav-brand img {
 	height: 600px;
 	width: auto;
-	margin-top:5px
+	margin-top: -10px;
 }
 
 .page1::before {
@@ -276,7 +276,7 @@ nav a {
 	line-height: 1.9;
 	position: relative;
 	z-index: 1;
-	margin-top: 2px;
+	margin-top: -6px;
 	margin-bottom: 12px;
 }
 
