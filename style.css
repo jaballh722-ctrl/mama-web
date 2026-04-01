@@ -240,6 +240,7 @@ nav a {
 .page1 .nav-brand img {
 	height: 600px;
 	width: auto;
+	margin-top:5px
 }
 
 .page1::before {
