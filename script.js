@@ -67,59 +67,7 @@ function enableMemberAccess() {
       return;
     }
 
-    showToast("كود العضو عير صحيح");
-  });
-}
-
-function setupChatbot() {
-  const toggleButton = document.getElementById("chatbotToggle");
-  const panel = document.getElementById("chatbotPanel");
-  const form = document.getElementById("chatbotForm");
-  const input = document.getElementById("chatbotInput");
-  const messages = document.getElementById("chatbotMessages");
-  if (!toggleButton || !panel || !form || !input || !messages) return;
-
-  const getBotReply = (text) => {
-    const normalizedText = text.toLowerCase();
-    if (normalizedText.includes("سعر") || normalizedText.includes("تكلفة")) {
-      return "أسعار البرامج موجودة في قسم البرامج الشهرية، ولو تحب أوجهك للأنسب ابعتلنا على واتساب.";
-    }
-    if (normalizedText.includes("جلسة") || normalizedText.includes("تقييم")) {
-      return "تقدر تحجز جلسة تقييم مجانية 15 دقيقة من زر واتساب في الصفحة الرئيسية.";
-    }
-    if (normalizedText.includes("عضو") || normalizedText.includes("كود")) {
-      return "قسم الإطعام يظهر بعد إدخال كود العضو الصحيح من زر (دخول كـ عضو).";
-    }
-    return "شكرًا لرسالتك 🤍 فريقنا هيساعدك فورًا، وتقدر كمان تراسلنا مباشرة على واتساب.";
-  };
-
-  const appendMessage = (className, text) => {
-    const message = document.createElement("p");
-    message.className = className;
-    message.textContent = text;
-    messages.appendChild(message);
-    messages.scrollTop = messages.scrollHeight;
-  };
-
-  toggleButton.addEventListener("click", () => {
-    const isOpen = !panel.hidden;
-    panel.hidden = isOpen;
-    toggleButton.setAttribute("aria-expanded", String(!isOpen));
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const userText = input.value.trim();
-    if (!userText) return;
-
-    appendMessage("user-msg", userText);
-    const botReply = getBotReply(userText);
-
-    window.setTimeout(() => {
-      appendMessage("bot-msg", botReply);
-    }, 300);
-
-    form.reset();
+    showToast("كود العضو غير صحيح");
   });
 }
 
@@ -127,5 +75,4 @@ window.addEventListener("DOMContentLoaded", () => {
   handleWhatsappForm();
   markExternalLinks();
   enableMemberAccess();
-  setupChatbot();
 });
