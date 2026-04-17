@@ -45,6 +45,7 @@ function enableMemberAccess() {
   const memberBtn = document.getElementById("memberAccessBtn");
   const menuSection = document.getElementById("menu");
   if (!memberBtn || !menuSection) return;
+
   memberBtn.addEventListener("click", (event) => {
     if (!menuSection.hidden) return;
     event.preventDefault();
