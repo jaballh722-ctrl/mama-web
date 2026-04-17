@@ -57,17 +57,17 @@ function enableMemberAccess() {
     if (!menuSection.hidden) return;
 
     event.preventDefault();
-    const enteredCode = window.prompt("من فضلك أدخل كود العضو لعرض صفحة الإطعام:");
+    const enteredCode = window.prompt("من فضلك أدخل كود العضو :");
     if (!enteredCode) return;
 
     if (enteredCode.trim() === MEMBER_CODE) {
       menuSection.hidden = false;
-      showToast("تم فتح صفحة الإطعام بنجاح.", "#2ea97f");
+      showToast("تم الدخول بنجاح");
       menuSection.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
 
-    showToast("كود العضو غير صحيح.", "#c0392b");
+    showToast("كود العضو عير صحيح");
   });
 }
 
