@@ -21,7 +21,7 @@
             <a href="#page3">البرامج</a>
             <a href="#comparison">المقارنة</a>
             <a href="#page4">التواصل</a>
-            <a class="primary-link" href="#quick-booking">احجز جلسة مجانية</a>
+            <a class="primary-link" href="#menu" id="memberAccessBtn">دخول كـ عضو</a>
         </div>
     </nav>
 
@@ -147,9 +147,7 @@
     <section id="results" class="section-block testimonials">
         <h2 class="section-title">آراء أولياء الأمور</h2>
         <div class="testimonials-grid">
-            <article class="quote-card">"ابني بقى ملتزم أكثر في المذاكرة وبقينا شايفين تقدم واضح أسبوعيًا."</article>
-            <article class="quote-card">"الخطة اليومية سهّلت علينا المتابعة في البيت بدون توتر."</article>
-            <article class="quote-card">"أكتر حاجة فرقت معنا هي جلسات التركيز وتقييم الأداء المنتظم."</article>
+            <article class="quote-card">لا شيء حتى الآن</article>
         </div>
     </section>
 
@@ -200,7 +198,7 @@
         </div>
     </section>
 
-    <section id="menu" class="section-block menu-section">
+    <section id="menu" class="section-block menu-section" hidden>
         <h2 class="section-title">الوجبات المتاحة</h2>
         <div class="menu-c">
             <article class="menu-l">
@@ -231,6 +229,21 @@
     </section>
 
     <div id="toast" class="toast" role="status" aria-live="polite">تم إرسال الطلب بنجاح.</div>
+    <section class="chatbot" id="chatbot">
+        <button class="chatbot-toggle" id="chatbotToggle" type="button" aria-expanded="false" aria-controls="chatbotPanel">
+            بوت المساعدة
+        </button>
+        <div class="chatbot-panel" id="chatbotPanel" hidden>
+            <h3>بوت المتابعة</h3>
+            <div class="chatbot-messages" id="chatbotMessages" aria-live="polite">
+                <p class="bot-msg">أهلًا 👋 أنا هنا لو عايز تعرف تفاصيل البرامج أو طريقة الاشتراك.</p>
+            </div>
+            <form id="chatbotForm" class="chatbot-form">
+                <input id="chatbotInput" type="text" placeholder="اكتب رسالتك..." autocomplete="off" />
+                <button type="submit">إرسال</button>
+            </form>
+        </div>
+    </section>
 
     <footer class="site-footer">
         <p>© 2026 — متابعة دراسية<br>جميع الحقوق محفوظة</p>
