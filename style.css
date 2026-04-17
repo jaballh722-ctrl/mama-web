@@ -50,9 +50,10 @@ nav {
 }
 
 .nav-brand img {
-  width: 110px;
-  max-height: calc(var(--nav-height) - 20px);
-  height: auto;
+  height: calc(var(--nav-height) - 14px);
+  width: auto;
+  max-width: min(180px, 42vw);
+  object-fit: contain;
 }
 
 .nav-brand {
