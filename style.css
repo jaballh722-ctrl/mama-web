@@ -50,8 +50,16 @@ nav {
 }
 
 .nav-brand img {
-  width: 84px;
+  width: 110px;
+  max-height: calc(var(--nav-height) - 20px);
   height: auto;
+}
+
+.nav-brand {
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  line-height: 0;
 }
 
 .nav-tabs {
@@ -91,11 +99,16 @@ nav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  gap: 16px;
+  gap: 10px;
   position: relative;
+  padding-top: 8px;
   padding-inline: 12px;
+}
+
+.hero-logo {
+  margin-block: 2px 0;
 }
 
 .hero-logo img {
@@ -366,6 +379,10 @@ details p {
 .menu-c {
   display: grid;
   gap: 14px;
+}
+
+.menu-section[hidden] {
+  display: none;
 }
 
 .toast {

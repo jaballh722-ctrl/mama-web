@@ -1,4 +1,5 @@
 const WHATSAPP_PHONE = "201116967317";
+const MEMBER_CODE = "MEMBER2026";
 
 function showToast(message, bgColor = "#1f2937") {
   const toast = document.getElementById("toast");
@@ -47,7 +48,31 @@ function markExternalLinks() {
   });
 }
 
+function enableMemberAccess() {
+  const memberBtn = document.getElementById("memberAccessBtn");
+  const menuSection = document.getElementById("menu");
+  if (!memberBtn || !menuSection) return;
+
+  memberBtn.addEventListener("click", (event) => {
+    if (!menuSection.hidden) return;
+
+    event.preventDefault();
+    const enteredCode = window.prompt("من فضلك أدخل كود العضو لعرض صفحة الإطعام:");
+    if (!enteredCode) return;
+
+    if (enteredCode.trim() === MEMBER_CODE) {
+      menuSection.hidden = false;
+      showToast("تم فتح صفحة الإطعام بنجاح.", "#2ea97f");
+      menuSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    showToast("كود العضو غير صحيح.", "#c0392b");
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   handleWhatsappForm();
   markExternalLinks();
+  enableMemberAccess();
 });
