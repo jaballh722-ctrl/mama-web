@@ -252,6 +252,11 @@ nav {
   font-size: 1.25rem;
 }
 
+.program-request-form {
+  display: grid;
+  gap: 8px;
+}
+
 .price {
   color: var(--dark-green);
   font-weight: 800;
@@ -283,6 +288,13 @@ nav {
   padding: 11px 14px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.contact-input {
+  border: 1px solid #d7e5de;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
 }
 
 .table-wrap {
