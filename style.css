@@ -43,23 +43,24 @@ nav {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 18px;
+  padding: 10px 20px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid #dde9e3;
 }
 
-.nav-brand img {
-  width: 110px;
-  max-height: calc(var(--nav-height) - 20px);
-  height: auto;
-}
-
+/* ✅ لوجو الناف بار — أكبر ومنمق */
 .nav-brand {
-  margin: 5px;
   display: flex;
   align-items: center;
   line-height: 0;
+  flex-shrink: 0;
+}
+
+.nav-brand img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-tabs {
@@ -107,12 +108,18 @@ nav {
   padding-inline: 12px;
 }
 
+/* ✅ لوجو الهيدر — قريب من الناف بار والنص */
 .hero-logo {
-  margin-block: 2px 0;
+  margin-top: 4px;
+  margin-bottom: 0;
+  display: block;
 }
 
 .hero-logo img {
-  width: 120px
+  width: 110px;
+  height: auto;
+  object-fit: contain;
+  margin-inline: auto;
 }
 
 .page1 h1 {
@@ -221,8 +228,10 @@ nav {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
+  align-items: stretch;
 }
 
+/* ✅ الكروت تبقى flex column عشان الزرار يتمحور في الآخر */
 .card3 {
   background: #fff;
   border-radius: var(--radius);
@@ -256,12 +265,13 @@ nav {
   font-weight: 800;
 }
 
+/* ✅ dot-list تاخد كل المساحة المتاحة فيدفع الزرار للأسفل */
 .dot-list {
   list-style: none;
   display: grid;
   gap: 8px;
   margin-block: 8px 14px;
-  min-height: 170px;
+  flex: 1;
 }
 
 .dot-list li::before {
@@ -270,6 +280,7 @@ nav {
   font-weight: 700;
 }
 
+/* ✅ زرار الاشتراك دايمًا في نفس مستوى الارتفاع */
 .submit,
 .cta-link,
 .contact-form button {
@@ -282,6 +293,8 @@ nav {
   padding: 11px 14px;
   font-weight: 700;
   cursor: pointer;
+  margin-top: auto;
+  display: block;
 }
 
 .table-wrap {
@@ -320,11 +333,13 @@ td:first-child {
   gap: 12px;
 }
 
+/* ✅ "لا شيء حتى الآن" في النص */
 .quote-card {
   background: #f5faf7;
   border: 1px solid #e3efea;
   border-radius: 14px;
   padding: 16px;
+  text-align: center;
 }
 
 .faq-list {
