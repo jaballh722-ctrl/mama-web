@@ -28,6 +28,7 @@ body {
 	line-height: 1.7;
 	color: var(--dark-text);
 	background: var(--white);
+	direction: rtl;
 	overflow-x: hidden;
 	position: relative;
 	width: 100%;
@@ -151,7 +152,7 @@ nav img:hover {
 	align-items: center;
 	gap: 10px;
 	flex: 1;
-	justify-content: flex-end;
+	justify-content: flex-start;
 }
 
 #menu-link {
@@ -362,9 +363,14 @@ nav a {
 	max-width: 1200px;
 	direction: rtl;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	gap: 60px;
 	transition: 0.3s;
+}
+
+.cardspage2 .cardpage2:nth-child(even) {
+	flex-direction: row-reverse;
 }
 
 .cardpage2 img {
@@ -712,6 +718,7 @@ form {
 	font-weight: 800;
 	position: relative;
 	padding-bottom: 20px;
+	direction: rtl;
 }
 
 .contact-form h2::after {
@@ -732,6 +739,7 @@ form {
 	color: var(--dark-text);
 	font-weight: 600;
 	font-size: 1rem;
+	text-align: right;
 }
 
 .contact-form input,
@@ -745,6 +753,7 @@ form {
 	font-family: "Cairo", sans-serif;
 	background: #fafafa;
 	transition: 0.3s;
+	text-align: right;
 }
 
 .contact-form input:focus,
@@ -928,7 +937,7 @@ form {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: flex-end;
+		justify-content: flex-start;
 		gap: 5px;
 		overflow: hidden;
 		flex-wrap: nowrap;
@@ -1006,6 +1015,10 @@ form {
 		padding: 20px;
 		margin: 12px 0;
 		gap: 16px;
+	}
+
+	.cardspage2 .cardpage2:nth-child(even) {
+		flex-direction: column;
 	}
 
 	.cardpage2 img { max-width: 100%; width: 100%; }
