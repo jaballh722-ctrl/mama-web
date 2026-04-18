@@ -428,20 +428,38 @@ nav a {
 
 .cardspage3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   align-items: stretch;
 }
 
 .card3 {
   background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
+  border-radius: 22px;
+  box-shadow: 0 8px 26px rgba(20, 39, 32, 0.08);
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid #e4eee9;
+  gap: 12px;
+  border: 1px solid #d9ece3;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card3::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 4px;
+	background: linear-gradient(90deg, #3eb489, #53d1a2);
+	opacity: 0.95;
+}
+
+.card3:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 15px 34px rgba(20, 39, 32, 0.14);
+	border-color: #b8dfcf;
 }
 
 .card3.featured {
@@ -457,8 +475,11 @@ nav a {
   padding: 4px 10px;
 }
 
-.card3 h3 {
-  font-size: 1.25rem;
+.card3 h1 {
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--dark-text);
+  font-weight: 800;
 }
 
 .price {
@@ -472,6 +493,8 @@ nav a {
   gap: 8px;
   margin-block: 8px 14px;
   flex: 1;
+  color: #243b33;
+  font-size: 0.95rem;
 }
 
 .dot-list li::before {
@@ -479,16 +502,19 @@ nav a {
   color: var(--main-green);
   font-weight: 700;
 }
+
+.card3 form {
+	padding: 0;
+	background: transparent;
+	gap: 10px;
+}
+
 form {
 	display: flex;
 	flex-direction: column;
 	padding: 30px;
 	gap: 15px;
 	background: white;
-}
-
-.card3:nth-child(2) form {
-	background: var(--main-green);
 }
 
 .contact-input {
@@ -530,16 +556,6 @@ form {
 	background: #00d483;
 	transform: translateY(-2px);
 	box-shadow: 0 6px 20px rgba(62, 180, 137, 0.35);
-}
-
-.card3:nth-child(2) .submit {
-	background: var(--yellow);
-	color: #25322c;
-}
-
-.card3:nth-child(2) .submit:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .package-name {
@@ -837,7 +853,7 @@ form {
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
-	.cardspage3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+	.cardspage3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 	.cardpage2 { padding: 40px; gap: 40px; }
 	.menu-l, .menu-r { padding: 40px; }
 	.page1 .nav-brand img { height: 520px; }   /* أكبر على التابلت */
