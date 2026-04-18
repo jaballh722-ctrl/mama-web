@@ -1,249 +1,703 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>متابعة دراسية | تنظيم ومتابعة أكاديمية للطلاب</title>
-    <meta name="description" content="متابعة دراسية يومية للطلاب: تنظيم المهام، مؤقتات إنجاز، تقييم أسبوعي، وجلسات تركيز مع خطط شهرية واضحة." />
-    <meta property="og:title" content="متابعة دراسية" />
-    <script src="//code.tidio.co/i5m205cru5v6i8zwir48cjegxiubzgaw.js" async></script>
-    <meta property="og:description" content="اشترك في برنامج متابعة أكاديمية يساعد الطالب على الإنجاز المنتظم ورفع المستوى." />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ar_EG" />
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-</head>
-<body>
-    <nav>
-        <a href="#page1" class="nav-brand"><img src="20260223_1936_Image_Generation_remix_01kj5s5jwfeqyr2jc7r0jsz42g-removebg-preview.png" alt="شعار متابعة دراسية" loading="eager" decoding="async" /></a>
-        <div class="nav-tabs">
-            <a href="#page1">الرئيسية</a>
-            <a href="#page2">الخدمات</a>
-            <a href="#page3">البرامج</a>
-            <a href="#comparison">المقارنة</a>
-            <a href="#page4">التواصل</a>
-            <a class="primary-link" href="#menu" id="memberAccessBtn">دخول كـ عضو</a>
-        </div>
-    </nav>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    <!-- ===== MEMBER CODE MODAL ===== -->
-    <div id="memberModal" class="modal-overlay" hidden>
-        <div class="modal-box">
-            <div class="modal-icon">🔒</div>
-            <h2 class="modal-title">دخول الأعضاء</h2>
-            <p class="modal-desc">أدخل كود العضو للوصول إلى صفحة الإطعام</p>
-            <div class="modal-input-wrap">
-                <input
-                    type="text"
-                    id="memberCodeInput"
-                    class="modal-input"
-                    placeholder="XXXXXXXX"
-                    autocomplete="off"
-                    spellcheck="false"
-                    maxlength="20"
-                />
-            </div>
-            <p id="modalError" class="modal-error" hidden>❌ كود العضو غير صحيح، حاول مرة أخرى</p>
-            <div class="modal-actions">
-                <button id="modalSubmitBtn" class="modal-btn modal-btn-primary">دخول</button>
-                <button id="modalBackBtn" class="modal-btn modal-btn-ghost">رجوع</button>
-            </div>
-        </div>
-    </div>
-    <!-- ===== END MODAL ===== -->
+:root {
+  --main-green: #2ea97f;
+  --dark-green: #217a5d;
+  --light-green: #eef8f4;
+  --dark-text: #1f2937;
+  --gray-text: #5b6472;
+  --white: #fff;
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(30, 50, 44, 0.08);
+  --nav-height: 90px;
+}
 
-    <header id="page1" class="page1">
-        <a href="#page1" class="hero-logo"><img src="20260223_1936_Image_Generation_remix_01kj5s5jwfeqyr2jc7r0jsz42g-removebg-preview.png" alt="متابعة دراسية" loading="eager" decoding="async" /></a>
-        <h1>متابعة دراسية يومية تساعد الطالب ينجز أسرع بثقة أكبر</h1>
-        <p class="hero-subtitle">
-            بنشتغل مع الطالب خطوة بخطوة: تحديد مهام يومية واضحة، متابعة مباشرة للتنفيذ،
-            وتقييم أسبوعي يوضح نقاط القوة وفرص التحسين.
-        </p>
-        <ul class="hero-points">
-            <li>خطة يومية عملية بدل المذاكرة العشوائية</li>
-            <li>تنظيم وقت ومؤقتات إنجاز لرفع الالتزام</li>
-            <li>دعم مستمر من فريق متابعة متخصص</li>
-        </ul>
-        <div class="hero-cta" id="quick-booking">
-            <a class="btn primary" href="https://wa.me/201116967317?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AC%D9%84%D8%B3%D8%A9%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D9%85%D8%AC%D8%A7%D9%86%D9%8A%D8%A9%2015%20%D8%AF%D9%82%D9%8A%D9%82%D8%A9">احجز جلسة تقييم مجانية (15 دقيقة)</a>
-            <a class="btn ghost" href="#page3">شوف البرامج</a>
-        </div>
-    </header>
+html {
+  scroll-behavior: smooth;
+}
 
-    <section id="page2" class="page2 section-block">
-        <h2 class="section-title">الخدمات الأساسية</h2>
-        <div class="cardspage2">
-            <article class="cardpage2">
-                <p>تحديد المهام الدراسية اليومية بشكل واضح ومتابعتها بدقة لضمان إنجازها في الوقت المناسب.</p>
-                <img src="premium_vector-1682311160662-ebc15dde8ca0.avif" alt="تنظيم المهام اليومية" loading="lazy" decoding="async" />
-            </article>
-            <article class="cardpage2">
-                <p>متابعة سير الإنجاز باستخدام مؤقتات زمنية تساعد الطالب على التركيز وتقليل التشتت.</p>
-                <img src="2.avif" alt="مؤقتات إنجاز الدراسة" loading="lazy" decoding="async" />
-            </article>
-            <article class="cardpage2">
-                <p>تقييم أكاديمي أسبوعي شامل لقياس الأداء وتحديد نقاط القوة والجوانب التي تحتاج دعمًا.</p>
-                <img src="premium_vector-1682310575839-a2c0e49edb1a.avif" alt="تقييم أكاديمي أسبوعي" loading="lazy" decoding="async" />
-            </article>
-            <article class="cardpage2">
-                <p>جلسات متخصصة لتنمية الانتباه وزيادة التركيز بشكل متدرج وفق احتياج كل طالب.</p>
-                <img src="انتباه.avif" alt="جلسات تركيز وانتباه" loading="lazy" decoding="async" />
-            </article>
-            <article class="cardpage2">
-                <p>جلسات منتظمة لتنمية مهارات التخطيط والتنفيذ الفعّال للمهام الدراسية.</p>
-                <img src="زياده2.avif" alt="تخطيط وتنفيذ المهام" loading="lazy" decoding="async" />
-            </article>
-        </div>
-    </section>
+body {
+  font-family: "Cairo", sans-serif;
+  color: var(--dark-text);
+  background: #f9fbfa;
+  line-height: 1.8;
+  padding-top: var(--nav-height);
+}
 
-    <section class="page3 section-block" id="page3">
-        <h2 class="section-title">البرامج الشهرية</h2>
-        <p class="section-note">اختر الباقة المناسبة حسب مستوى المتابعة المطلوبة — ويمكن تعديل الخطة بعد الجلسة التقييمية.</p>
-        <div class="cardspage3">
-            <article class="card3">
-                <h3>برنامج صح صح</h3>
-                <p class="price">3000 ج / شهر</p>
-                <ul class="dot-list">
-                    <li>تحديد المهام اليومية</li>
-                    <li>متابعة تنفيذ المهام</li>
-                    <li>تقرير متابعة أسبوعي مختصر</li>
-                </ul>
-                <a class="submit cta-link" href="https://wa.me/201116967317?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B5%D8%AD%20%D8%B5%D8%AD">اشترك الآن</a>
-            </article>
+img {
+  max-width: 100%;
+  display: block;
+}
 
-            <article class="card3 featured">
-                <span class="badge">الأكثر اختيارًا</span>
-                <h3>برنامج خلاويص</h3>
-                <p class="price">4000 ج / شهر</p>
-                <ul class="dot-list">
-                    <li>كل مميزات باقة صح صح</li>
-                    <li>مؤقتات متابعة أثناء الدراسة</li>
-                    <li>متابعة أكثر انتظامًا خلال الأسبوع</li>
-                </ul>
-                <a class="submit cta-link" href="https://wa.me/201116967317?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%AE%D9%84%D8%A7%D9%88%D9%8A%D8%B5">اشترك الآن</a>
-            </article>
+nav {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #dde9e3;
+}
 
-            <article class="card3">
-                <h3>برنامج المحقق</h3>
-                <p class="price">5000 ج / شهر</p>
-                <ul class="dot-list">
-                    <li>كل مميزات باقة خلاويص</li>
-                    <li>تقييم أكاديمي أسبوعي تفصيلي</li>
-                    <li>خطة تحسين مبنية على النتائج</li>
-                </ul>
-                <a class="submit cta-link" href="https://wa.me/201116967317?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82">اشترك الآن</a>
-            </article>
+.nav-brand {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
 
-            <article class="card3">
-                <h3>برنامج النووي</h3>
-                <p class="price">6000 ج / شهر</p>
-                <ul class="dot-list">
-                    <li>كل مميزات باقة المحقق</li>
-                    <li>جلسات تركيز وانتباه إضافية</li>
-                    <li>متابعة مكثفة للحالات الخاصة</li>
-                </ul>
-                <a class="submit cta-link" href="https://wa.me/201116967317?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%A7%D9%84%D9%86%D9%88%D9%88%D9%8A">اشترك الآن</a>
-            </article>
-        </div>
-    </section>
+.nav-brand img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
 
-    <section id="comparison" class="section-block comparison">
-        <h2 class="section-title">مقارنة سريعة بين الباقات</h2>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>الميزة</th>
-                        <th>صح صح</th>
-                        <th>خلاويص</th>
-                        <th>المحقق</th>
-                        <th>النووي</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>تحديد المهام اليومية</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
-                    <tr><td>متابعة التنفيذ</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
-                    <tr><td>مؤقتات إنجاز</td><td>—</td><td>✓</td><td>✓</td><td>✓</td></tr>
-                    <tr><td>تقييم أسبوعي تفصيلي</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
-                    <tr><td>جلسات تركيز إضافية</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
 
-    <section id="results" class="section-block testimonials">
-        <h2 class="section-title">آراء أولياء الأمور</h2>
-        <div class="testimonials-grid">
-            <article class="quote-card">لا شيء حتى الآن</article>
-        </div>
-    </section>
+.nav-tabs a {
+  text-decoration: none;
+  color: var(--dark-text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
 
-    <section id="page4" class="page4 section-block">
-        <h2 class="section-title">التواصل</h2>
-        <div class="contact-container">
-            <form id="whatsappForm" class="contact-form" aria-label="نموذج التواصل عبر واتساب">
-                <h3>راسلنا على واتساب</h3>
-                <label for="email">البريد الإلكتروني (اختياري)</label>
-                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" />
+.nav-tabs a:hover {
+  background: #e8f4ef;
+}
 
-                <label for="message">رسالتك</label>
-                <textarea id="message" placeholder="اكتب رسالتك هنا..." rows="5" required></textarea>
+.nav-tabs .primary-link {
+  background: var(--main-green);
+  color: #fff;
+}
 
-                <button type="submit" class="submit">إرسال عبر واتساب</button>
-            </form>
+/* ===== LOGOUT BUTTON (يظهر بعد تسجيل الدخول) ===== */
+.nav-tabs .logout-link {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  transition: background 0.2s, color 0.2s;
+}
 
-            <form action="https://api.web3forms.com/submit" method="POST" class="contact-form" aria-label="نموذج إرسال ملاحظة بالبريد">
-                <input type="hidden" name="access_key" value="c4c5f5cd-58d1-4f43-8bde-06abddb8187e">
-                <h3>أرسل ملاحظة سريعة</h3>
+.nav-tabs .logout-link:hover {
+  background: #fee2e2;
+}
 
-                <label for="noteEmail">البريد الإلكتروني</label>
-                <input id="noteEmail" type="email" name="email" required />
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(15, 20, 27, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.22s ease;
+}
 
-                <label for="noteMessage">الملاحظة</label>
-                <textarea id="noteMessage" name="message" class="txt" required></textarea>
+.modal-overlay[hidden] {
+  display: none;
+}
 
-                <button type="submit">إرسال إلى البريد</button>
-            </form>
-        </div>
-    </section>
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
-    <section id="menu" class="section-block menu-section" hidden>
-        <h2 class="section-title">الوجبات المتاحة</h2>
-        <div class="menu-c">
-            <article class="menu-l">
-                <p>بطاطس مهروسة مسلوقة مضاف إليها التوابل</p>
-                <img src="potato-removebg-preview.png" alt="بطاطس مهروسة" loading="lazy" decoding="async" />
-            </article>
-            <article class="menu-r">
-                <p>فول مدمس مصري بالبهارات والتتبيلة</p>
-                <img src="فول مدمس.jpg" alt="فول مدمس" loading="lazy" decoding="async" />
-            </article>
-            <article class="menu-l">
-                <p>سلطة خضراء طازجة بالخس والطماطم والخيار</p>
-                <img src="سلطة خضراء.jpg" alt="سلطة خضراء" loading="lazy" decoding="async" />
-            </article>
-            <article class="menu-r">
-                <p>زبادي طبيعي طازج</p>
-                <img src="yougrt.jpg" alt="زبادي" loading="lazy" decoding="async" />
-            </article>
-            <article class="menu-l">
-                <p>تشكيلة فواكه طازجة ومتنوعة</p>
-                <img src="فواكه متنوعه.jpg" alt="فواكه متنوعة" loading="lazy" decoding="async" />
-            </article>
-            <article class="menu-r">
-                <p>بيض أومليت بالخضروات</p>
-                <img src="omlet.jpg" alt="بيض أومليت" loading="lazy" decoding="async" />
-            </article>
-        </div>
-    </section>
+.modal-box {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(30, 50, 44, 0.18);
+  padding: 36px 32px 30px;
+  width: min(420px, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: modalSlideUp 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-    <div id="toast" class="toast" role="status" aria-live="polite">تم إرسال الطلب بنجاح.</div>
+@keyframes modalSlideUp {
+  from { transform: translateY(32px) scale(0.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
 
-    <footer class="site-footer">
-        <p>© 2026 — متابعة دراسية<br>جميع الحقوق محفوظة</p>
-    </footer>
+.modal-icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
 
-    <script src="script.js"></script>
-    <script src="scroll-animation.js"></script>
-</body>
-</html>
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark-text);
+  text-align: center;
+}
+
+.modal-desc {
+  font-size: 0.95rem;
+  color: var(--gray-text);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* حقل الإدخال — مستدير */
+.modal-input-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-input {
+  width: 100%;
+  border: 2px solid #d1e8de;
+  border-radius: 999px;
+  padding: 13px 22px;
+  font-family: "Cairo", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 3px;
+  color: var(--dark-text);
+  background: #f6faf8;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-input:focus {
+  border-color: var(--main-green);
+  box-shadow: 0 0 0 4px rgba(46, 169, 127, 0.12);
+  background: #fff;
+}
+
+.modal-input.input-error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-6px); }
+  75%       { transform: translateX(6px); }
+}
+
+/* رسالة الخطأ */
+.modal-error {
+  font-size: 0.88rem;
+  color: #dc2626;
+  font-weight: 600;
+  text-align: center;
+  min-height: 20px;
+}
+
+.modal-error[hidden] {
+  display: none;
+}
+
+/* أزرار الموديل */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.modal-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: "Cairo", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s;
+}
+
+.modal-btn:active {
+  transform: scale(0.98);
+}
+
+.modal-btn-primary {
+  background: var(--main-green);
+  color: #fff;
+}
+
+.modal-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.modal-btn-ghost {
+  background: #f3f6f5;
+  color: var(--gray-text);
+  border: 1px solid #dde9e3;
+}
+
+.modal-btn-ghost:hover {
+  background: #e8f0ec;
+}
+
+/* ===== باقي الستايل الأصلي ===== */
+
+.section-block {
+  width: min(1120px, 92vw);
+  margin-inline: auto;
+  padding: 72px 0;
+}
+
+.page1 {
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: 10px;
+  position: relative;
+  padding-top: 8px;
+  padding-inline: 12px;
+}
+
+.hero-logo {
+  margin-top: 4px;
+  margin-bottom: 0;
+  display: block;
+}
+
+.hero-logo img {
+  width: 110px;
+  height: auto;
+  object-fit: contain;
+  margin-inline: auto;
+}
+
+.page1 h1 {
+  font-size: clamp(1.6rem, 3.8vw, 2.6rem);
+  line-height: 1.4;
+  font-weight: 800;
+  max-width: 900px;
+}
+
+.hero-subtitle {
+  max-width: 760px;
+  color: var(--gray-text);
+  font-size: clamp(1rem, 2.1vw, 1.15rem);
+}
+
+.hero-points {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.hero-points li::before {
+  content: "✓ ";
+  color: var(--dark-green);
+  font-weight: 800;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn {
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+}
+
+.btn.primary {
+  background: var(--main-green);
+  color: white;
+}
+
+.btn.ghost {
+  border: 1px solid #cddfd7;
+  color: var(--dark-text);
+  background: white;
+}
+
+.section-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.section-note {
+  text-align: center;
+  color: var(--gray-text);
+  margin-bottom: 28px;
+}
+
+.cardspage2 {
+  display: grid;
+  gap: 18px;
+}
+
+.cardpage2,
+.menu-l,
+.menu-r {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.cardpage2 p,
+.menu-l p,
+.menu-r p {
+  font-size: 1.06rem;
+}
+
+.cardpage2 img,
+.menu-l img,
+.menu-r img {
+  border-radius: 14px;
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.page3 {
+  background: var(--light-green);
+  border-radius: 24px;
+}
+
+.cardspage3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.card3 {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #e4eee9;
+}
+
+.card3.featured {
+  border: 2px solid var(--main-green);
+}
+
+.badge {
+  width: fit-content;
+  background: #dff4eb;
+  color: var(--dark-green);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  padding: 4px 10px;
+}
+
+.card3 h3 {
+  font-size: 1.25rem;
+}
+
+.price {
+  color: var(--dark-green);
+  font-weight: 800;
+}
+
+.dot-list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin-block: 8px 14px;
+  flex: 1;
+}
+
+.dot-list li::before {
+  content: "✓ ";
+  color: var(--main-green);
+  font-weight: 700;
+}
+
+.submit,
+.cta-link,
+.contact-form button {
+  background: var(--main-green);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  text-align: center;
+  padding: 11px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+  display: block;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ecf2ef;
+  text-align: center;
+}
+
+th:first-child,
+td:first-child {
+  text-align: right;
+  font-weight: 700;
+}
+
+.testimonials {
+  background: #fff;
+  border-radius: 24px;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.quote-card {
+  background: #f5faf7;
+  border: 1px solid #e3efea;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.faq-list {
+  display: grid;
+  gap: 10px;
+}
+
+details {
+  border: 1px solid #e1ece7;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px 14px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+details p {
+  margin-top: 10px;
+  color: var(--gray-text);
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.contact-form {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.contact-form label {
+  font-weight: 700;
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: 1px solid #dbe8e1;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: inherit;
+}
+
+.menu-c {
+  display: grid;
+  gap: 14px;
+}
+
+.menu-section[hidden] {
+  display: none;
+}
+
+.toast {
+  visibility: hidden;
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  background: #1f2937;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  z-index: 5000;
+}
+
+.site-footer {
+  margin-top: 30px;
+  text-align: center;
+  background: #0f141b;
+  color: #fff;
+  padding: 20px;
+}
+
+.chatbot {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 2500;
+}
+
+.chatbot-toggle {
+  border: none;
+  border-radius: 999px;
+  background: var(--main-green);
+  color: #fff;
+  padding: 11px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.chatbot-panel {
+  width: min(320px, 82vw);
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #dce9e3;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+
+.chatbot-messages {
+  max-height: 220px;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.bot-msg,
+.user-msg {
+  padding: 8px 10px;
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
+.bot-msg {
+  background: #f0f8f4;
+}
+
+.user-msg {
+  background: #eaf1fe;
+}
+
+.chatbot-form {
+  display: flex;
+  gap: 6px;
+}
+
+.chatbot-form input {
+  flex: 1;
+  border: 1px solid #d4e3dc;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: inherit;
+}
+
+.chatbot-form button {
+  border: none;
+  border-radius: 8px;
+  background: var(--dark-green);
+  color: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* scroll reveal support */
+.scroll-reveal,
+.scroll-reveal-left,
+.scroll-reveal-right,
+.scroll-reveal-scale {
+  opacity: 0;
+  transition: all 0.7s ease;
+}
+
+.scroll-reveal { transform: translateY(24px); }
+.scroll-reveal-left { transform: translateX(-24px); }
+.scroll-reveal-right { transform: translateX(24px); }
+.scroll-reveal-scale { transform: scale(0.96); }
+
+.scroll-reveal.active,
+.scroll-reveal-left.active,
+.scroll-reveal-right.active,
+.scroll-reveal-scale.active {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+@media (max-width: 900px) {
+  .cardpage2,
+  .menu-l,
+  .menu-r {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    height: auto;
+    min-height: var(--nav-height);
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  body {
+    padding-top: 120px;
+  }
+}
