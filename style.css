@@ -1101,3 +1101,20 @@ details p {
   margin-top: 10px;
   color: #4f5c56;
 }
+
+/* testimonials section */
+.testimonials-grid {
+  width: min(960px, 92vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.quote-card {
+  background: #f5faf7;
+  border: 1px solid #e3efea;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
