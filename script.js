@@ -35,6 +35,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // ============================================
 const SECRET_CODE = "1234";
 let isLoggedIn = false;
+let toastTimeout;
 
 function showToast(message, bgColor) {
     const toast = document.getElementById("toast");
@@ -42,7 +43,20 @@ function showToast(message, bgColor) {
         toast.textContent = message;
         toast.style.backgroundColor = bgColor || "#333";
         toast.style.visibility = "visible";
-        setTimeout(() => toast.style.visibility = "hidden", 3000);
+        toast.style.opacity = "1";
+        toast.style.transform = "translateY(0)";
+
+        if (toastTimeout) {
+            clearTimeout(toastTimeout);
+        }
+
+        toastTimeout = setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(-8px)";
+            setTimeout(() => {
+                toast.style.visibility = "hidden";
+            }, 250);
+        }, 3000);
     }
 }
 
@@ -59,7 +73,8 @@ function openLogin() {
 }
 
 function login() {
-    const code = document.getElementById("code").value;
+    const codeInput = document.getElementById("code");
+    const code = codeInput.value.trim();
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
@@ -67,6 +82,8 @@ function login() {
         document.getElementById("back").style.display = "none";
     } else {
         showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
+        codeInput.focus();
+        codeInput.select();
     }
 }
 
