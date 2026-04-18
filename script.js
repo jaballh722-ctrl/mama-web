@@ -66,7 +66,15 @@ function enableMemberAccess() {
   const backBtn      = document.getElementById("modalBackBtn");
   const errorMsg     = document.getElementById("modalError");
 
-  if (!memberBtn || !menuSection || !modal) return;
+  if (
+    !memberBtn ||
+    !menuSection ||
+    !modal ||
+    !codeInput ||
+    !submitBtn ||
+    !backBtn ||
+    !errorMsg
+  ) return;
 
   /* ---- فتح الموديل ---- */
   memberBtn.addEventListener("click", (event) => {
@@ -96,18 +104,22 @@ function enableMemberAccess() {
     closeModal();
   });
 
-  /* ---- إغلاق بالنقر على الخلفية ---- */
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
   /* ---- إغلاق بـ Escape ---- */
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !modal.hidden) closeModal();
   });
 
+  /* ---- إغلاق لو ضغط برا صندوق الإدخال ---- */
+  document.addEventListener("click", (e) => {
+    if (modal.hidden) return;
+    const clickedInsidePanel = modal.contains(e.target);
+    const clickedMemberBtn = memberBtn.contains(e.target);
+    if (!clickedInsidePanel && !clickedMemberBtn) closeModal();
+  });
+
   /* ---- الدوال الداخلية ---- */
   function openModal() {
+    memberBtn.hidden = true;
     codeInput.value = "";
     errorMsg.hidden = true;
     codeInput.classList.remove("input-error");
@@ -118,6 +130,7 @@ function enableMemberAccess() {
 
   function closeModal() {
     modal.hidden = true;
+    memberBtn.hidden = false;
     codeInput.value = "";
     errorMsg.hidden = true;
     codeInput.classList.remove("input-error");
@@ -142,7 +155,8 @@ function enableMemberAccess() {
       memberBtn.classList.remove("primary-link");
       memberBtn.classList.add("logout-link");
       memberBtn.dataset.loggedIn = "true";
-      memberBtn.removeAttribute("href");
+      memberBtn.setAttribute("href", "#");
+      memberBtn.hidden = false;
     } else {
       // كود خاطئ
       errorMsg.hidden = false;
@@ -168,6 +182,7 @@ function enableMemberAccess() {
     memberBtn.classList.remove("logout-link");
     memberBtn.dataset.loggedIn = "false";
     memberBtn.setAttribute("href", "#menu");
+    memberBtn.hidden = false;
     showToast("تم تسجيل الخروج بنجاح.", "#1f2937");
     // رجوع لأعلى الصفحة
     window.scrollTo({ top: 0, behavior: "smooth" });

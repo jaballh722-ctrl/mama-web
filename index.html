@@ -10,7 +10,7 @@
     <meta property="og:description" content="اشترك في برنامج متابعة أكاديمية يساعد الطالب على الإنجاز المنتظم ورفع المستوى." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ar_EG" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=20260418-2" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -23,6 +23,20 @@
             <a href="#comparison">المقارنة</a>
             <a href="#page4">التواصل</a>
             <a class="primary-link" href="#menu" id="memberAccessBtn">دخول كـ عضو</a>
+            <div id="memberModal" class="member-inline-panel" hidden>
+                <input
+                    type="text"
+                    id="memberCodeInput"
+                    class="modal-input member-inline-input"
+                    placeholder="اكتب كود العضوية"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="20"
+                />
+                <button id="modalSubmitBtn" class="modal-btn modal-btn-primary member-inline-btn">دخول</button>
+                <button id="modalBackBtn" class="modal-btn modal-btn-ghost member-inline-btn">رجوع</button>
+                <p id="modalError" class="modal-error member-inline-error" hidden>❌ كود العضو غير صحيح</p>
+            </div>
         </div>
     </nav>
 
