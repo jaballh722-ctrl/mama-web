@@ -135,7 +135,7 @@ nav {
 
 /* لوجو الناف بار — أكبر على اللاب */
 nav img {
-	height: 90px;          /* ← كان 86 */
+	height: 150px;        
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
