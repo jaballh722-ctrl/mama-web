@@ -95,7 +95,7 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   شريط التنقل
+   شريط التنقل — ديسكتوب / تابلت (صف واحد)
 ===================================================== */
 
 nav {
@@ -921,63 +921,101 @@ form {
 }
 
 /* =====================================================
-   موبايل — الناف بار صف واحد مضغوط
+   موبايل — الناف بار صفّين
+   صف أول: لوجو + زر دخول
+   صف ثاني: التابس (يسكرول أفقياً)
 ===================================================== */
 
 @media (max-width: 640px) {
 
-	:root { --nav-height: 64px; }
+	/* ارتفاع الناف بار صفّين */
+	:root { --nav-height: 108px; }
 
 	html, body {
 		overflow-x: hidden;
 		width: 100%;
 	}
 
-	/* ====== الناف بار ====== */
+	/* ====== الناف بار: عمودي صفّين ====== */
 	nav {
 		height: var(--nav-height);
-		padding: 0 8px;
-		gap: 5px;
-		flex-wrap: nowrap;
-		justify-content: space-between;
-		align-items: center;
+		padding: 0;
+		gap: 0;
+		flex-direction: column;
+		justify-content: center;
+		align-items: stretch;
 	}
 
-	/* اللوجو */
-	nav .nav-top {
+	/* ===== الصف الأول: لوجو + زر دخول كـ عضو ===== */
+	.nav-top {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 6px 12px 0;
 		flex-shrink: 0;
 	}
 
 	nav .nav-top img {
-		height: 52px;
+		height: 52px;         /* لوجو ظاهر بوضوح */
 	}
 
-	/* ===================================================
-	   wrapper التابس: يأخذ المساحة المتبقية ويسكرول
-	=================================================== */
-	.nav-tabs-wrapper {
-		flex: 1;
+	/* أزرار الدخول في الصف الأول على اليسار */
+	.nav-auth {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		gap: 4px;
-		min-width: 0;
+		flex-shrink: 0;
+	}
+
+	#first-f {
+		padding: 7px 12px;
+		font-size: 11px;
+		white-space: nowrap;
+	}
+
+	#second-f, #toexit, #back {
+		padding: 7px 10px;
+		font-size: 11px;
+		white-space: nowrap;
+	}
+
+	#code {
+		width: 90px;
+		font-size: 11px;
+		padding: 6px 8px;
+	}
+
+	/* ===== الصف الثاني: wrapper التابس ===== */
+	.nav-tabs-wrapper {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 8px 6px;
 		overflow-x: auto;
 		overflow-y: hidden;
 		scrollbar-width: none;
 		-webkit-overflow-scrolling: touch;
-		padding: 2px 0;
+		/* نخلي .nav-auth يتحرك للصف الأول */
+		flex-wrap: nowrap;
 	}
 	.nav-tabs-wrapper::-webkit-scrollbar { display: none; }
 
-	/* التابس نفسه — inline بدون wrap */
+	/* نخبي .nav-auth من الصف الثاني لأنه اتنقل للصف الأول */
+	.nav-tabs-wrapper .nav-auth {
+		display: none;
+	}
+
+	/* التابس نفسه */
 	.nav-tabs {
 		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: nowrap;
 		gap: 2px;
-		padding: 3px 4px;
+		padding: 4px 5px;
 		border-radius: 999px;
 		background: #f5faf7;
 		border: 1px solid #d2e2d8;
@@ -985,55 +1023,23 @@ form {
 	}
 
 	.nav-tabs a {
-		padding: 5px 8px;
-		font-size: 10px;
+		padding: 5px 9px;
+		font-size: 11px;
 		white-space: nowrap;
-		/* إخفاء الخط السفلي على الموبايل عشان يوفر مساحة */
 		padding-bottom: 5px;
 	}
 
-	/* إخفاء الخط السفلي للتابس على الموبايل */
+	/* إخفاء الخط السفلي على الموبايل */
 	.nav-tabs a.nav-section-link::after {
 		display: none;
 	}
 
 	/* زر قائمة الطعام */
 	#menu-link {
-		font-size: 10px;
-		padding: 5px 8px;
+		font-size: 11px;
+		padding: 5px 9px;
 		white-space: nowrap;
 		flex-shrink: 0;
-	}
-
-	/* ===================================================
-	   قسم الدخول — ثابت على يسار الناف بار
-	=================================================== */
-	.nav-auth {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 3px;
-		flex-shrink: 0;
-	}
-
-	/* زر "دخول كـ عضو" يظهر دايماً */
-	#first-f {
-		display: inline-flex !important;
-		padding: 5px 8px;
-		font-size: 10px;
-		white-space: nowrap;
-	}
-
-	#second-f, #toexit, #back {
-		padding: 5px 8px;
-		font-size: 10px;
-		white-space: nowrap;
-	}
-
-	#code {
-		width: 80px;
-		font-size: 10px;
-		padding: 5px 7px;
 	}
 
 	/* ====== الصفحات ====== */
@@ -1044,7 +1050,7 @@ form {
 	}
 
 	.page1 .nav-brand img {
-		height: 340px;
+		height: 320px;
 	}
 
 	.page2 { padding: 50px 12px; overflow: hidden; }
@@ -1097,13 +1103,13 @@ form {
 
 /* موبايل صغير جداً */
 @media (max-width: 380px) {
-	:root { --nav-height: 58px; }
-	nav .nav-top img { height: 46px; }
-	.nav-tabs a, #menu-link { padding: 4px 6px; font-size: 9px; }
-	#first-f, #second-f, #toexit, #back { padding: 4px 6px; font-size: 9px; }
-	#code { width: 68px; font-size: 9px; }
+	:root { --nav-height: 100px; }
+	nav .nav-top img { height: 44px; }
+	.nav-tabs a, #menu-link { padding: 4px 7px; font-size: 10px; }
+	#first-f, #second-f, #toexit, #back { padding: 6px 9px; font-size: 10px; }
+	#code { width: 76px; font-size: 10px; }
 	.page1 h1 { font-size: 1.6rem; }
-	.page1 .nav-brand img { height: 280px; }
+	.page1 .nav-brand img { height: 260px; }
 }
 
 /* =====================================================
