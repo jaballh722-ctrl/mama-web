@@ -15,7 +15,7 @@
 	--dark-text: #1f2937;
 	--gray-text: #6b7280;
 	--yellow: #8eed91;
-	--nav-height: 100px; /* ارتفاع الناف بار */
+	--nav-height: 100px;
 }
 
 html {
@@ -32,10 +32,9 @@ body {
 	overflow-x: hidden;
 	position: relative;
 	width: 100%;
-	padding-top: var(--nav-height); /* مسافة علشان الناف بار الفيكسد */
+	padding-top: var(--nav-height);
 }
 
-/* منع أي عنصر من الخروج عن عرض الشاشة */
 section, div, footer, header, main {
 	max-width: 100%;
 }
@@ -96,14 +95,14 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   شريط التنقل — FIXED دايماً فوق
+   شريط التنقل
 ===================================================== */
 
 nav {
 	background: rgba(255, 255, 255, 0.97);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
-	position: fixed;           /* ← فيكسد بدل sticky */
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -120,7 +119,7 @@ nav {
 	gap: 14px;
 }
 
-/* --- اللوجو على اليمين --- */
+/* اللوجو */
 .nav-top {
 	display: flex;
 	align-items: center;
@@ -133,9 +132,8 @@ nav {
 	text-decoration: none;
 }
 
- /* the LOGO لوجو الناف بار — أكبر على اللاب */
 nav img {
-	height: 230px;        
+	height: 230px;
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
@@ -145,7 +143,7 @@ nav img:hover {
 	transform: scale(1.05);
 }
 
-/* --- التابس + دخول في المنتصف والشمال --- */
+/* التابس + دخول */
 .nav-tabs-wrapper {
 	display: flex;
 	flex-direction: row;
@@ -153,6 +151,7 @@ nav img:hover {
 	gap: 10px;
 	flex: 1;
 	justify-content: flex-start;
+	min-width: 0;
 }
 
 #menu-link {
@@ -217,7 +216,7 @@ nav a {
 	box-shadow: 0 6px 16px rgba(46, 169, 127, 0.25);
 }
 
-/* --- أزرار الدخول --- */
+/* أزرار الدخول */
 .nav-auth {
 	display: flex;
 	flex-direction: row;
@@ -266,9 +265,8 @@ nav a {
 	margin-bottom: -115px;
 }
 
-/* لوجو الهيرو — أكبر */
 .page1 .nav-brand img {
-	height: 680px;            /* ← كان 600 */
+	height: 680px;
 	width: auto;
 	margin-top: -10px;
 }
@@ -452,25 +450,25 @@ nav a {
 }
 
 .cardspage3 {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  align-items: stretch;
-  direction: rtl;
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 14px;
+	align-items: stretch;
+	direction: rtl;
 }
 
 .card3 {
-  background: linear-gradient(180deg, #ffffff 0%, #fbfefd 100%);
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.09);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border: 1px solid #d6e7df;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+	background: linear-gradient(180deg, #ffffff 0%, #fbfefd 100%);
+	border-radius: 24px;
+	box-shadow: 0 10px 30px rgba(17, 24, 39, 0.09);
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	border: 1px solid #d6e7df;
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .card3::before {
@@ -489,78 +487,78 @@ nav a {
 }
 
 .card3.featured {
-  border: 2px solid var(--main-green);
+	border: 2px solid var(--main-green);
 }
 
 .badge {
-  width: fit-content;
-  background: #dff4eb;
-  color: var(--dark-green);
-  border-radius: 999px;
-  font-size: 0.82rem;
-  padding: 4px 10px;
+	width: fit-content;
+	background: #dff4eb;
+	color: var(--dark-green);
+	border-radius: 999px;
+	font-size: 0.82rem;
+	padding: 4px 10px;
 }
 
 .card3 h1 {
-  font-size: 1.06rem;
-  line-height: 1.65;
-  color: var(--dark-text);
-  font-weight: 800;
+	font-size: 1.06rem;
+	line-height: 1.65;
+	color: var(--dark-text);
+	font-weight: 800;
 }
 
 .khalawis-highlight {
-  border: 2px solid #1f9d52;
-  box-shadow: 0 14px 34px rgba(31, 157, 82, 0.2);
-  background: linear-gradient(180deg, #ffffff 0%, #f3fff8 100%);
+	border: 2px solid #1f9d52;
+	box-shadow: 0 14px 34px rgba(31, 157, 82, 0.2);
+	background: linear-gradient(180deg, #ffffff 0%, #f3fff8 100%);
 }
 
 .khalawis-highlight::before {
-  background: linear-gradient(90deg, #1f9d52, #33c56e);
+	background: linear-gradient(90deg, #1f9d52, #33c56e);
 }
 
 .khalawis-highlight h1 {
-  color: #14753b;
+	color: #14753b;
 }
 
 .popular-badge {
-  width: fit-content;
-  align-self: center;
-  border-radius: 999px;
-  border: 3px solid #33cc33;
-  background: #fff;
-  color: #000;
-  font-size: 0.92rem;
-  font-weight: 800;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-shadow: 0 8px 18px rgba(29, 111, 29, 0.12);
-  padding: 5px 22px;
-  min-height: 38px;
-  margin-bottom: 4px;
+	width: fit-content;
+	align-self: center;
+	border-radius: 999px;
+	border: 3px solid #33cc33;
+	background: #fff;
+	color: #000;
+	font-size: 0.92rem;
+	font-weight: 800;
+	line-height: 1.2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	box-shadow: 0 8px 18px rgba(29, 111, 29, 0.12);
+	padding: 5px 22px;
+	min-height: 38px;
+	margin-bottom: 4px;
 }
 
 .price {
-  color: var(--dark-green);
-  font-weight: 800;
+	color: var(--dark-green);
+	font-weight: 800;
 }
 
 .dot-list {
-  list-style: none;
-  display: grid;
-  gap: 8px;
-  margin-block: 8px 14px;
-  flex: 1;
-  color: #243b33;
-  font-size: 0.95rem;
+	list-style: none;
+	display: grid;
+	gap: 8px;
+	margin-block: 8px 14px;
+	flex: 1;
+	color: #243b33;
+	font-size: 0.95rem;
 }
 
 .dot-list li::before {
-  content: "✓ ";
-  color: var(--main-green);
-  font-weight: 700;
+	content: "✓ ";
+	color: var(--main-green);
+	font-weight: 700;
 }
 
 .card3 form {
@@ -912,14 +910,14 @@ form {
 @media (max-width: 1024px) {
 	:root { --nav-height: 88px; }
 	nav { padding: 7px 14px; }
-	nav img { height: 76px; }          /* أكبر شوية على التابلت */
+	nav img { height: 76px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
 	.cardspage3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 	.cardpage2 { padding: 40px; gap: 40px; }
 	.menu-l, .menu-r { padding: 40px; }
-	.page1 .nav-brand img { height: 520px; }   /* أكبر على التابلت */
+	.page1 .nav-brand img { height: 520px; }
 }
 
 /* =====================================================
@@ -928,7 +926,7 @@ form {
 
 @media (max-width: 640px) {
 
-	:root { --nav-height: 72px; }        /* ارتفاع الناف بار على الموبايل */
+	:root { --nav-height: 64px; }
 
 	html, body {
 		overflow-x: hidden;
@@ -938,77 +936,104 @@ form {
 	/* ====== الناف بار ====== */
 	nav {
 		height: var(--nav-height);
-		padding: 0 10px;
-		gap: 6px;
+		padding: 0 8px;
+		gap: 5px;
 		flex-wrap: nowrap;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	/* لوجو الناف — أكبر على الموبايل */
-	nav .nav-top img {
-		height: 62px;                    /* ← كان 54 */
+	/* اللوجو */
+	nav .nav-top {
+		flex-shrink: 0;
 	}
 
-	/* التابس wrapper */
+	nav .nav-top img {
+		height: 52px;
+	}
+
+	/* ===================================================
+	   wrapper التابس: يأخذ المساحة المتبقية ويسكرول
+	=================================================== */
 	.nav-tabs-wrapper {
 		flex: 1;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: flex-start;
-		gap: 5px;
-		overflow: hidden;
-		flex-wrap: nowrap;
+		gap: 4px;
 		min-width: 0;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
+		padding: 2px 0;
 	}
+	.nav-tabs-wrapper::-webkit-scrollbar { display: none; }
 
-	/* التابس نفسه — يسكرول أفقياً لو ضاق المكان */
+	/* التابس نفسه — inline بدون wrap */
 	.nav-tabs {
 		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: nowrap;
 		gap: 2px;
-		padding: 4px 5px;
-		width: auto;
-		overflow-x: auto;
-		scrollbar-width: none;
-		-webkit-overflow-scrolling: touch;
+		padding: 3px 4px;
+		border-radius: 999px;
+		background: #f5faf7;
+		border: 1px solid #d2e2d8;
+		flex-shrink: 0;
 	}
-	.nav-tabs::-webkit-scrollbar { display: none; }
 
 	.nav-tabs a {
-		padding: 6px 9px;
+		padding: 5px 8px;
 		font-size: 10px;
 		white-space: nowrap;
+		/* إخفاء الخط السفلي على الموبايل عشان يوفر مساحة */
+		padding-bottom: 5px;
 	}
 
+	/* إخفاء الخط السفلي للتابس على الموبايل */
+	.nav-tabs a.nav-section-link::after {
+		display: none;
+	}
+
+	/* زر قائمة الطعام */
 	#menu-link {
 		font-size: 10px;
-		padding: 6px 9px;
+		padding: 5px 8px;
 		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
-	/* أزرار الدخول */
+	/* ===================================================
+	   قسم الدخول — ثابت على يسار الناف بار
+	=================================================== */
 	.nav-auth {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 4px;
+		gap: 3px;
 		flex-shrink: 0;
 	}
 
-	#first-f, #second-f, #toexit, #back {
-		padding: 6px 9px;
+	/* زر "دخول كـ عضو" يظهر دايماً */
+	#first-f {
+		display: inline-flex !important;
+		padding: 5px 8px;
+		font-size: 10px;
+		white-space: nowrap;
+	}
+
+	#second-f, #toexit, #back {
+		padding: 5px 8px;
 		font-size: 10px;
 		white-space: nowrap;
 	}
 
 	#code {
-		width: 85px;
+		width: 80px;
 		font-size: 10px;
-		padding: 6px 8px;
+		padding: 5px 7px;
 	}
 
 	/* ====== الصفحات ====== */
@@ -1018,9 +1043,8 @@ form {
 		min-height: calc(100vh - var(--nav-height));
 	}
 
-	/* لوجو الهيرو على الموبايل — أكبر */
 	.page1 .nav-brand img {
-		height: 370px;                   /* ← كان 320 */
+		height: 340px;
 	}
 
 	.page2 { padding: 50px 12px; overflow: hidden; }
@@ -1073,100 +1097,102 @@ form {
 
 /* موبايل صغير جداً */
 @media (max-width: 380px) {
-	:root { --nav-height: 66px; }
-	nav .nav-top img { height: 54px; }
-	.nav-tabs a, #menu-link { padding: 5px 7px; font-size: 9.5px; }
-	#first-f, #second-f, #toexit, #back { padding: 5px 7px; font-size: 9px; }
-	#code { width: 72px; font-size: 9px; }
+	:root { --nav-height: 58px; }
+	nav .nav-top img { height: 46px; }
+	.nav-tabs a, #menu-link { padding: 4px 6px; font-size: 9px; }
+	#first-f, #second-f, #toexit, #back { padding: 4px 6px; font-size: 9px; }
+	#code { width: 68px; font-size: 9px; }
 	.page1 h1 { font-size: 1.6rem; }
-	.page1 .nav-brand img { height: 300px; }
+	.page1 .nav-brand img { height: 280px; }
 }
 
-/* comparison + faq sections */
+/* =====================================================
+   comparison + faq + testimonials
+===================================================== */
+
 .section-title {
-  color: #000;
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  margin-bottom: 30px;
-  text-align: center;
-  font-weight: 800;
-  position: relative;
-  padding-bottom: 16px;
+	color: #000;
+	font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+	margin-bottom: 30px;
+	text-align: center;
+	font-weight: 800;
+	position: relative;
+	padding-bottom: 16px;
 }
 
 .section-title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 4px;
-  background: var(--main-green);
-  border-radius: 3px;
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 70px;
+	height: 4px;
+	background: var(--main-green);
+	border-radius: 3px;
 }
 
 .table-wrap {
-  width: min(1120px, 92vw);
-  margin: 0 auto;
-  overflow-x: auto;
-  border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(10, 31, 19, 0.08);
+	width: min(1120px, 92vw);
+	margin: 0 auto;
+	overflow-x: auto;
+	border-radius: 16px;
+	box-shadow: 0 10px 24px rgba(10, 31, 19, 0.08);
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
 }
 
 th,
 td {
-  padding: 12px;
-  border-bottom: 1px solid #ecf2ef;
-  text-align: center;
+	padding: 12px;
+	border-bottom: 1px solid #ecf2ef;
+	text-align: center;
 }
 
 th:first-child,
 td:first-child {
-  text-align: right;
-  font-weight: 700;
+	text-align: right;
+	font-weight: 700;
 }
 
 .faq-list {
-  display: grid;
-  gap: 10px;
+	display: grid;
+	gap: 10px;
 }
 
 details {
-  border: 1px solid #e1ece7;
-  border-radius: 12px;
-  background: #fff;
-  padding: 12px 14px;
+	border: 1px solid #e1ece7;
+	border-radius: 12px;
+	background: #fff;
+	padding: 12px 14px;
 }
 
 summary {
-  cursor: pointer;
-  font-weight: 700;
+	cursor: pointer;
+	font-weight: 700;
 }
 
 details p {
-  margin-top: 10px;
-  color: #4f5c56;
+	margin-top: 10px;
+	color: #4f5c56;
 }
 
-/* testimonials section */
 .testimonials-grid {
-  width: min(960px, 92vw);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+	width: min(960px, 92vw);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 12px;
 }
 
 .quote-card {
-  background: #f5faf7;
-  border: 1px solid #e3efea;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
+	background: #f5faf7;
+	border: 1px solid #e3efea;
+	border-radius: 14px;
+	padding: 16px;
+	text-align: center;
 }
