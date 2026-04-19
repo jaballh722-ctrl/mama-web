@@ -1064,6 +1064,32 @@ form {
 }
 
 /* comparison + faq sections */
+.section-title {
+  color: var(--dark-text);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  margin: 0 auto 30px;
+  width: fit-content;
+  font-weight: 800;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 4px;
+  background: var(--main-green);
+  border-radius: 3px;
+}
+
+.section-title-contact {
+  padding-top: 50px;
+}
+
 .table-wrap {
   width: min(1120px, 92vw);
   margin: 0 auto;
