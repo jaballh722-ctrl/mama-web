@@ -16,6 +16,33 @@
 	--gray-text: #6b7280;
 	--yellow: #8eed91;
 	--nav-height: 78px;
+	--theme-bg: var(--white);
+	--theme-surface: #f5faf7;
+	--theme-surface-border: #d2e2d8;
+	--theme-tab-hover: #dff3df;
+	--theme-button: var(--main-green);
+	--theme-button-hover: #35a077;
+	--theme-accent: var(--main-green);
+	--theme-detail: #e8f7f2;
+	--theme-nav-bg: rgba(255, 255, 255, 0.97);
+	--theme-nav-border: #dfe9e3;
+	--theme-toggle-shadow: rgba(46,169,127,0.35);
+	--theme-toggle-icon: linear-gradient(135deg, #2f99af 0 50%, #ebfbf7 50% 100%);
+}
+
+body[data-theme="alt"] {
+	--theme-bg: #ebfbf7;
+	--theme-surface: #2f99af;
+	--theme-surface-border: #7ed7d2;
+	--theme-tab-hover: #beecea;
+	--theme-button: #7ed7d2;
+	--theme-button-hover: #6ac7c2;
+	--theme-accent: #2f99af;
+	--theme-detail: #beecea;
+	--theme-nav-bg: rgba(235, 251, 247, 0.96);
+	--theme-nav-border: #7ed7d2;
+	--theme-toggle-shadow: rgba(47,153,175,0.35);
+	--theme-toggle-icon: linear-gradient(135deg, #2ea97f 0 50%, #ffffff 50% 100%);
 }
 
 html {
@@ -27,7 +54,7 @@ body {
 	font-family: "Cairo", sans-serif;
 	line-height: 1.7;
 	color: var(--dark-text);
-	background: var(--white);
+	background: var(--theme-bg);
 	direction: rtl;
 	overflow-x: hidden;
 	position: relative;
@@ -37,6 +64,21 @@ body {
 
 section, div, footer, header, main {
 	max-width: 100%;
+}
+
+body[data-theme="alt"] .section-title,
+body[data-theme="alt"] .page3 h1,
+body[data-theme="alt"] #page2 h1 {
+	color: var(--theme-accent) !important;
+}
+
+body[data-theme="alt"] .card3,
+body[data-theme="alt"] .cardpage2,
+body[data-theme="alt"] .contact-form,
+body[data-theme="alt"] details,
+body[data-theme="alt"] .table-wrap {
+	background: var(--theme-detail);
+	border-color: var(--theme-surface-border);
 }
 
 /* =====================================================
@@ -85,13 +127,13 @@ section, div, footer, header, main {
 ===================================================== */
 
 nav {
-	background: rgba(255, 255, 255, 0.97);
+	background: var(--theme-nav-bg);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	position: fixed;
 	top: 0; left: 0; right: 0;
 	z-index: 9999;
-	border-bottom: 1px solid #dfe9e3;
+	border-bottom: 1px solid var(--theme-nav-border);
 	box-shadow: 0 4px 20px rgba(28, 56, 43, 0.10);
 	width: 100%;
 	height: var(--nav-height);
@@ -106,6 +148,33 @@ nav {
 /* ─── المفتاح: nav-row1 يذوب وأولاده يصبحوا flex items مباشرة ─── */
 .nav-row1 {
 	display: contents;
+}
+
+.theme-toggle {
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	border: 2px solid var(--theme-nav-border);
+	background: transparent;
+	padding: 0;
+	cursor: pointer;
+	position: relative;
+	box-shadow: 0 3px 10px var(--theme-toggle-shadow);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+	flex-shrink: 0;
+}
+
+.theme-toggle::before {
+	content: "";
+	position: absolute;
+	inset: 3px;
+	border-radius: 999px;
+	background: var(--theme-toggle-icon);
+}
+
+.theme-toggle:hover {
+	transform: translateY(-1px) scale(1.05);
+	box-shadow: 0 6px 14px var(--theme-toggle-shadow);
 }
 
 /* ─── اللوجو — يمين ─── */
@@ -156,8 +225,8 @@ nav .nav-top img:hover { transform: scale(1.05); }
 	gap: 4px;
 	padding: 6px 8px;
 	border-radius: 999px;
-	background: #f5faf7;
-	border: 1px solid #d2e2d8;
+	background: var(--theme-surface);
+	border: 1px solid var(--theme-surface-border);
 	flex-shrink: 0;
 }
 
@@ -175,12 +244,16 @@ nav a {
 	font-size: 0.88rem;
 }
 
-.nav-tabs a:hover { background: #dff3df; color: #1f6d52; }
+.nav-tabs a:hover { background: var(--theme-tab-hover); color: #1f6d52; }
 
 .nav-tabs a.nav-section-link {
 	color: #000;
 	position: relative;
 	padding-bottom: 12px;
+}
+
+body[data-theme="alt"] .nav-tabs a.nav-section-link {
+	color: #ebfbf7;
 }
 
 .nav-tabs a.nav-section-link::after {
@@ -194,14 +267,14 @@ nav a {
 }
 
 #menu-link {
-	background: #2ea97f;
+	background: var(--theme-button);
 	color: #fff;
 	box-shadow: 0 6px 16px rgba(46,169,127,0.25);
 	white-space: nowrap;
 	flex-shrink: 0;
 }
 
-#menu-link:hover { background: #35a077; }
+#menu-link:hover { background: var(--theme-button-hover); }
 
 /* ─── الدخول — يسار ─── */
 .nav-auth {
@@ -236,13 +309,13 @@ nav a {
 }
 
 #first-f, #second-f, #back {
-	background: var(--main-green);
+	background: var(--theme-button);
 	color: white;
 	box-shadow: 0 4px 15px rgba(62,180,137,0.2);
 }
 
 #first-f:hover, #second-f:hover, #back:hover {
-	background: #35a077;
+	background: var(--theme-button-hover);
 	transform: translateY(-2px);
 }
 
@@ -850,6 +923,12 @@ form {
 		order: unset;
 	}
 
+	.theme-toggle {
+		width: 30px;
+		height: 30px;
+		margin-inline: 6px;
+	}
+
 	/* reset orders للموبايل */
 	.nav-top  { order: unset; }
 	.nav-row2 { order: unset; flex: unset; }
@@ -878,18 +957,18 @@ form {
 		padding: 9px 16px;
 		font-size: 12px;
 		border-radius: 50px;
-		background: var(--main-green);
+		background: var(--theme-button);
 		color: #fff;
 		font-weight: 700;
 		font-family: "Cairo", sans-serif;
 		border: none;
 		cursor: pointer;
-		box-shadow: 0 3px 12px rgba(46,169,127,0.35);
+		box-shadow: 0 3px 12px var(--theme-toggle-shadow);
 		white-space: nowrap;
 		transition: 0.3s;
 	}
 
-	#first-f:hover { background: #35a077; }
+	#first-f:hover { background: var(--theme-button-hover); }
 	#second-f, #back { padding: 8px 12px; font-size: 11px; }
 	#toexit { padding: 8px 12px; font-size: 11px; }
 	#code { width: 95px; font-size: 11px; padding: 7px 9px; }
@@ -916,8 +995,8 @@ form {
 		overflow-y: hidden;
 		scrollbar-width: none;
 		-webkit-overflow-scrolling: touch;
-		background: #f0faf5;
-		border: 1.5px solid #b8dece;
+		background: var(--theme-surface);
+		border: 1.5px solid var(--theme-surface-border);
 		border-radius: 999px;
 		padding: 4px 6px;
 		gap: 2px;
@@ -966,7 +1045,7 @@ form {
 		white-space: nowrap;
 		flex-shrink: 0;
 		border-radius: 999px;
-		background: var(--main-green);
+		background: var(--theme-button);
 		color: #fff;
 		margin-left: 2px;
 	}
