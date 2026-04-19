@@ -36,6 +36,27 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 const SECRET_CODE = "1234";
 let isLoggedIn = false;
 let toastTimeout;
+const THEME_STORAGE_KEY = "mama-theme";
+
+function applyTheme(themeName) {
+    const finalTheme = themeName === "alt" ? "alt" : "default";
+    document.body.setAttribute("data-theme", finalTheme === "alt" ? "alt" : "default");
+    localStorage.setItem(THEME_STORAGE_KEY, finalTheme);
+}
+
+function initThemeToggle() {
+    const themeToggleButton = document.getElementById("theme-toggle");
+    if (!themeToggleButton) return;
+
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "default";
+    applyTheme(savedTheme);
+
+    themeToggleButton.addEventListener("click", () => {
+        const currentTheme = document.body.getAttribute("data-theme") === "alt" ? "alt" : "default";
+        const nextTheme = currentTheme === "alt" ? "default" : "alt";
+        applyTheme(nextTheme);
+    });
+}
 
 function showToast(message, bgColor) {
     const toast = document.getElementById("toast");
@@ -128,6 +149,7 @@ function back() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
     updateUI();
     
     // WhatsApp Form
