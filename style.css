@@ -40,7 +40,7 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   تأثيرات الظهور عند السكرول
+   تأثيرات السكرول
 ===================================================== */
 
 .scroll-reveal {
@@ -95,7 +95,7 @@ section, div, footer, header, main {
 }
 
 /* =====================================================
-   شريط التنقل — ديسكتوب / تابلت (صف واحد)
+   شريط التنقل — ديسكتوب (صف واحد)
 ===================================================== */
 
 nav {
@@ -109,13 +109,13 @@ nav {
 	z-index: 9999;
 	border-bottom: 1px solid #dfe9e3;
 	box-shadow: 0 4px 20px rgba(28, 56, 43, 0.10);
-	padding: 6px 28px;
 	width: 100%;
 	height: var(--nav-height);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	padding: 6px 28px;
 	gap: 14px;
 }
 
@@ -132,18 +132,18 @@ nav {
 	text-decoration: none;
 }
 
-nav img {
+nav .nav-top img {
 	height: 230px;
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
 }
 
-nav img:hover {
+nav .nav-top img:hover {
 	transform: scale(1.05);
 }
 
-/* التابس + دخول */
+/* التابس wrapper */
 .nav-tabs-wrapper {
 	display: flex;
 	flex-direction: row;
@@ -910,7 +910,7 @@ form {
 @media (max-width: 1024px) {
 	:root { --nav-height: 88px; }
 	nav { padding: 7px 14px; }
-	nav img { height: 76px; }
+	nav .nav-top img { height: 76px; }
 	nav a { padding: 8px 12px; font-size: 0.82rem; }
 	#first-f, #second-f, #toexit, #back { padding: 8px 14px; font-size: 12px; }
 	#code { width: 120px; font-size: 12px; padding: 8px 10px; }
@@ -921,136 +921,180 @@ form {
 }
 
 /* =====================================================
-   موبايل — الناف بار صفّين
-   صف أول: لوجو + زر دخول
-   صف ثاني: التابس (يسكرول أفقياً)
+   موبايل — ناف بار صفّين احترافي
 ===================================================== */
 
 @media (max-width: 640px) {
 
-	/* ارتفاع الناف بار صفّين */
-	:root { --nav-height: 108px; }
+	:root { --nav-height: 115px; }
 
 	html, body {
 		overflow-x: hidden;
 		width: 100%;
 	}
 
-	/* ====== الناف بار: عمودي صفّين ====== */
+	/* الناف بار: عمود من صفّين */
 	nav {
 		height: var(--nav-height);
 		padding: 0;
 		gap: 0;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: stretch;
 		align-items: stretch;
+		overflow: hidden;
 	}
 
-	/* ===== الصف الأول: لوجو + زر دخول كـ عضو ===== */
-	.nav-top {
+	/* =========================================
+	   الصف الأول: لوجو في النص + زر الدخول
+	========================================= */
+	.nav-row-top {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		padding: 6px 12px 0;
+		padding: 8px 14px 4px;
+		position: relative;
 		flex-shrink: 0;
+		height: 68px;
+	}
+
+	/* اللوجو في المنتصف */
+	.nav-top {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
 	}
 
 	nav .nav-top img {
-		height: 52px;         /* لوجو ظاهر بوضوح */
+		height: 56px;
+		width: auto;
 	}
 
-	/* أزرار الدخول في الصف الأول على اليسار */
+	/* أزرار الدخول — يسار الصف الأول */
 	.nav-auth {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 4px;
-		flex-shrink: 0;
+		gap: 5px;
+		margin-left: auto;
+		position: relative;
+		z-index: 1;
 	}
 
 	#first-f {
-		padding: 7px 12px;
+		padding: 8px 14px;
+		font-size: 11.5px;
+		background: var(--main-green);
+		color: #fff;
+		border-radius: 50px;
+		border: none;
+		font-weight: 700;
+		font-family: "Cairo", sans-serif;
+		box-shadow: 0 3px 10px rgba(46,169,127,0.3);
+		cursor: pointer;
+		white-space: nowrap;
+		transition: 0.3s;
+	}
+
+	#second-f, #back {
+		padding: 8px 12px;
 		font-size: 11px;
 		white-space: nowrap;
 	}
 
-	#second-f, #toexit, #back {
-		padding: 7px 10px;
+	#toexit {
+		padding: 8px 12px;
 		font-size: 11px;
 		white-space: nowrap;
+	}
+
+	#loginBox {
+		gap: 4px;
 	}
 
 	#code {
-		width: 90px;
+		width: 95px;
 		font-size: 11px;
-		padding: 6px 8px;
+		padding: 7px 9px;
 	}
 
-	/* ===== الصف الثاني: wrapper التابس ===== */
+	/* =========================================
+	   الصف الثاني: التابس تسكرول بشكل نضيف
+	========================================= */
 	.nav-tabs-wrapper {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 4px;
-		padding: 4px 8px 6px;
+		gap: 6px;
+		padding: 0 12px 8px;
 		overflow-x: auto;
 		overflow-y: hidden;
 		scrollbar-width: none;
 		-webkit-overflow-scrolling: touch;
-		/* نخلي .nav-auth يتحرك للصف الأول */
-		flex-wrap: nowrap;
+		flex-shrink: 0;
+		height: 47px;
 	}
 	.nav-tabs-wrapper::-webkit-scrollbar { display: none; }
 
-	/* نخبي .nav-auth من الصف الثاني لأنه اتنقل للصف الأول */
-	.nav-tabs-wrapper .nav-auth {
-		display: none;
-	}
-
-	/* التابس نفسه */
+	/* التابس — كبسولة واحدة كاملة */
 	.nav-tabs {
 		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: nowrap;
 		gap: 2px;
-		padding: 4px 5px;
+		padding: 5px 7px;
 		border-radius: 999px;
-		background: #f5faf7;
-		border: 1px solid #d2e2d8;
+		background: #f0faf5;
+		border: 1.5px solid #c8e0d4;
 		flex-shrink: 0;
+		/* الظل عشان يبان محيطها */
+		box-shadow: 0 2px 8px rgba(46,169,127,0.10);
 	}
 
-	.nav-tabs a {
-		padding: 5px 9px;
+	/* روابط التابس */
+	.nav-tabs a.nav-section-link {
+		padding: 5px 11px;
 		font-size: 11px;
 		white-space: nowrap;
-		padding-bottom: 5px;
+		border-radius: 999px;
+		color: #25322c;
+		font-weight: 700;
+		/* شيل الخط السفلي — مش محتاجينه هنا */
 	}
 
-	/* إخفاء الخط السفلي على الموبايل */
 	.nav-tabs a.nav-section-link::after {
 		display: none;
+	}
+
+	.nav-tabs a.nav-section-link:hover {
+		background: #d6f0e4;
+		color: #1a6644;
 	}
 
 	/* زر قائمة الطعام */
 	#menu-link {
 		font-size: 11px;
-		padding: 5px 9px;
+		padding: 6px 12px;
 		white-space: nowrap;
 		flex-shrink: 0;
+		border-radius: 999px;
+		background: var(--main-green);
+		color: #fff;
 	}
 
 	/* ====== الصفحات ====== */
 	.page1 {
-		padding: 22px 12px 40px;
+		padding: 20px 12px 40px;
 		overflow: hidden;
 		min-height: calc(100vh - var(--nav-height));
 	}
 
+	/* لوجو الهيرو — أكبر بكتير */
 	.page1 .nav-brand img {
-		height: 320px;
+		height: 300px;
 	}
 
 	.page2 { padding: 50px 12px; overflow: hidden; }
@@ -1101,14 +1145,15 @@ form {
 	.menu-l p, .menu-r p { padding: 0; }
 }
 
-/* موبايل صغير جداً */
+/* موبايل صغير */
 @media (max-width: 380px) {
-	:root { --nav-height: 100px; }
-	nav .nav-top img { height: 44px; }
-	.nav-tabs a, #menu-link { padding: 4px 7px; font-size: 10px; }
-	#first-f, #second-f, #toexit, #back { padding: 6px 9px; font-size: 10px; }
-	#code { width: 76px; font-size: 10px; }
-	.page1 h1 { font-size: 1.6rem; }
+	:root { --nav-height: 108px; }
+	.nav-row-top { height: 62px; }
+	nav .nav-top img { height: 48px; }
+	.nav-tabs a.nav-section-link, #menu-link { padding: 4px 9px; font-size: 10px; }
+	#first-f { padding: 7px 11px; font-size: 10.5px; }
+	#second-f, #toexit, #back { padding: 6px 9px; font-size: 10px; }
+	#code { width: 80px; font-size: 10px; }
 	.page1 .nav-brand img { height: 260px; }
 }
 
@@ -1152,8 +1197,7 @@ table {
 	background: #fff;
 }
 
-th,
-td {
+th, td {
 	padding: 12px;
 	border-bottom: 1px solid #ecf2ef;
 	text-align: center;
