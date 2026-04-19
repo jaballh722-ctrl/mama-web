@@ -159,6 +159,8 @@ nav {
 	padding: 0;
 	cursor: pointer;
 	position: relative;
+	z-index: 2;
+	pointer-events: auto;
 	box-shadow: 0 3px 10px var(--theme-toggle-shadow);
 	transition: transform 0.25s ease, box-shadow 0.25s ease;
 	flex-shrink: 0;

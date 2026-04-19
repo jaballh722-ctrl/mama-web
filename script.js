@@ -44,18 +44,27 @@ function applyTheme(themeName) {
     localStorage.setItem(THEME_STORAGE_KEY, finalTheme);
 }
 
+function toggleTheme() {
+    const currentTheme = document.body.getAttribute("data-theme") === "alt" ? "alt" : "default";
+    const nextTheme = currentTheme === "alt" ? "default" : "alt";
+    applyTheme(nextTheme);
+
+    const themeToggleButton = document.getElementById("theme-toggle");
+    if (themeToggleButton) {
+        themeToggleButton.setAttribute("aria-pressed", nextTheme === "alt" ? "true" : "false");
+    }
+}
+
 function initThemeToggle() {
     const themeToggleButton = document.getElementById("theme-toggle");
-    if (!themeToggleButton) return;
 
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "default";
     applyTheme(savedTheme);
 
-    themeToggleButton.addEventListener("click", () => {
-        const currentTheme = document.body.getAttribute("data-theme") === "alt" ? "alt" : "default";
-        const nextTheme = currentTheme === "alt" ? "default" : "alt";
-        applyTheme(nextTheme);
-    });
+    if (!themeToggleButton) return;
+
+    themeToggleButton.setAttribute("aria-pressed", savedTheme === "alt" ? "true" : "false");
+    themeToggleButton.addEventListener("click", toggleTheme);
 }
 
 function showToast(message, bgColor) {
@@ -148,27 +157,38 @@ function back() {
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+function initWhatsAppForm() {
+    const whatsappForm = document.getElementById("whatsappForm");
+    if (!whatsappForm) return;
+
+    whatsappForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const phoneNumber = "201116967317";
+        const finalMessage = `📧 الإيميل: ${email}
+
+💬 الرسالة:
+${message}`;
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(finalMessage)}`;
+        window.open(whatsappURL, "_blank");
+        showToast("جاري فتح واتساب...", "#25D366");
+        document.getElementById("email").value = "";
+        document.getElementById("message").value = "";
+    });
+}
+
+function initApp() {
     initThemeToggle();
     updateUI();
-    
-    // WhatsApp Form
-    const whatsappForm = document.getElementById("whatsappForm");
-    if (whatsappForm) {
-        whatsappForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const message = document.getElementById("message").value;
-            const phoneNumber = "201116967317";
-            const finalMessage = `📧 الإيميل: ${email}\n\n💬 الرسالة:\n${message}`;
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(finalMessage)}`;
-            window.open(whatsappURL, "_blank");
-            showToast("جاري فتح واتساب...", "#25D366");
-            document.getElementById("email").value = "";
-            document.getElementById("message").value = "";
-        });
-    }
-});
+    initWhatsAppForm();
+}
+
+if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", initApp);
+} else {
+    initApp();
+}
 
 // ============================================
 // AI CHATBOT - مش هيشتغل بسبب CORS
