@@ -192,6 +192,25 @@ nav a {
 	color: #1f6d52;
 }
 
+.nav-tabs a.nav-section-link {
+	color: #000;
+	text-align: center;
+	position: relative;
+	padding-bottom: 12px;
+}
+
+.nav-tabs a.nav-section-link::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: 4px;
+	transform: translateX(-50%);
+	width: 28px;
+	height: 3px;
+	background: var(--main-green);
+	border-radius: 999px;
+}
+
 #menu-link {
 	background: #2ea97f;
 	color: #fff;
