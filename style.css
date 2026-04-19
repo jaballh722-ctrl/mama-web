@@ -135,7 +135,7 @@ nav {
 
  /* the LOGO لوجو الناف بار — أكبر على اللاب */
 nav img {
-	height: 185px;        
+	height: 230px;        
 	width: auto;
 	transition: transform 0.3s;
 	flex-shrink: 0;
