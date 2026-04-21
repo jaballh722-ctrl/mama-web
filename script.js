@@ -42,6 +42,14 @@ function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
     document.body.setAttribute("data-theme", finalTheme === "alt" ? "alt" : "default");
     localStorage.setItem(THEME_STORAGE_KEY, finalTheme);
+
+    const themeToggleButton = document.getElementById("theme-toggle");
+    if (themeToggleButton) {
+        const isAlt = finalTheme === "alt";
+        const nextThemeLabel = isAlt ? "الأخضر والأبيض" : "الثيم الفاتح";
+        themeToggleButton.setAttribute("aria-label", `تغيير الثيم إلى ${nextThemeLabel}`);
+        themeToggleButton.setAttribute("title", `تغيير الثيم إلى ${nextThemeLabel}`);
+    }
 }
 
 function toggleTheme() {
