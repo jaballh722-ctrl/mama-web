@@ -34,6 +34,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // كود الموقع الأساسي
 // ============================================
 const SECRET_CODE = "1234";
+const ADMIN_CODE = "admi-n2026";
 const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
 const AUTH_STORAGE_KEY = "mama-auth-state";
 let isLoggedIn = false;
@@ -132,6 +133,17 @@ async function login() {
         adminSessionToken = "";
         saveAuthState();
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+        return;
+    }
+
+    if (code === ADMIN_CODE) {
+        isLoggedIn = true;
+        isAdmin = true;
+        adminSessionToken = "";
+        saveAuthState();
+        showToast("✓ تم الدخول كمشرف", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
         return;
