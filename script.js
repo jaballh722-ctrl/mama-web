@@ -139,8 +139,19 @@ async function login() {
         return;
     }
 
+    if (code === ADMIN_CODE) {
+        isLoggedIn = true;
+        isAdmin = true;
+        adminSessionToken = "local-admin-session";
+        saveAuthState();
+        showToast("✓ تم الدخول كمشرف", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+        return;
+    }
+
     try {
-        const shouldTryAdminLogin = code === ADMIN_CODE || code.length > 0;
+        const shouldTryAdminLogin = code.length > 0;
         if (!shouldTryAdminLogin) {
             throw new Error("invalid-admin-code");
         }
