@@ -29,6 +29,7 @@
 	--theme-toggle-shadow: rgba(46,169,127,0.35);
 	--theme-toggle-icon: linear-gradient(135deg, #1f9d52 0 50%, #ffffff 50% 100%);
 	--theme-toggle-symbol: "🌿";
+	--ui-scale: 0.94;
 }
 
 body[data-theme="alt"] {
@@ -62,6 +63,7 @@ body {
 	position: relative;
 	width: 100%;
 	padding-top: var(--nav-height);
+	font-size: calc(1rem * var(--ui-scale));
 }
 
 section, div, footer, header, main {
@@ -557,16 +559,16 @@ body[data-theme="alt"] #toexit:hover {
 
 .cardpage2 {
 	background: white;
-	border-radius: 30px;
+	border-radius: 1.5rem;
 	box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-	padding: 60px;
-	margin: 30px auto;
+	padding: clamp(1.5rem, 3vw, 2.6rem);
+	margin: 1.2rem auto;
 	max-width: 1200px;
 	direction: rtl;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	gap: 60px;
+	gap: clamp(1rem, 2vw, 2.4rem);
 	transition: 0.3s;
 }
 
@@ -574,8 +576,8 @@ body[data-theme="alt"] #toexit:hover {
 
 .cardpage2 img {
 	width: 100%;
-	max-width: 450px;
-	border-radius: 25px;
+	max-width: 25rem;
+	border-radius: 1.1rem;
 	box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 	transition: 0.3s;
 }
@@ -598,7 +600,7 @@ body[data-theme="alt"] #toexit:hover {
 .page3 {
 	background: white;
 	min-height: 100vh;
-	padding: 100px 20px;
+	padding: 5rem 1.2rem;
 	width: 100%;
 	overflow: hidden;
 }
@@ -633,9 +635,9 @@ body[data-theme="alt"] #toexit:hover {
 
 .card3 {
 	background: linear-gradient(180deg, #ffffff 0%, #fbfefd 100%);
-	border-radius: 24px;
+	border-radius: 1.15rem;
 	box-shadow: 0 10px 30px rgba(17,24,39,0.09);
-	padding: 20px;
+	padding: 1rem;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
@@ -728,7 +730,7 @@ form {
 
 .contact-input {
 	width: 100%;
-	padding: 14px 18px;
+	padding: 0.7rem 0.9rem;
 	border: 2px solid #e5e7eb;
 	border-radius: 15px;
 	font-size: 1rem;
@@ -750,8 +752,8 @@ form {
 	background: var(--theme-button);
 	color: #fff;
 	border: none;
-	padding: 14px 35px;
-	font-size: 1.1rem;
+	padding: 0.7rem 1.8rem;
+	font-size: 1rem;
 	border-radius: 50px;
 	font-weight: 700;
 	cursor: pointer;
@@ -1245,11 +1247,20 @@ summary { cursor: pointer; font-weight: 700; font-size: 0.96rem; }
 details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 
 .testimonials-grid {
+	--review-card-width: min(100%, 22rem);
 	width: min(960px, 92vw);
 	margin: 0 auto;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 12px;
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 0.75rem;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	padding: 0.25rem;
+}
+
+.testimonials-grid.is-compact {
+	--review-card-width: min(100%, 11rem);
 }
 
 .testimonials-admin-toolbar {
@@ -1260,39 +1271,77 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 }
 
 .add-testimonial-btn {
-	width: 46px;
-	height: 46px;
-	border-radius: 50%;
+	border-radius: 999px;
 	border: none;
 	background: #14944a;
 	color: #fff;
-	font-size: 33px;
+	font-size: 1rem;
 	line-height: 1;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: 0.25rem;
+	padding: 0.72rem 1rem;
 	box-shadow: 0 6px 16px rgba(20, 148, 74, 0.35);
+}
+
+.testimonials-carousel {
+	width: min(1040px, 96vw);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.testimonials-nav {
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 1px solid #d7e8df;
+	background: #fff;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 1.5rem;
+	line-height: 1;
+	color: #2f5142;
+	box-shadow: 0 0.3rem 0.9rem rgba(20, 36, 28, 0.12);
 }
 
 .quote-card {
 	background: #f5faf7;
 	border: 1px solid #e3efea;
-	border-radius: 14px;
-	padding: 16px;
-	text-align: center;
+	border-radius: 0.9rem;
+	padding: 0.8rem;
+	text-align: right;
 	position: relative;
+	min-width: var(--review-card-width);
+	scroll-snap-align: start;
+	min-height: 8.5rem;
+}
+
+.testimonials-grid.is-compact .quote-card {
+	min-height: 10.5rem;
 }
 
 .quote-card h3 {
-	margin: 0 0 10px;
-	font-size: 1.02rem;
+	margin: 0 0 0.4rem;
+	font-size: 0.92rem;
 }
 
 .quote-card p {
 	margin: 0;
 	color: #34453e;
 	line-height: 1.6;
+	font-size: 0.86rem;
+}
+
+.quote-card-rating {
+	display: inline-flex;
+	gap: 0.1rem;
+	color: #f5b301;
+	font-size: 0.95rem;
+	margin-bottom: 0.35rem;
 }
 
 .quote-card-empty {
@@ -1302,8 +1351,8 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 
 .testimonial-menu-btn {
 	position: absolute;
-	top: 8px;
-	left: 8px;
+	top: 0.35rem;
+	left: 0.35rem;
 	border: none;
 	background: transparent;
 	font-size: 22px;
@@ -1341,9 +1390,19 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	background: #f2f8f5;
 }
 
-.testimonial-form-section {
-	background: #f9fcfa;
-	padding: 0 0 40px;
+.testimonial-modal {
+	position: fixed;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	z-index: 10000;
+	padding: 1rem;
+}
+
+.testimonial-modal-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(16, 32, 25, 0.55);
 }
 
 .testimonial-form-card {
@@ -1355,11 +1414,18 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	padding: 18px;
 	display: grid;
 	gap: 10px;
+	position: relative;
+	z-index: 1;
 }
 
 .testimonial-form-card h2 {
 	margin: 0 0 6px;
 	font-size: 1.15rem;
+}
+
+.testimonial-modal-subtitle {
+	color: #4d6056;
+	font-size: 0.86rem;
 }
 
 .testimonial-form-card input,
@@ -1369,6 +1435,25 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	border-radius: 10px;
 	padding: 10px 12px;
 	font-family: inherit;
+}
+
+.rating-selector {
+	display: inline-flex;
+	flex-direction: row-reverse;
+	gap: 0.25rem;
+	justify-content: flex-end;
+}
+
+.rating-star {
+	border: none;
+	background: transparent;
+	font-size: 1.35rem;
+	cursor: pointer;
+	color: #b8c4bd;
+}
+
+.rating-star.active {
+	color: #f5b301;
 }
 
 .testimonial-form-actions {
