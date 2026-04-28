@@ -1293,7 +1293,9 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	width: min(960px, 92vw);
 	margin: 0 auto 16px;
 	display: flex;
-	justify-content: flex-start;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.6rem;
 }
 
 .add-testimonial-btn {
@@ -1353,12 +1355,12 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	position: relative;
 	min-width: var(--review-card-width);
 	scroll-snap-align: start;
-	min-height: 8.5rem;
+	min-height: 11rem;
 	box-shadow: 0 10px 22px rgba(17, 63, 39, 0.08);
 }
 
 .testimonials-grid.is-compact .quote-card {
-	min-height: 10.5rem;
+	min-height: 11rem;
 }
 
 .quote-card h3 {
@@ -1409,6 +1411,8 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 .quote-card-empty {
 	color: #61766c;
 	font-weight: 600;
+	display: grid;
+	place-items: center;
 }
 
 .testimonial-menu-btn {
@@ -1536,4 +1540,20 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 .testimonial-form-actions button.ghost {
 	background: #edf5f1;
 	color: #355245;
+}
+
+#toast {
+	position: fixed !important;
+	top: 18px !important;
+	right: 18px !important;
+	z-index: 2147483647 !important;
+	min-width: 180px !important;
+	max-width: min(82vw, 300px);
+	padding: 10px 12px !important;
+	font-size: 0.84rem;
+	border-radius: 10px !important;
+	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+	transform: translateY(-8px);
+	opacity: 0;
+	transition: opacity 0.25s ease, transform 0.25s ease !important;
 }
