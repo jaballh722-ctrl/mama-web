@@ -173,8 +173,12 @@ async function login() {
     } catch (error) {
         if (error?.message === "invalid-admin-code") {
             showToast("✗ كود المشرف غير صحيح", "#f44336");
+        } else if (error?.message === "missing-admin-token") {
+            showToast("تعذر تسجيل دخول المشرف، استجابة الخادم غير مكتملة", "#f44336");
+        } else if (error instanceof TypeError || !navigator.onLine) {
+            showToast("تعذر تسجيل دخول المشرف، تحقق من اتصال الإنترنت ثم أعد المحاولة", "#f44336");
         } else {
-            showToast("تعذر تسجيل دخول المشرف، تأكد من اتصال الإنترنت", "#f44336");
+            showToast("تعذر تسجيل دخول المشرف، حدث خطأ بالخادم، حاول لاحقًا", "#f44336");
         }
         codeInput.focus();
         codeInput.select();
