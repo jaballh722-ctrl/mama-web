@@ -316,6 +316,16 @@ body[data-theme="alt"] .quote-card {
 	border-color: #ded0c1;
 }
 
+body[data-theme="alt"] .results-subtitle {
+	color: #4c5b57;
+}
+
+body[data-theme="alt"] .testimonials-count {
+	background: #efe4d9;
+	border-color: #e0d0be;
+	color: #5b5147;
+}
+
 body[data-theme="alt"] .badge {
 	background: #e7d9cb;
 	color: #37413f;
@@ -1259,6 +1269,22 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	padding: 0.25rem;
 }
 
+.results-section {
+	background:
+		radial-gradient(circle at top left, rgba(20,148,74,0.12), transparent 46%),
+		radial-gradient(circle at bottom right, rgba(89,98,232,0.12), transparent 42%),
+		#fff;
+	padding: 48px 0;
+}
+
+.results-subtitle {
+	margin: -10px auto 18px;
+	text-align: center;
+	color: #446257;
+	font-size: 0.95rem;
+	width: min(620px, 90vw);
+}
+
 .testimonials-grid.is-compact {
 	--review-card-width: min(100%, 11rem);
 }
@@ -1286,6 +1312,16 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	box-shadow: 0 6px 16px rgba(20, 148, 74, 0.35);
 }
 
+.testimonials-count {
+	background: #eef7f1;
+	color: #1f6a44;
+	border: 1px solid #d8eadf;
+	border-radius: 999px;
+	padding: 0.45rem 0.82rem;
+	font-size: 0.82rem;
+	font-weight: 700;
+}
+
 .testimonials-carousel {
 	width: min(1040px, 96vw);
 	margin: 0 auto;
@@ -1309,15 +1345,16 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 }
 
 .quote-card {
-	background: #f5faf7;
-	border: 1px solid #e3efea;
-	border-radius: 0.9rem;
-	padding: 0.8rem;
+	background: linear-gradient(165deg, #ffffff, #f5faf7 78%);
+	border: 1px solid #dbece3;
+	border-radius: 1rem;
+	padding: 1rem;
 	text-align: right;
 	position: relative;
 	min-width: var(--review-card-width);
 	scroll-snap-align: start;
 	min-height: 8.5rem;
+	box-shadow: 0 10px 22px rgba(17, 63, 39, 0.08);
 }
 
 .testimonials-grid.is-compact .quote-card {
@@ -1325,15 +1362,40 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 }
 
 .quote-card h3 {
-	margin: 0 0 0.4rem;
-	font-size: 0.92rem;
+	margin: 0;
+	font-size: 1rem;
 }
 
 .quote-card p {
 	margin: 0;
 	color: #34453e;
 	line-height: 1.6;
-	font-size: 0.86rem;
+	font-size: 0.9rem;
+}
+
+.quote-card-head {
+	display: flex;
+	align-items: center;
+	gap: 0.62rem;
+	margin-bottom: 0.42rem;
+}
+
+.quote-card-head small {
+	color: #678277;
+	font-size: 0.74rem;
+}
+
+.quote-card-avatar {
+	width: 2.05rem;
+	height: 2.05rem;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+	color: #0f5f38;
+	background: #ddf1e4;
+	border: 1px solid #cfe7d8;
 }
 
 .quote-card-rating {
