@@ -37,6 +37,7 @@ const SECRET_CODE = "1234";
 const ADMIN_CODE = "admi-n2026";
 const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
 const AUTH_STORAGE_KEY = "mama-auth-state";
+const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
 let isLoggedIn = false;
 let isAdmin = false;
 let toastTimeout;
@@ -276,20 +277,38 @@ function normalizeReviews(rawReviews) {
         .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 }
 
+function loadLocalTestimonials() {
+    try {
+        const rawData = localStorage.getItem(LOCAL_TESTIMONIALS_KEY);
+        return normalizeReviews(rawData ? JSON.parse(rawData) : []);
+    } catch {
+        return [];
+    }
+}
+
+function saveLocalTestimonials() {
+    localStorage.setItem(LOCAL_TESTIMONIALS_KEY, JSON.stringify(testimonials));
+}
+
 async function fetchTestimonialsFromServer({ silent = false } = {}) {
     try {
         const response = await fetch(`${REVIEWS_API_BASE_URL}/reviews`, {
             method: "GET",
-            cache: "no-store",
-            headers: { "Cache-Control": "no-store" }
+            cache: "no-store"
         });
         if (!response.ok) throw new Error("reviews-fetch-failed");
         const data = await response.json();
         testimonials = normalizeReviews(data?.reviews || data);
+        saveLocalTestimonials();
         renderTestimonials();
     } catch {
+        const localReviews = loadLocalTestimonials();
+        if (localReviews.length) {
+            testimonials = localReviews;
+            renderTestimonials();
+        }
         if (!silent) {
-            showToast("تعذر تحديث الآراء حاليًا", "#f44336");
+            showToast("تعذر تحديث الآراء من السيرفر، يتم عرض النسخة المحلية", "#ff9800");
         }
     }
 }
@@ -440,6 +459,7 @@ function initTestimonials() {
                 testimonials[currentEditIndex] = optimisticPayload;
             }
 
+            saveLocalTestimonials();
             renderTestimonials();
             hideTestimonialForm();
 
@@ -452,8 +472,7 @@ function initTestimonials() {
                     method,
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${adminSessionToken}`,
-                        "Cache-Control": "no-store"
+                        "Authorization": `Bearer ${adminSessionToken}`
                     },
                     body: JSON.stringify(payload)
                 });
@@ -461,9 +480,12 @@ function initTestimonials() {
                 await fetchTestimonialsFromServer({ silent: true });
                 showToast("تم نشر الرأي بنجاح", "#4CAF50");
             } catch {
-                testimonials = testimonials.filter((item) => item.id !== tempId);
+                if (currentEditIndex !== null && currentReviewId) {
+                    testimonials[currentEditIndex] = { ...payload, id: currentReviewId };
+                }
+                saveLocalTestimonials();
                 renderTestimonials();
-                showToast("تعذر حفظ الرأي. تحقق من صلاحية المشرف", "#f44336");
+                showToast("تم حفظ الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
             }
         });
     }
@@ -509,15 +531,18 @@ function initTestimonials() {
                     fetch(`${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(reviewToDelete.id)}`, {
                         method: "DELETE",
                         headers: {
-                            "Authorization": `Bearer ${adminSessionToken}`,
-                            "Cache-Control": "no-store"
+                            "Authorization": `Bearer ${adminSessionToken}`
                         }
                     }).then((response) => {
                         if (!response.ok) throw new Error("review-delete-failed");
                         testimonials.splice(index, 1);
+                        saveLocalTestimonials();
                         renderTestimonials();
                     }).catch(() => {
-                        showToast("فشل حذف الرأي", "#f44336");
+                        testimonials.splice(index, 1);
+                        saveLocalTestimonials();
+                        renderTestimonials();
+                        showToast("تم حذف الرأي محليًا فقط بسبب مشكلة اتصال", "#ff9800");
                     });
                 }
 
@@ -570,6 +595,7 @@ function initTestimonials() {
 function initApp() {
     loadAuthState();
     initThemeToggle();
+    testimonials = loadLocalTestimonials();
     initTestimonials();
     updateUI();
     initWhatsAppForm();
