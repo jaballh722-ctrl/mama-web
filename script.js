@@ -46,6 +46,28 @@ let reviewPollingInterval = null;
 let adminSessionToken = "";
 let editIndex = null;
 let selectedRating = 5;
+let isLoginPending = false;
+
+function normalizeDigits(value) {
+    const arabicIndicMap = {
+        "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4",
+        "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9",
+        "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4",
+        "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9"
+    };
+    return String(value || "")
+        .replace(/[٠-٩۰-۹]/g, (digit) => arabicIndicMap[digit] || digit)
+        .trim();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
 function buildLocalReviewId() {
     return `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -129,7 +151,16 @@ function openLogin() {
 
 async function login() {
     const codeInput = document.getElementById("code");
-    const code = codeInput.value.trim();
+    if (!codeInput || isLoginPending) return;
+    const code = normalizeDigits(codeInput.value);
+
+    if (!code) {
+        showToast("من فضلك أدخل كود الدخول أولًا", "#f44336");
+        codeInput.focus();
+        return;
+    }
+
+    isLoginPending = true;
 
     if (code === SECRET_CODE) {
         isLoggedIn = true;
@@ -139,15 +170,11 @@ async function login() {
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
+        isLoginPending = false;
         return;
     }
 
     try {
-        const shouldTryAdminLogin = code.length > 0;
-        if (!shouldTryAdminLogin) {
-            throw new Error("invalid-admin-code");
-        }
-
         const response = await fetch(`${REVIEWS_API_BASE_URL}/admin-login`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
@@ -182,6 +209,8 @@ async function login() {
         }
         codeInput.focus();
         codeInput.select();
+    } finally {
+        isLoginPending = false;
     }
 }
 
@@ -206,6 +235,11 @@ function loadAuthState() {
         isLoggedIn = Boolean(parsedData.isLoggedIn);
         isAdmin = Boolean(parsedData.isAdmin);
         adminSessionToken = parsedData.adminSessionToken || "";
+
+        if (isAdmin && !adminSessionToken) {
+            isLoggedIn = false;
+            isAdmin = false;
+        }
     } catch {
         isLoggedIn = false;
         isAdmin = false;
@@ -285,7 +319,11 @@ function normalizeReviews(rawReviews) {
             date: item?.date || "",
             createdAt: item?.createdAt || ""
         }))
-        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+        .sort((a, b) => {
+            const firstDate = new Date(a.createdAt || 0).getTime();
+            const secondDate = new Date(b.createdAt || 0).getTime();
+            return (Number.isFinite(secondDate) ? secondDate : 0) - (Number.isFinite(firstDate) ? firstDate : 0);
+        });
 }
 
 function loadLocalTestimonials() {
@@ -409,7 +447,12 @@ function renderTestimonials() {
     if (prevButton) prevButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
     if (nextButton) nextButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
 
-    grid.innerHTML = testimonials.map((item, index) => `
+    grid.innerHTML = testimonials.map((item, index) => {
+        const safeName = escapeHtml(item.name || "عميل");
+        const safeDate = escapeHtml(item.date || "");
+        const safeReview = escapeHtml(item.review || "");
+        const avatarLetter = escapeHtml((item.name || "ع").trim().charAt(0) || "ع");
+        return `
         <article class="quote-card">
             ${canManageTestimonials() ? `<button type="button" class="testimonial-menu-btn" data-menu-index="${index}" aria-label="خيارات">⋯</button>
             <div class="testimonial-menu" id="testimonial-menu-${index}" style="display:none;">
@@ -417,16 +460,17 @@ function renderTestimonials() {
                 <button type="button" data-action="delete" data-index="${index}">حذف</button>
             </div>` : ""}
             <div class="quote-card-head">
-                <span class="quote-card-avatar">${(item.name || "ع").trim().charAt(0)}</span>
+                <span class="quote-card-avatar">${avatarLetter}</span>
                 <div>
-                    <h3>${item.name}</h3>
-                    <small>${item.date || ""}</small>
+                    <h3>${safeName}</h3>
+                    <small>${safeDate}</small>
                 </div>
             </div>
             <div class="quote-card-rating" aria-label="التقييم ${item.rating || 1} من 5">${getRatingStars(item.rating)}</div>
-            <p>${item.review}</p>
+            <p>${safeReview}</p>
         </article>
-    `).join("");
+    `;
+    }).join("");
 }
 
 function initTestimonials() {
@@ -471,6 +515,10 @@ function initTestimonials() {
 
             if (!name || !review) {
                 showToast("من فضلك اكتب اسم العميلـ/ـه ورأي العميله", "#f44336");
+                return;
+            }
+            if (name.length > 80 || review.length > 1000) {
+                showToast("الاسم أو الرأي طويل جدًا، من فضلك اختصر النص", "#f44336");
                 return;
             }
 
@@ -570,7 +618,7 @@ function initTestimonials() {
                         testimonials.splice(index, 1);
                         saveLocalTestimonials();
                         renderTestimonials();
-                        showToast("تم حذف الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
+                        showToast("تعذر حذف الرأي من السيرفر، أعد تسجيل دخول المشرف ثم حاول مرة أخرى", "#f44336");
                     });
                 }
 
