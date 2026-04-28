@@ -34,7 +34,6 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // كود الموقع الأساسي
 // ============================================
 const SECRET_CODE = "1234";
-const ADMIN_CODE = "admi-n2026";
 const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
 const AUTH_STORAGE_KEY = "mama-auth-state";
 const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
@@ -143,17 +142,6 @@ async function login() {
         return;
     }
 
-    if (code === ADMIN_CODE) {
-        isLoggedIn = true;
-        isAdmin = true;
-        adminSessionToken = "local-admin-session";
-        saveAuthState();
-        showToast("✓ تم الدخول كمشرف", "#4CAF50");
-        updateUI();
-        document.getElementById("back").style.display = "none";
-        return;
-    }
-
     try {
         const shouldTryAdminLogin = code.length > 0;
         if (!shouldTryAdminLogin) {
@@ -182,8 +170,12 @@ async function login() {
         showToast("✓ تم الدخول كمشرف", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
-    } catch {
-        showToast("✗ كود المشرف غير صحيح", "#f44336");
+    } catch (error) {
+        if (error?.message === "invalid-admin-code") {
+            showToast("✗ كود المشرف غير صحيح", "#f44336");
+        } else {
+            showToast("تعذر تسجيل دخول المشرف، تأكد من اتصال الإنترنت", "#f44336");
+        }
         codeInput.focus();
         codeInput.select();
     }
@@ -507,7 +499,11 @@ function initTestimonials() {
                 await fetchTestimonialsFromServer({ silent: true });
                 hideTestimonialForm();
                 showToast("تم نشر الرأي بنجاح", "#4CAF50");
-            } catch {
+            } catch (error) {
+                if (error?.message === "review-save-failed") {
+                    showToast("تعذر حفظ الرأي على السيرفر، أعد تسجيل دخول المشرف ثم حاول مرة أخرى", "#f44336");
+                    return;
+                }
                 upsertTestimonialLocally({
                     ...payload,
                     id: currentReviewId || buildLocalReviewId()
