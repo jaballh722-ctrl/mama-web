@@ -34,9 +34,14 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // كود الموقع الأساسي
 // ============================================
 const SECRET_CODE = "1234";
+const ADMIN_CODE = "admi-n2026";
 let isLoggedIn = false;
+let isAdmin = false;
 let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
+const TESTIMONIALS_STORAGE_KEY = "testimonials-data";
+let testimonials = [];
+let editIndex = null;
 
 function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
@@ -113,8 +118,9 @@ function openLogin() {
 function login() {
     const codeInput = document.getElementById("code");
     const code = codeInput.value.trim();
-    if (code === SECRET_CODE) {
+    if (code === SECRET_CODE || code === ADMIN_CODE) {
         isLoggedIn = true;
+        isAdmin = code === ADMIN_CODE;
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
@@ -128,12 +134,14 @@ function login() {
 function logout() {
     document.getElementById("back").style.display = "none";
     isLoggedIn = false;
+    isAdmin = false;
     showToast("تم تسجيل الخروج بنجاح", "#FF9800");
     updateUI();
 }
 
 function updateUI() {
     const menuLink = document.getElementById("menu-link");
+    const addTestimonialButton = document.getElementById("add-testimonial-btn");
     if (isLoggedIn) {
         document.getElementById("secret").style.display = "block";
         document.getElementById("first-f").style.display = "none";
@@ -147,6 +155,16 @@ function updateUI() {
         document.getElementById("toexit").style.display = "none";
         if (menuLink) menuLink.style.display = "none";
     }
+
+    if (addTestimonialButton) {
+        addTestimonialButton.style.display = isAdmin ? "inline-flex" : "none";
+    }
+
+    if (!isAdmin) {
+        hideTestimonialForm();
+    }
+
+    renderTestimonials();
 }
 
 function back() {
@@ -186,8 +204,162 @@ ${message}`;
     });
 }
 
+function saveTestimonials() {
+    localStorage.setItem(TESTIMONIALS_STORAGE_KEY, JSON.stringify(testimonials));
+}
+
+function loadTestimonials() {
+    try {
+        const rawData = localStorage.getItem(TESTIMONIALS_STORAGE_KEY);
+        const parsedData = rawData ? JSON.parse(rawData) : [];
+        testimonials = Array.isArray(parsedData) ? parsedData : [];
+    } catch {
+        testimonials = [];
+    }
+}
+
+function hideAllMenus() {
+    document.querySelectorAll(".testimonial-menu").forEach((menu) => {
+        menu.style.display = "none";
+    });
+}
+
+function showTestimonialForm() {
+    if (!isAdmin) return;
+    const formSection = document.getElementById("testimonial-form-section");
+    if (formSection) formSection.style.display = "block";
+}
+
+function hideTestimonialForm() {
+    const formSection = document.getElementById("testimonial-form-section");
+    const clientNameInput = document.getElementById("client-name-input");
+    const clientReviewInput = document.getElementById("client-review-input");
+    if (formSection) formSection.style.display = "none";
+    if (clientNameInput) clientNameInput.value = "";
+    if (clientReviewInput) clientReviewInput.value = "";
+    editIndex = null;
+}
+
+function renderTestimonials() {
+    const grid = document.getElementById("testimonials-grid");
+    if (!grid) return;
+
+    if (!testimonials.length) {
+        grid.innerHTML = '<article class="quote-card quote-card-empty">لا شيء حتى الآن</article>';
+        return;
+    }
+
+    grid.innerHTML = testimonials.map((item, index) => `
+        <article class="quote-card">
+            ${isAdmin ? `<button type="button" class="testimonial-menu-btn" data-menu-index="${index}" aria-label="خيارات">⋯</button>
+            <div class="testimonial-menu" id="testimonial-menu-${index}" style="display:none;">
+                <button type="button" data-action="edit" data-index="${index}">تعديل</button>
+                <button type="button" data-action="delete" data-index="${index}">حذف</button>
+            </div>` : ""}
+            <h3>${item.name}</h3>
+            <p>${item.review}</p>
+        </article>
+    `).join("");
+}
+
+function initTestimonials() {
+    loadTestimonials();
+    renderTestimonials();
+
+    const addButton = document.getElementById("add-testimonial-btn");
+    const saveButton = document.getElementById("save-testimonial-btn");
+    const cancelButton = document.getElementById("cancel-testimonial-btn");
+    const grid = document.getElementById("testimonials-grid");
+
+    if (addButton) {
+        addButton.addEventListener("click", () => {
+            editIndex = null;
+            showTestimonialForm();
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", hideTestimonialForm);
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener("click", () => {
+            if (!isAdmin) return;
+
+            const nameInput = document.getElementById("client-name-input");
+            const reviewInput = document.getElementById("client-review-input");
+            const name = nameInput ? nameInput.value.trim() : "";
+            const review = reviewInput ? reviewInput.value.trim() : "";
+
+            if (!name || !review) {
+                showToast("من فضلك اكتب اسم العميلـ/ـه ورأي العميله", "#f44336");
+                return;
+            }
+
+            const payload = { name, review };
+            if (editIndex === null) {
+                testimonials.push(payload);
+            } else {
+                testimonials[editIndex] = payload;
+            }
+
+            saveTestimonials();
+            renderTestimonials();
+            hideTestimonialForm();
+        });
+    }
+
+    if (grid) {
+        grid.addEventListener("click", (event) => {
+            const menuButton = event.target.closest(".testimonial-menu-btn");
+            const actionButton = event.target.closest(".testimonial-menu button");
+
+            if (menuButton) {
+                const menuIndex = menuButton.dataset.menuIndex;
+                const menu = document.getElementById(`testimonial-menu-${menuIndex}`);
+                if (!menu) return;
+                const isHidden = menu.style.display === "none";
+                hideAllMenus();
+                menu.style.display = isHidden ? "flex" : "none";
+                return;
+            }
+
+            if (actionButton) {
+                const action = actionButton.dataset.action;
+                const index = Number(actionButton.dataset.index);
+
+                if (action === "edit") {
+                    const selected = testimonials[index];
+                    if (!selected) return;
+                    const nameInput = document.getElementById("client-name-input");
+                    const reviewInput = document.getElementById("client-review-input");
+                    if (nameInput) nameInput.value = selected.name;
+                    if (reviewInput) reviewInput.value = selected.review;
+                    editIndex = index;
+                    showTestimonialForm();
+                }
+
+                if (action === "delete") {
+                    testimonials.splice(index, 1);
+                    saveTestimonials();
+                    renderTestimonials();
+                }
+
+                hideAllMenus();
+            }
+        });
+    }
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".quote-card")) {
+            hideAllMenus();
+        }
+    });
+}
+
 function initApp() {
     initThemeToggle();
+    initTestimonials();
     updateUI();
     initWhatsAppForm();
 }
