@@ -48,6 +48,10 @@ let adminSessionToken = "";
 let editIndex = null;
 let selectedRating = 5;
 
+function buildLocalReviewId() {
+    return `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
 function canManageTestimonials() {
     return isLoggedIn && isAdmin;
 }
@@ -301,6 +305,26 @@ function saveLocalTestimonials() {
     localStorage.setItem(LOCAL_TESTIMONIALS_KEY, JSON.stringify(testimonials));
 }
 
+function upsertTestimonialLocally(reviewData, currentEditIndex = null) {
+    const nextReview = {
+        ...reviewData,
+        id: reviewData.id || buildLocalReviewId(),
+        rating: Math.max(1, Math.min(5, Number(reviewData.rating) || 5)),
+        date: reviewData.date || new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
+        createdAt: reviewData.createdAt || new Date().toISOString()
+    };
+
+    if (currentEditIndex !== null && testimonials[currentEditIndex]) {
+        testimonials[currentEditIndex] = { ...testimonials[currentEditIndex], ...nextReview };
+    } else {
+        testimonials.unshift(nextReview);
+    }
+
+    testimonials.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+    saveLocalTestimonials();
+    renderTestimonials();
+}
+
 async function fetchTestimonialsFromServer({ silent = false } = {}) {
     try {
         const response = await fetch(`${REVIEWS_API_BASE_URL}/reviews`, {
@@ -484,7 +508,12 @@ function initTestimonials() {
                 hideTestimonialForm();
                 showToast("تم نشر الرأي بنجاح", "#4CAF50");
             } catch {
-                showToast("فشل نشر الرأي على السيرفر. حاول مرة تانية.", "#f44336");
+                upsertTestimonialLocally({
+                    ...payload,
+                    id: currentReviewId || buildLocalReviewId()
+                }, currentEditIndex);
+                hideTestimonialForm();
+                showToast("تم حفظ الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
             }
         });
     }
@@ -541,7 +570,7 @@ function initTestimonials() {
                         testimonials.splice(index, 1);
                         saveLocalTestimonials();
                         renderTestimonials();
-                        showToast("تم حذف الرأي محليًا فقط بسبب مشكلة اتصال", "#ff9800");
+                        showToast("تم حذف الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
                     });
                 }
 
