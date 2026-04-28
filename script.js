@@ -138,18 +138,12 @@ async function login() {
         return;
     }
 
-    if (code === ADMIN_CODE) {
-        isLoggedIn = true;
-        isAdmin = true;
-        adminSessionToken = "";
-        saveAuthState();
-        showToast("✓ تم الدخول كمشرف", "#4CAF50");
-        updateUI();
-        document.getElementById("back").style.display = "none";
-        return;
-    }
-
     try {
+        const shouldTryAdminLogin = code === ADMIN_CODE || code.length > 0;
+        if (!shouldTryAdminLogin) {
+            throw new Error("invalid-admin-code");
+        }
+
         const response = await fetch(`${REVIEWS_API_BASE_URL}/admin-login`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
