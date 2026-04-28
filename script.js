@@ -181,7 +181,7 @@ function updateUI() {
     }
 
     if (addTestimonialButton) {
-        addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
+        addTestimonialButton.style.display = "inline-flex";
     }
 
     renderTestimonials();
@@ -298,7 +298,7 @@ function renderTestimonials() {
     }
 
     if (!testimonials.length) {
-        grid.innerHTML = '<article class="quote-card quote-card-empty">لا يوجد آراء بعد، كن أول من يشارك رأيه ✨</article>';
+        grid.innerHTML = '<article class="quote-card quote-card-empty">لا اراء حتى الان</article>';
         grid.classList.remove("is-compact");
         if (prevButton) prevButton.style.display = "none";
         if (nextButton) nextButton.style.display = "none";
@@ -344,10 +344,6 @@ function initTestimonials() {
 
     if (addButton) {
         addButton.addEventListener("click", () => {
-            if (!canManageTestimonials()) {
-                showToast("إضافة الآراء متاحة فقط بعد دخول الأدمن", "#f44336");
-                return;
-            }
             editIndex = null;
             setSelectedRating(5);
             showTestimonialForm();
@@ -360,11 +356,6 @@ function initTestimonials() {
 
     if (saveButton) {
         saveButton.addEventListener("click", () => {
-            if (!canManageTestimonials()) {
-                showToast("حفظ الرأي متاح فقط بعد دخول الأدمن", "#f44336");
-                hideTestimonialForm();
-                return;
-            }
             const nameInput = document.getElementById("client-name-input");
             const reviewInput = document.getElementById("client-review-input");
             const name = nameInput ? nameInput.value.trim() : "";
