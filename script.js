@@ -45,6 +45,10 @@ let testimonials = [];
 let editIndex = null;
 let selectedRating = 5;
 
+function canManageTestimonials() {
+    return isLoggedIn && isAdmin;
+}
+
 function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
     document.body.setAttribute("data-theme", finalTheme === "alt" ? "alt" : "default");
@@ -177,7 +181,7 @@ function updateUI() {
     }
 
     if (addTestimonialButton) {
-        addTestimonialButton.style.display = "inline-flex";
+        addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
     }
 
     renderTestimonials();
@@ -340,6 +344,10 @@ function initTestimonials() {
 
     if (addButton) {
         addButton.addEventListener("click", () => {
+            if (!canManageTestimonials()) {
+                showToast("إضافة الآراء متاحة فقط بعد دخول الأدمن", "#f44336");
+                return;
+            }
             editIndex = null;
             setSelectedRating(5);
             showTestimonialForm();
@@ -352,6 +360,11 @@ function initTestimonials() {
 
     if (saveButton) {
         saveButton.addEventListener("click", () => {
+            if (!canManageTestimonials()) {
+                showToast("حفظ الرأي متاح فقط بعد دخول الأدمن", "#f44336");
+                hideTestimonialForm();
+                return;
+            }
             const nameInput = document.getElementById("client-name-input");
             const reviewInput = document.getElementById("client-review-input");
             const name = nameInput ? nameInput.value.trim() : "";
@@ -396,6 +409,10 @@ function initTestimonials() {
             }
 
             if (actionButton) {
+                if (!canManageTestimonials()) {
+                    hideAllMenus();
+                    return;
+                }
                 const action = actionButton.dataset.action;
                 const index = Number(actionButton.dataset.index);
 
