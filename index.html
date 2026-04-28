@@ -67,9 +67,10 @@
             color: green;
             font-weight: bold;
         }
-        body {
+        .page1 p {
             direction: rtl;
-            font-size: 40px;
+            font-size: clamp(1.35rem, 2.6vw, 2rem);
+            text-align: center;
         }
     </style>
 
@@ -232,21 +233,36 @@
     <section id="results" style="background-color: #ffffff; padding: 40px 0;">
         <h1 class="section-title">آراء أولياء الأمور</h1>
         <div class="testimonials-admin-toolbar">
-            <button id="add-testimonial-btn" class="add-testimonial-btn" type="button" aria-label="إضافة رأي جديد" title="إضافة رأي جديد" style="display:none;">+</button>
+            <button id="add-testimonial-btn" class="add-testimonial-btn" type="button" aria-label="إضافة رأي جديد" title="إضافة رأي جديد" style="display:none;">+ إضافة رأي</button>
         </div>
-        <div id="testimonials-grid" class="testimonials-grid">
-            <article class="quote-card quote-card-empty">لا شيء حتى الآن</article>
+        <div class="testimonials-carousel">
+            <button id="testimonials-prev" class="testimonials-nav testimonials-nav-prev" type="button" aria-label="السابق" style="display:none;">‹</button>
+            <div id="testimonials-grid" class="testimonials-grid">
+                <article class="quote-card quote-card-empty">لا شيء حتى الآن</article>
+            </div>
+            <button id="testimonials-next" class="testimonials-nav testimonials-nav-next" type="button" aria-label="التالي" style="display:none;">›</button>
         </div>
     </section>
 
-    <section id="testimonial-form-section" class="testimonial-form-section" style="display:none;">
-        <div class="testimonial-form-card">
+    <section id="testimonial-modal" class="testimonial-modal" style="display:none;" aria-hidden="true">
+        <div class="testimonial-modal-overlay" data-close-modal="true"></div>
+        <div class="testimonial-form-card" role="dialog" aria-modal="true" aria-labelledby="testimonial-modal-title">
             <h2>إضافة رأي جديد</h2>
+            <p id="testimonial-modal-title" class="testimonial-modal-subtitle">أضف اسم العميل والتقييم والرأي.</p>
             <label for="client-name-input">اسم العميلـ/ـه</label>
             <input id="client-name-input" type="text" placeholder="اكتب اسم العميلـ/ـه" />
 
             <label for="client-review-input">رأي العميله</label>
             <textarea id="client-review-input" rows="4" placeholder="اكتب رأي العميله"></textarea>
+
+            <label>التقييم</label>
+            <div id="rating-selector" class="rating-selector" aria-label="اختيار التقييم من نجمة إلى خمس نجوم">
+                <button type="button" class="rating-star" data-rating="1" aria-label="نجمة واحدة">☆</button>
+                <button type="button" class="rating-star" data-rating="2" aria-label="نجمتان">☆</button>
+                <button type="button" class="rating-star" data-rating="3" aria-label="ثلاث نجوم">☆</button>
+                <button type="button" class="rating-star" data-rating="4" aria-label="أربع نجوم">☆</button>
+                <button type="button" class="rating-star" data-rating="5" aria-label="خمس نجوم">☆</button>
+            </div>
 
             <div class="testimonial-form-actions">
                 <button id="save-testimonial-btn" type="button">حفظ الرأي</button>

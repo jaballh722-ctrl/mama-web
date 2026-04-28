@@ -35,6 +35,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // ============================================
 const SECRET_CODE = "1234";
 const ADMIN_CODE = "admi-n2026";
+const AUTH_STORAGE_KEY = "mama-auth-state";
 let isLoggedIn = false;
 let isAdmin = false;
 let toastTimeout;
@@ -42,6 +43,7 @@ const THEME_STORAGE_KEY = "mama-theme";
 const TESTIMONIALS_STORAGE_KEY = "testimonials-data";
 let testimonials = [];
 let editIndex = null;
+let selectedRating = 5;
 
 function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
@@ -121,6 +123,7 @@ function login() {
     if (code === SECRET_CODE || code === ADMIN_CODE) {
         isLoggedIn = true;
         isAdmin = code === ADMIN_CODE;
+        saveAuthState();
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
@@ -135,8 +138,25 @@ function logout() {
     document.getElementById("back").style.display = "none";
     isLoggedIn = false;
     isAdmin = false;
+    saveAuthState();
     showToast("تم تسجيل الخروج بنجاح", "#FF9800");
     updateUI();
+}
+
+function saveAuthState() {
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ isLoggedIn, isAdmin }));
+}
+
+function loadAuthState() {
+    try {
+        const rawData = localStorage.getItem(AUTH_STORAGE_KEY);
+        const parsedData = rawData ? JSON.parse(rawData) : {};
+        isLoggedIn = Boolean(parsedData.isLoggedIn);
+        isAdmin = Boolean(parsedData.isAdmin);
+    } catch {
+        isLoggedIn = false;
+        isAdmin = false;
+    }
 }
 
 function updateUI() {
@@ -212,7 +232,13 @@ function loadTestimonials() {
     try {
         const rawData = localStorage.getItem(TESTIMONIALS_STORAGE_KEY);
         const parsedData = rawData ? JSON.parse(rawData) : [];
-        testimonials = Array.isArray(parsedData) ? parsedData : [];
+        testimonials = Array.isArray(parsedData)
+            ? parsedData.map((item) => ({
+                name: item?.name || "عميل",
+                review: item?.review || "",
+                rating: Math.max(1, Math.min(5, Number(item?.rating) || 5))
+            }))
+            : [];
     } catch {
         testimonials = [];
     }
@@ -226,28 +252,58 @@ function hideAllMenus() {
 
 function showTestimonialForm() {
     if (!isAdmin) return;
-    const formSection = document.getElementById("testimonial-form-section");
-    if (formSection) formSection.style.display = "block";
+    const modal = document.getElementById("testimonial-modal");
+    if (!modal) return;
+    modal.style.display = "grid";
+    modal.setAttribute("aria-hidden", "false");
 }
 
 function hideTestimonialForm() {
-    const formSection = document.getElementById("testimonial-form-section");
+    const modal = document.getElementById("testimonial-modal");
     const clientNameInput = document.getElementById("client-name-input");
     const clientReviewInput = document.getElementById("client-review-input");
-    if (formSection) formSection.style.display = "none";
+    if (modal) {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+    }
     if (clientNameInput) clientNameInput.value = "";
     if (clientReviewInput) clientReviewInput.value = "";
+    setSelectedRating(5);
     editIndex = null;
+}
+
+function getRatingStars(rating) {
+    const safeRating = Math.max(1, Math.min(5, Number(rating) || 1));
+    return Array.from({ length: 5 }, (_, i) => (i < safeRating ? "★" : "☆")).join("");
+}
+
+function setSelectedRating(rating) {
+    selectedRating = Math.max(1, Math.min(5, Number(rating) || 1));
+    document.querySelectorAll(".rating-star").forEach((starButton) => {
+        const starValue = Number(starButton.dataset.rating);
+        const isActive = starValue <= selectedRating;
+        starButton.classList.toggle("active", isActive);
+        starButton.textContent = isActive ? "★" : "☆";
+    });
 }
 
 function renderTestimonials() {
     const grid = document.getElementById("testimonials-grid");
+    const prevButton = document.getElementById("testimonials-prev");
+    const nextButton = document.getElementById("testimonials-next");
     if (!grid) return;
 
     if (!testimonials.length) {
         grid.innerHTML = '<article class="quote-card quote-card-empty">لا شيء حتى الآن</article>';
+        grid.classList.remove("is-compact");
+        if (prevButton) prevButton.style.display = "none";
+        if (nextButton) nextButton.style.display = "none";
         return;
     }
+
+    grid.classList.toggle("is-compact", testimonials.length >= 2);
+    if (prevButton) prevButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
+    if (nextButton) nextButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
 
     grid.innerHTML = testimonials.map((item, index) => `
         <article class="quote-card">
@@ -257,6 +313,7 @@ function renderTestimonials() {
                 <button type="button" data-action="delete" data-index="${index}">حذف</button>
             </div>` : ""}
             <h3>${item.name}</h3>
+            <div class="quote-card-rating" aria-label="التقييم ${item.rating || 1} من 5">${getRatingStars(item.rating)}</div>
             <p>${item.review}</p>
         </article>
     `).join("");
@@ -270,10 +327,15 @@ function initTestimonials() {
     const saveButton = document.getElementById("save-testimonial-btn");
     const cancelButton = document.getElementById("cancel-testimonial-btn");
     const grid = document.getElementById("testimonials-grid");
+    const prevButton = document.getElementById("testimonials-prev");
+    const nextButton = document.getElementById("testimonials-next");
+    const ratingSelector = document.getElementById("rating-selector");
+    const modal = document.getElementById("testimonial-modal");
 
     if (addButton) {
         addButton.addEventListener("click", () => {
             editIndex = null;
+            setSelectedRating(5);
             showTestimonialForm();
         });
     }
@@ -296,7 +358,7 @@ function initTestimonials() {
                 return;
             }
 
-            const payload = { name, review };
+            const payload = { name, review, rating: selectedRating };
             if (editIndex === null) {
                 testimonials.push(payload);
             } else {
@@ -335,6 +397,7 @@ function initTestimonials() {
                     const reviewInput = document.getElementById("client-review-input");
                     if (nameInput) nameInput.value = selected.name;
                     if (reviewInput) reviewInput.value = selected.review;
+                    setSelectedRating(selected.rating || 1);
                     editIndex = index;
                     showTestimonialForm();
                 }
@@ -355,9 +418,40 @@ function initTestimonials() {
             hideAllMenus();
         }
     });
+
+    if (ratingSelector) {
+        ratingSelector.addEventListener("click", (event) => {
+            const starButton = event.target.closest(".rating-star");
+            if (!starButton) return;
+            setSelectedRating(starButton.dataset.rating);
+        });
+    }
+
+    if (modal) {
+        modal.addEventListener("click", (event) => {
+            if (event.target.matches("[data-close-modal='true']")) {
+                hideTestimonialForm();
+            }
+        });
+    }
+
+    if (prevButton && grid) {
+        prevButton.addEventListener("click", () => {
+            grid.scrollBy({ left: -280, behavior: "smooth" });
+        });
+    }
+
+    if (nextButton && grid) {
+        nextButton.addEventListener("click", () => {
+            grid.scrollBy({ left: 280, behavior: "smooth" });
+        });
+    }
+
+    setSelectedRating(5);
 }
 
 function initApp() {
+    loadAuthState();
     initThemeToggle();
     initTestimonials();
     updateUI();
