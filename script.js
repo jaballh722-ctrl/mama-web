@@ -177,11 +177,7 @@ function updateUI() {
     }
 
     if (addTestimonialButton) {
-        addTestimonialButton.style.display = isAdmin ? "inline-flex" : "none";
-    }
-
-    if (!isAdmin) {
-        hideTestimonialForm();
+        addTestimonialButton.style.display = "inline-flex";
     }
 
     renderTestimonials();
@@ -236,7 +232,8 @@ function loadTestimonials() {
             ? parsedData.map((item) => ({
                 name: item?.name || "عميل",
                 review: item?.review || "",
-                rating: Math.max(1, Math.min(5, Number(item?.rating) || 5))
+                rating: Math.max(1, Math.min(5, Number(item?.rating) || 5)),
+                date: item?.date || ""
             }))
             : [];
     } catch {
@@ -251,7 +248,6 @@ function hideAllMenus() {
 }
 
 function showTestimonialForm() {
-    if (!isAdmin) return;
     const modal = document.getElementById("testimonial-modal");
     if (!modal) return;
     modal.style.display = "grid";
@@ -291,10 +287,14 @@ function renderTestimonials() {
     const grid = document.getElementById("testimonials-grid");
     const prevButton = document.getElementById("testimonials-prev");
     const nextButton = document.getElementById("testimonials-next");
+    const countLabel = document.getElementById("testimonials-count");
     if (!grid) return;
+    if (countLabel) {
+        countLabel.textContent = `${testimonials.length} ${testimonials.length === 1 ? "رأي" : "آراء"}`;
+    }
 
     if (!testimonials.length) {
-        grid.innerHTML = '<article class="quote-card quote-card-empty">لا شيء حتى الآن</article>';
+        grid.innerHTML = '<article class="quote-card quote-card-empty">لا يوجد آراء بعد، كن أول من يشارك رأيه ✨</article>';
         grid.classList.remove("is-compact");
         if (prevButton) prevButton.style.display = "none";
         if (nextButton) nextButton.style.display = "none";
@@ -312,7 +312,13 @@ function renderTestimonials() {
                 <button type="button" data-action="edit" data-index="${index}">تعديل</button>
                 <button type="button" data-action="delete" data-index="${index}">حذف</button>
             </div>` : ""}
-            <h3>${item.name}</h3>
+            <div class="quote-card-head">
+                <span class="quote-card-avatar">${(item.name || "ع").trim().charAt(0)}</span>
+                <div>
+                    <h3>${item.name}</h3>
+                    <small>${item.date || ""}</small>
+                </div>
+            </div>
             <div class="quote-card-rating" aria-label="التقييم ${item.rating || 1} من 5">${getRatingStars(item.rating)}</div>
             <p>${item.review}</p>
         </article>
@@ -346,8 +352,6 @@ function initTestimonials() {
 
     if (saveButton) {
         saveButton.addEventListener("click", () => {
-            if (!isAdmin) return;
-
             const nameInput = document.getElementById("client-name-input");
             const reviewInput = document.getElementById("client-review-input");
             const name = nameInput ? nameInput.value.trim() : "";
@@ -358,9 +362,14 @@ function initTestimonials() {
                 return;
             }
 
-            const payload = { name, review, rating: selectedRating };
+            const payload = {
+                name,
+                review,
+                rating: selectedRating,
+                date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
+            };
             if (editIndex === null) {
-                testimonials.push(payload);
+                testimonials.unshift(payload);
             } else {
                 testimonials[editIndex] = payload;
             }
@@ -448,6 +457,12 @@ function initTestimonials() {
     }
 
     setSelectedRating(5);
+    window.addEventListener("storage", (event) => {
+        if (event.key === TESTIMONIALS_STORAGE_KEY) {
+            loadTestimonials();
+            renderTestimonials();
+        }
+    });
 }
 
 function initApp() {
