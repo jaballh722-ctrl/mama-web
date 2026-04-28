@@ -1252,10 +1252,141 @@ details p { margin-top: 8px; color: #4f5c56; font-size: 0.92rem; }
 	gap: 12px;
 }
 
+.testimonials-admin-toolbar {
+	width: min(960px, 92vw);
+	margin: 0 auto 16px;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.add-testimonial-btn {
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	border: none;
+	background: #14944a;
+	color: #fff;
+	font-size: 33px;
+	line-height: 1;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 6px 16px rgba(20, 148, 74, 0.35);
+}
+
 .quote-card {
 	background: #f5faf7;
 	border: 1px solid #e3efea;
 	border-radius: 14px;
 	padding: 16px;
 	text-align: center;
+	position: relative;
+}
+
+.quote-card h3 {
+	margin: 0 0 10px;
+	font-size: 1.02rem;
+}
+
+.quote-card p {
+	margin: 0;
+	color: #34453e;
+	line-height: 1.6;
+}
+
+.quote-card-empty {
+	color: #61766c;
+	font-weight: 600;
+}
+
+.testimonial-menu-btn {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	border: none;
+	background: transparent;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	color: #4d5f56;
+}
+
+.testimonial-menu {
+	position: absolute;
+	top: 32px;
+	left: 8px;
+	background: #fff;
+	border: 1px solid #e2ede7;
+	border-radius: 10px;
+	padding: 6px;
+	box-shadow: 0 8px 20px rgba(20, 36, 28, 0.12);
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	z-index: 10;
+}
+
+.testimonial-menu button {
+	background: transparent;
+	border: none;
+	text-align: right;
+	padding: 6px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-family: inherit;
+}
+
+.testimonial-menu button:hover {
+	background: #f2f8f5;
+}
+
+.testimonial-form-section {
+	background: #f9fcfa;
+	padding: 0 0 40px;
+}
+
+.testimonial-form-card {
+	width: min(560px, 92vw);
+	margin: 0 auto;
+	background: #fff;
+	border: 1px solid #e2ede7;
+	border-radius: 14px;
+	padding: 18px;
+	display: grid;
+	gap: 10px;
+}
+
+.testimonial-form-card h2 {
+	margin: 0 0 6px;
+	font-size: 1.15rem;
+}
+
+.testimonial-form-card input,
+.testimonial-form-card textarea {
+	width: 100%;
+	border: 1px solid #d3e3db;
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-family: inherit;
+}
+
+.testimonial-form-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.testimonial-form-actions button {
+	border: none;
+	border-radius: 10px;
+	padding: 10px 14px;
+	cursor: pointer;
+	font-family: inherit;
+	background: #14944a;
+	color: #fff;
+}
+
+.testimonial-form-actions button.ghost {
+	background: #edf5f1;
+	color: #355245;
 }

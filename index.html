@@ -231,8 +231,27 @@
 
     <section id="results" style="background-color: #ffffff; padding: 40px 0;">
         <h1 class="section-title">آراء أولياء الأمور</h1>
-        <div class="testimonials-grid">
-            <article class="quote-card">لا شيء حتى الآن</article>
+        <div class="testimonials-admin-toolbar">
+            <button id="add-testimonial-btn" class="add-testimonial-btn" type="button" aria-label="إضافة رأي جديد" title="إضافة رأي جديد" style="display:none;">+</button>
+        </div>
+        <div id="testimonials-grid" class="testimonials-grid">
+            <article class="quote-card quote-card-empty">لا شيء حتى الآن</article>
+        </div>
+    </section>
+
+    <section id="testimonial-form-section" class="testimonial-form-section" style="display:none;">
+        <div class="testimonial-form-card">
+            <h2>إضافة رأي جديد</h2>
+            <label for="client-name-input">اسم العميلـ/ـه</label>
+            <input id="client-name-input" type="text" placeholder="اكتب اسم العميلـ/ـه" />
+
+            <label for="client-review-input">رأي العميله</label>
+            <textarea id="client-review-input" rows="4" placeholder="اكتب رأي العميله"></textarea>
+
+            <div class="testimonial-form-actions">
+                <button id="save-testimonial-btn" type="button">حفظ الرأي</button>
+                <button id="cancel-testimonial-btn" type="button" class="ghost">إلغاء</button>
+            </div>
         </div>
     </section>
 
