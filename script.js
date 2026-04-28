@@ -34,14 +34,15 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // كود الموقع الأساسي
 // ============================================
 const SECRET_CODE = "1234";
-const ADMIN_CODE = "admi-n2026";
+const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
 const AUTH_STORAGE_KEY = "mama-auth-state";
 let isLoggedIn = false;
 let isAdmin = false;
 let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
-const TESTIMONIALS_STORAGE_KEY = "testimonials-data";
 let testimonials = [];
+let reviewPollingInterval = null;
+let adminSessionToken = "";
 let editIndex = null;
 let selectedRating = 5;
 
@@ -121,18 +122,46 @@ function openLogin() {
     document.getElementById("back").style.display = "block";
 }
 
-function login() {
+async function login() {
     const codeInput = document.getElementById("code");
     const code = codeInput.value.trim();
-    if (code === SECRET_CODE || code === ADMIN_CODE) {
+
+    if (code === SECRET_CODE) {
         isLoggedIn = true;
-        isAdmin = code === ADMIN_CODE;
+        isAdmin = false;
+        adminSessionToken = "";
         saveAuthState();
         showToast("✓ تم الدخول بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
-    } else {
-        showToast("✗ الكود خاطئ حاول مرة اخرى", "#f44336");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${REVIEWS_API_BASE_URL}/admin-login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+            body: JSON.stringify({ adminCode: code })
+        });
+
+        if (!response.ok) {
+            throw new Error("invalid-admin-code");
+        }
+
+        const data = await response.json();
+        if (!data?.token) {
+            throw new Error("missing-admin-token");
+        }
+
+        isLoggedIn = true;
+        isAdmin = true;
+        adminSessionToken = data.token;
+        saveAuthState();
+        showToast("✓ تم الدخول كمشرف", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+    } catch {
+        showToast("✗ كود المشرف غير صحيح", "#f44336");
         codeInput.focus();
         codeInput.select();
     }
@@ -142,13 +171,14 @@ function logout() {
     document.getElementById("back").style.display = "none";
     isLoggedIn = false;
     isAdmin = false;
+    adminSessionToken = "";
     saveAuthState();
     showToast("تم تسجيل الخروج بنجاح", "#FF9800");
     updateUI();
 }
 
 function saveAuthState() {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ isLoggedIn, isAdmin }));
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ isLoggedIn, isAdmin, adminSessionToken }));
 }
 
 function loadAuthState() {
@@ -157,9 +187,11 @@ function loadAuthState() {
         const parsedData = rawData ? JSON.parse(rawData) : {};
         isLoggedIn = Boolean(parsedData.isLoggedIn);
         isAdmin = Boolean(parsedData.isAdmin);
+        adminSessionToken = parsedData.adminSessionToken || "";
     } catch {
         isLoggedIn = false;
         isAdmin = false;
+        adminSessionToken = "";
     }
 }
 
@@ -181,7 +213,7 @@ function updateUI() {
     }
 
     if (addTestimonialButton) {
-        addTestimonialButton.style.display = "inline-flex";
+        addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
     }
 
     renderTestimonials();
@@ -224,24 +256,35 @@ ${message}`;
     });
 }
 
-function saveTestimonials() {
-    localStorage.setItem(TESTIMONIALS_STORAGE_KEY, JSON.stringify(testimonials));
+function normalizeReviews(rawReviews) {
+    if (!Array.isArray(rawReviews)) return [];
+    return rawReviews
+        .map((item) => ({
+            id: item?.id || item?._id || `${item?.name || "review"}-${item?.createdAt || Date.now()}`,
+            name: item?.name || "عميل",
+            review: item?.review || "",
+            rating: Math.max(1, Math.min(5, Number(item?.rating) || 5)),
+            date: item?.date || "",
+            createdAt: item?.createdAt || ""
+        }))
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 }
 
-function loadTestimonials() {
+async function fetchTestimonialsFromServer({ silent = false } = {}) {
     try {
-        const rawData = localStorage.getItem(TESTIMONIALS_STORAGE_KEY);
-        const parsedData = rawData ? JSON.parse(rawData) : [];
-        testimonials = Array.isArray(parsedData)
-            ? parsedData.map((item) => ({
-                name: item?.name || "عميل",
-                review: item?.review || "",
-                rating: Math.max(1, Math.min(5, Number(item?.rating) || 5)),
-                date: item?.date || ""
-            }))
-            : [];
+        const response = await fetch(`${REVIEWS_API_BASE_URL}/reviews`, {
+            method: "GET",
+            cache: "no-store",
+            headers: { "Cache-Control": "no-store" }
+        });
+        if (!response.ok) throw new Error("reviews-fetch-failed");
+        const data = await response.json();
+        testimonials = normalizeReviews(data?.reviews || data);
+        renderTestimonials();
     } catch {
-        testimonials = [];
+        if (!silent) {
+            showToast("تعذر تحديث الآراء حاليًا", "#f44336");
+        }
     }
 }
 
@@ -252,6 +295,7 @@ function hideAllMenus() {
 }
 
 function showTestimonialForm() {
+    if (!canManageTestimonials()) return;
     const modal = document.getElementById("testimonial-modal");
     if (!modal) return;
     modal.style.display = "grid";
@@ -298,7 +342,7 @@ function renderTestimonials() {
     }
 
     if (!testimonials.length) {
-        grid.innerHTML = '<article class="quote-card quote-card-empty">لا اراء حتى الان</article>';
+        grid.innerHTML = '<article class="quote-card quote-card-empty">لا توجد آراء متاحة حاليًا.</article>';
         grid.classList.remove("is-compact");
         if (prevButton) prevButton.style.display = "none";
         if (nextButton) nextButton.style.display = "none";
@@ -311,7 +355,7 @@ function renderTestimonials() {
 
     grid.innerHTML = testimonials.map((item, index) => `
         <article class="quote-card">
-            ${isAdmin ? `<button type="button" class="testimonial-menu-btn" data-menu-index="${index}" aria-label="خيارات">⋯</button>
+            ${canManageTestimonials() ? `<button type="button" class="testimonial-menu-btn" data-menu-index="${index}" aria-label="خيارات">⋯</button>
             <div class="testimonial-menu" id="testimonial-menu-${index}" style="display:none;">
                 <button type="button" data-action="edit" data-index="${index}">تعديل</button>
                 <button type="button" data-action="delete" data-index="${index}">حذف</button>
@@ -330,8 +374,7 @@ function renderTestimonials() {
 }
 
 function initTestimonials() {
-    loadTestimonials();
-    renderTestimonials();
+    fetchTestimonialsFromServer();
 
     const addButton = document.getElementById("add-testimonial-btn");
     const saveButton = document.getElementById("save-testimonial-btn");
@@ -344,6 +387,9 @@ function initTestimonials() {
 
     if (addButton) {
         addButton.addEventListener("click", () => {
+            if (!canManageTestimonials()) {
+                return;
+            }
             editIndex = null;
             setSelectedRating(5);
             showTestimonialForm();
@@ -355,11 +401,17 @@ function initTestimonials() {
     }
 
     if (saveButton) {
-        saveButton.addEventListener("click", () => {
+        saveButton.addEventListener("click", async () => {
+            if (!canManageTestimonials()) {
+                showToast("الإضافة متاحة للمشرف فقط", "#f44336");
+                return;
+            }
             const nameInput = document.getElementById("client-name-input");
             const reviewInput = document.getElementById("client-review-input");
             const name = nameInput ? nameInput.value.trim() : "";
             const review = reviewInput ? reviewInput.value.trim() : "";
+            const currentEditIndex = editIndex;
+            const currentReviewId = currentEditIndex === null ? null : testimonials[currentEditIndex]?.id;
 
             if (!name || !review) {
                 showToast("من فضلك اكتب اسم العميلـ/ـه ورأي العميله", "#f44336");
@@ -370,17 +422,43 @@ function initTestimonials() {
                 name,
                 review,
                 rating: selectedRating,
-                date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
+                date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
+                createdAt: new Date().toISOString()
             };
-            if (editIndex === null) {
-                testimonials.unshift(payload);
+            const tempId = `temp-${Date.now()}`;
+            const optimisticPayload = { ...payload, id: tempId };
+
+            if (currentEditIndex === null) {
+                testimonials.unshift(optimisticPayload);
             } else {
-                testimonials[editIndex] = payload;
+                testimonials[currentEditIndex] = optimisticPayload;
             }
 
-            saveTestimonials();
             renderTestimonials();
             hideTestimonialForm();
+
+            try {
+                const method = currentEditIndex === null ? "POST" : "PUT";
+                const endpoint = currentEditIndex === null
+                    ? `${REVIEWS_API_BASE_URL}/reviews`
+                    : `${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(currentReviewId || tempId)}`;
+                const response = await fetch(endpoint, {
+                    method,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${adminSessionToken}`,
+                        "Cache-Control": "no-store"
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error("review-save-failed");
+                await fetchTestimonialsFromServer({ silent: true });
+                showToast("تم نشر الرأي بنجاح", "#4CAF50");
+            } catch {
+                testimonials = testimonials.filter((item) => item.id !== tempId);
+                renderTestimonials();
+                showToast("تعذر حفظ الرأي. تحقق من صلاحية المشرف", "#f44336");
+            }
         });
     }
 
@@ -420,9 +498,21 @@ function initTestimonials() {
                 }
 
                 if (action === "delete") {
-                    testimonials.splice(index, 1);
-                    saveTestimonials();
-                    renderTestimonials();
+                    const reviewToDelete = testimonials[index];
+                    if (!reviewToDelete) return;
+                    fetch(`${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(reviewToDelete.id)}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${adminSessionToken}`,
+                            "Cache-Control": "no-store"
+                        }
+                    }).then((response) => {
+                        if (!response.ok) throw new Error("review-delete-failed");
+                        testimonials.splice(index, 1);
+                        renderTestimonials();
+                    }).catch(() => {
+                        showToast("فشل حذف الرأي", "#f44336");
+                    });
                 }
 
                 hideAllMenus();
@@ -465,12 +555,10 @@ function initTestimonials() {
     }
 
     setSelectedRating(5);
-    window.addEventListener("storage", (event) => {
-        if (event.key === TESTIMONIALS_STORAGE_KEY) {
-            loadTestimonials();
-            renderTestimonials();
-        }
-    });
+    if (reviewPollingInterval) clearInterval(reviewPollingInterval);
+    reviewPollingInterval = setInterval(() => {
+        fetchTestimonialsFromServer({ silent: true });
+    }, 4000);
 }
 
 function initApp() {
