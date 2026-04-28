@@ -139,8 +139,19 @@ async function login() {
         return;
     }
 
+    if (code === ADMIN_CODE) {
+        isLoggedIn = true;
+        isAdmin = true;
+        adminSessionToken = "local-admin-session";
+        saveAuthState();
+        showToast("✓ تم الدخول كمشرف", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+        return;
+    }
+
     try {
-        const shouldTryAdminLogin = code === ADMIN_CODE || code.length > 0;
+        const shouldTryAdminLogin = code.length > 0;
         if (!shouldTryAdminLogin) {
             throw new Error("invalid-admin-code");
         }
@@ -450,24 +461,16 @@ function initTestimonials() {
                 date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
                 createdAt: new Date().toISOString()
             };
-            const tempId = `temp-${Date.now()}`;
-            const optimisticPayload = { ...payload, id: tempId };
-
-            if (currentEditIndex === null) {
-                testimonials.unshift(optimisticPayload);
-            } else {
-                testimonials[currentEditIndex] = optimisticPayload;
-            }
-
-            saveLocalTestimonials();
-            renderTestimonials();
-            hideTestimonialForm();
+            showToast("جاري نشر الرأي...", "#2196f3");
 
             try {
+                if (currentEditIndex !== null && !currentReviewId) {
+                    throw new Error("missing-review-id");
+                }
                 const method = currentEditIndex === null ? "POST" : "PUT";
                 const endpoint = currentEditIndex === null
                     ? `${REVIEWS_API_BASE_URL}/reviews`
-                    : `${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(currentReviewId || tempId)}`;
+                    : `${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(currentReviewId)}`;
                 const response = await fetch(endpoint, {
                     method,
                     headers: {
@@ -478,14 +481,10 @@ function initTestimonials() {
                 });
                 if (!response.ok) throw new Error("review-save-failed");
                 await fetchTestimonialsFromServer({ silent: true });
+                hideTestimonialForm();
                 showToast("تم نشر الرأي بنجاح", "#4CAF50");
             } catch {
-                if (currentEditIndex !== null && currentReviewId) {
-                    testimonials[currentEditIndex] = { ...payload, id: currentReviewId };
-                }
-                saveLocalTestimonials();
-                renderTestimonials();
-                showToast("تم حفظ الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
+                showToast("فشل نشر الرأي على السيرفر. حاول مرة تانية.", "#f44336");
             }
         });
     }
