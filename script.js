@@ -1,19 +1,14 @@
 // ============================================
-// 🔑 إعدادات Firebase السحابية (مستخرجة من لوحة تحكمك)
+// 🔑 إعدادات Firebase السحابية للآراء
 // ============================================
 const FIREBASE_DATABASE_URL = "https://mama-website-7a250-default-rtdb.firebaseio.com";
 
-// ============================================
 // معلومات الموقع والـ AI
-// ============================================
 const ANTHROPIC_API_KEY = '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';
+const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية. للتواصل: واتساب 201116967317`;
 
-const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية.
-الخدمات الأساسية: تحديد المهام اليومية، استخدام مؤقتات، تقييم أكاديمي، جلسات تركيز.
-للتواصل: واتساب 201116967317`;
-
-const SECRET_CODE = "1234"; // كود العضو العادي (يفتح قائمة الطعام)
-const ADMIN_SECRET_CODE = "5678"; // كود المشرف (يفتح قائمة الطعام + صلاحية إضافة الآراء)
+const SECRET_CODE = "1234"; // كود العضو
+const ADMIN_SECRET_CODE = "5678"; // كود المشرف
 const AUTH_STORAGE_KEY = "mama-auth-state";
 let isLoggedIn = false;
 let isAdmin = false;
@@ -21,9 +16,6 @@ let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
 let testimonials = [];
 let selectedRating = 5;
-let isLoginPending = false;
-
-function normalizeDigits(value) { return value; }
 
 function escapeHtml(value) {
     return String(value ?? "")
@@ -38,7 +30,7 @@ function canManageTestimonials() {
     return isLoggedIn && isAdmin;
 }
 
-// ثيمات الموقع
+// الثيمات
 function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
     document.body.setAttribute("data-theme", finalTheme);
@@ -85,19 +77,16 @@ function openLogin() {
     document.getElementById("back").style.display = "block";
 }
 
-async function login() {
+function login() {
     const codeInput = document.getElementById("code");
-    if (!codeInput || isLoginPending) return;
-    const code = normalizeDigits(codeInput.value.trim());
+    if (!codeInput) return;
+    const code = codeInput.value.trim();
 
     if (!code) {
         showToast("من فضلك أدخل كود الدخول أولًا", "#f44336");
         return;
     }
 
-    isLoginPending = true;
-
-    // 1. كود العضو العادي
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = false;
@@ -105,25 +94,21 @@ async function login() {
         showToast("✓ تم الدخول كعضو بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
-        isLoginPending = false;
         return;
     }
 
-    // 2. كود المشرف
     if (code === ADMIN_SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = true;
         saveAuthState();
-        showToast("✓ تم الدخول كمشرف بنجاح (صلاحيات كاملة)", "#4CAF50");
+        showToast("✓ تم الدخول كمشرف بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
-        isLoginPending = false;
         return;
     }
 
     showToast("✗ كود الدخول غير صحيح", "#f44336");
     codeInput.focus();
-    isLoginPending = false;
 }
 
 function logout() {
@@ -183,7 +168,7 @@ function back() {
 }
 
 // ============================================
-// نظام السحابة (Firebase Realtime Database) للآراء
+// نظام السحابة (Firebase Realtime Database)
 // ============================================
 async function fetchTestimonialsFromCloud() {
     try {
@@ -199,7 +184,7 @@ async function fetchTestimonialsFromCloud() {
         }
         renderTestimonials();
     } catch (e) {
-        console.log("خطأ في جلب الآراء من السحابة");
+        console.log("خطأ في جلب الآراء");
     }
 }
 
@@ -212,7 +197,7 @@ async function saveTestimonialToCloud(payload) {
         });
         if (response.ok) {
             showToast("تم نشر الرأي للجميع بنجاح!", "#4CAF50");
-            fetchTestimonialsFromCloud();
+            await fetchTestimonialsFromCloud(); // تحديث فوري للقائمة بعد الحفظ
         }
     } catch (e) {
         showToast("حدث خطأ أثناء الاتصال بالسحابة", "#f44336");
@@ -225,14 +210,10 @@ async function deleteTestimonialFromCloud(id) {
             method: "DELETE"
         });
         showToast("تم حذف الرأي بنجاح", "#FF9800");
-        fetchTestimonialsFromCloud();
+        await fetchTestimonialsFromCloud();
     } catch (e) {
         showToast("تعذر حذف الرأي", "#f44336");
     }
-}
-
-function hideAllMenus() {
-    document.querySelectorAll(".testimonial-menu").forEach(m => m.style.display = "none");
 }
 
 function showTestimonialForm() {
@@ -247,7 +228,6 @@ function hideTestimonialForm() {
     document.getElementById("client-name-input").value = "";
     document.getElementById("client-review-input").value = "";
     setSelectedRating(5);
-    editIndex = null;
 }
 
 function getRatingStars(rating) {
@@ -275,12 +255,9 @@ function renderTestimonials() {
     }
 
     grid.innerHTML = testimonials.map((item, index) => `
-        <article class="quote-card">
+        <article class="quote-card" style="position: relative; padding-bottom: 30px;">
             ${canManageTestimonials() ? `
-            <button type="button" class="testimonial-menu-btn" onclick="toggleMenu(${index})">⋯</button>
-            <div class="testimonial-menu" id="menu-${index}" style="display:none;">
-                <button type="button" onclick="deleteReview('${item.id}')">حذف</button>
-            </div>` : ""}
+            <button type="button" onclick="deleteReview('${item.id}')" style="position: absolute; left: 10px; top: 10px; background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">حذف</button>` : ""}
             <div class="quote-card-head">
                 <span class="quote-card-avatar">${escapeHtml(item.name.charAt(0))}</span>
                 <div>
@@ -294,20 +271,15 @@ function renderTestimonials() {
     `).join("");
 }
 
-window.toggleMenu = function(index) {
-    const menu = document.getElementById(`menu-${index}`);
-    hideAllMenus();
-    if (menu) menu.style.display = menu.style.display === "none" ? "flex" : "none";
-};
-
 window.deleteReview = function(id) {
-    deleteTestimonialFromCloud(id);
+    if (confirm("هل أنت متأكد من حذف هذا الرأي؟")) {
+        deleteTestimonialFromCloud(id);
+    }
 };
 
 function initTestimonials() {
     fetchTestimonialsFromCloud();
-    // تحديث تلقائي كل 5 ثواني لجلب أي رأي جديد يضيفه المشرف
-    setInterval(fetchTestimonialsFromCloud, 5000);
+    setInterval(fetchTestimonialsFromCloud, 4000); // تحديث دوري كل 4 ثواني
 
     const addButton = document.getElementById("add-testimonial-btn");
     const saveButton = document.getElementById("save-testimonial-btn");
