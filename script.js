@@ -24,8 +24,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // كود الموقع الأساسي
 // ============================================
 const SECRET_CODE = "1234"; // كود الدخول كعضو (يفتح قائمة الطعام)
-const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
-const ADMIN_SECRET_CODE = "5678"; // (حط الكود السري اللي يعجبك هنا للأدمن)
+const ADMIN_SECRET_CODE = "5678"; // كود المشرف (يفتح قائمة الطعام + صلاحية إضافة الآراء)
 const AUTH_STORAGE_KEY = "mama-auth-state";
 const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
 let isLoggedIn = false;
@@ -56,7 +55,6 @@ function buildLocalReviewId() {
     return `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-// تعديل الصلاحية: إضافة الآراء مقتصرة على الأدمن فقط اللي دخل بكود المشرف
 function canManageTestimonials() {
     return isLoggedIn && isAdmin;
 }
@@ -157,8 +155,8 @@ async function login() {
         return;
     }
 
-    // 2. التحقق من كود المشرف محلياً بدون أخطاء أو سيرفرات خارجية
-    if (code === ADMIN_SECRET_CODE) { // الكود هو 5678
+    // 2. التحقق من كود المشرف (يفتح قائمة الطعام + صلاحية الإضافة)
+    if (code === ADMIN_SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = true;
         adminSessionToken = "local-admin-token";
@@ -170,67 +168,11 @@ async function login() {
         return;
     }
 
-    // إذا كان الكود خطأ
+    // إذا كان الكود غير صحيح
     showToast("✗ كود الدخول غير صحيح", "#f44336");
     codeInput.focus();
     codeInput.select();
     isLoginPending = false;
-}
-
-    isLoginPending = true;
-
-    // 1. التحقق إذا كان كود العضو العادي (يفتح قائمة الطعام)
-    if (code === SECRET_CODE) {
-        isLoggedIn = true;
-        isAdmin = false;
-        adminSessionToken = "";
-        saveAuthState();
-        showToast("✓ تم الدخول كعضو بنجاح", "#4CAF50");
-        updateUI();
-        document.getElementById("back").style.display = "none";
-        isLoginPending = false;
-        return;
-    }
-
-    // 2. إذا لم يكن كود عضو، جربه ككود مشرف (Admin) لإدارة آراء أولياء الأمور
-    try {
-        const response = await fetch(`${REVIEWS_API_BASE_URL}/admin-login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-            body: JSON.stringify({ adminCode: code })
-        });
-
-        if (!response.ok) {
-            throw new Error("invalid-admin-code");
-        }
-
-        const data = await response.json();
-        if (!data?.token) {
-            throw new Error("missing-admin-token");
-        }
-
-        isLoggedIn = true;
-        isAdmin = true;
-        adminSessionToken = data.token;
-        saveAuthState();
-        showToast("✓ تم الدخول كمشرف بنجاح (صلاحية إضافة الآراء مفعلة)", "#4CAF50");
-        updateUI();
-        document.getElementById("back").style.display = "none";
-    } catch (error) {
-        if (error?.message === "invalid-admin-code") {
-            showToast("✗ كود الدخول غير صحيح", "#f44336");
-        } else if (error?.message === "missing-admin-token") {
-            showToast("تعذر تسجيل دخول المشرف، استجابة الخادم غير مكتملة", "#f44336");
-        } else if (error instanceof TypeError || !navigator.onLine) {
-            showToast("تعذر الاتصال، تحقق من اتصال الإنترنت ثم أعد المحاولة", "#f44336");
-        } else {
-            showToast("كود الدخول غير صحيح أو حدث خطأ بالخادم", "#f44336");
-        }
-        codeInput.focus();
-        codeInput.select();
-    } finally {
-        isLoginPending = false;
-    }
 }
 
 function logout() {
@@ -271,12 +213,10 @@ function updateUI() {
     const addTestimonialButton = document.getElementById("add-testimonial-btn");
     
     if (isLoggedIn) {
-        // إذا كان مسجل دخول (سواء عضو عادي أو أدمن) يظهر زر الخروج
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
         
-        // إذا كان كود عضو عادي أو أدمن، نظهر رابط قائمة الطعام الخاصة بالأعضاء
         if (menuLink) menuLink.style.display = "block";
         const secretDiv = document.getElementById("secret");
         if (secretDiv) secretDiv.style.display = "block";
@@ -288,7 +228,6 @@ function updateUI() {
         if (menuLink) menuLink.style.display = "none";
     }
 
-    // زر إضافة رأي لا يظهر إلا للأدمن فقط لمنع أي سبام من الأعضاء العاديين أو الزوار
     if (addTestimonialButton) {
         addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
     }
@@ -373,26 +312,11 @@ function upsertTestimonialLocally(reviewData, currentEditIndex = null) {
     renderTestimonials();
 }
 
-async function fetchTestimonialsFromServer({ silent = false } = {}) {
-    try {
-        const response = await fetch(`${REVIEWS_API_BASE_URL}/reviews`, {
-            method: "GET",
-            cache: "no-store"
-        });
-        if (!response.ok) throw new Error("reviews-fetch-failed");
-        const data = await response.json();
-        testimonials = normalizeReviews(data?.reviews || data);
-        saveLocalTestimonials();
+function fetchTestimonialsFromServer({ silent = false } = {}) {
+    const localReviews = loadLocalTestimonials();
+    if (localReviews.length) {
+        testimonials = localReviews;
         renderTestimonials();
-    } catch {
-        const localReviews = loadLocalTestimonials();
-        if (localReviews.length) {
-            testimonials = localReviews;
-            renderTestimonials();
-        }
-        if (!silent) {
-            showToast("تعذر تحديث الآراء من السيرفر، يتم عرض النسخة المحلية", "#ff9800");
-        }
     }
 }
 
@@ -513,7 +437,7 @@ function initTestimonials() {
     }
 
     if (saveButton) {
-        saveButton.addEventListener("click", async () => {
+        saveButton.addEventListener("click", () => {
             if (!canManageTestimonials()) {
                 showToast("الإضافة متاحة للمشرف فقط", "#f44336");
                 return;
@@ -523,14 +447,9 @@ function initTestimonials() {
             const name = nameInput ? nameInput.value.trim() : "";
             const review = reviewInput ? reviewInput.value.trim() : "";
             const currentEditIndex = editIndex;
-            const currentReviewId = currentEditIndex === null ? null : testimonials[currentEditIndex]?.id;
 
             if (!name || !review) {
                 showToast("من فضلك اكتب اسم ولي الأمر والرأي", "#f44336");
-                return;
-            }
-            if (name.length > 80 || review.length > 1000) {
-                showToast("الاسم أو الرأي طويل جدًا، من فضلك اختصر النص", "#f44336");
                 return;
             }
 
@@ -541,40 +460,10 @@ function initTestimonials() {
                 date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
                 createdAt: new Date().toISOString()
             };
-            showToast("جاري نشر الرأي للجميع...", "#2196f3");
 
-            try {
-                if (currentEditIndex !== null && !currentReviewId) {
-                    throw new Error("missing-review-id");
-                }
-                const method = currentEditIndex === null ? "POST" : "PUT";
-                const endpoint = currentEditIndex === null
-                    ? `${REVIEWS_API_BASE_URL}/reviews`
-                    : `${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(currentReviewId)}`;
-                const response = await fetch(endpoint, {
-                    method,
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${adminSessionToken}`
-                    },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error("review-save-failed");
-                await fetchTestimonialsFromServer({ silent: true });
-                hideTestimonialForm();
-                showToast("تم نشر الرأي للجميع بنجاح!", "#4CAF50");
-            } catch (error) {
-                if (error?.message === "review-save-failed") {
-                    showToast("تعذر حفظ الرأي على السيرفر، أعد تسجيل دخول المشرف ثم حاول مرة أخرى", "#f44336");
-                    return;
-                }
-                upsertTestimonialLocally({
-                    ...payload,
-                    id: currentReviewId || buildLocalReviewId()
-                }, currentEditIndex);
-                hideTestimonialForm();
-                showToast("تم حفظ الرأي محليًا بسبب مشكلة اتصال بالسيرفر", "#ff9800");
-            }
+            upsertTestimonialLocally(payload, currentEditIndex);
+            hideTestimonialForm();
+            showToast("تم حفظ الرأي بنجاح!", "#4CAF50");
         });
     }
 
@@ -614,24 +503,10 @@ function initTestimonials() {
                 }
 
                 if (action === "delete") {
-                    const reviewToDelete = testimonials[index];
-                    if (!reviewToDelete) return;
-                    fetch(`${REVIEWS_API_BASE_URL}/reviews/${encodeURIComponent(reviewToDelete.id)}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Authorization": `Bearer ${adminSessionToken}`
-                        }
-                    }).then((response) => {
-                        if (!response.ok) throw new Error("review-delete-failed");
-                        testimonials.splice(index, 1);
-                        saveLocalTestimonials();
-                        renderTestimonials();
-                    }).catch(() => {
-                        testimonials.splice(index, 1);
-                        saveLocalTestimonials();
-                        renderTestimonials();
-                        showToast("تعذر حذف الرأي من السيرفر، أعد تسجيل دخول المشرف ثم حاول مرة أخرى", "#f44336");
-                    });
+                    testimonials.splice(index, 1);
+                    saveLocalTestimonials();
+                    renderTestimonials();
+                    showToast("تم حذف الرأي بنجاح", "#FF9800");
                 }
 
                 hideAllMenus();
@@ -674,10 +549,6 @@ function initTestimonials() {
     }
 
     setSelectedRating(5);
-    if (reviewPollingInterval) clearInterval(reviewPollingInterval);
-    reviewPollingInterval = setInterval(() => {
-        fetchTestimonialsFromServer({ silent: true });
-    }, 4000);
 }
 
 function initApp() {
@@ -757,7 +628,7 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         } catch (error) {
             typingDiv.remove();
             if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-                addMessage('عذراً، الخدمة غير متاحة حالياً بشكل مباشر بسبب إعدادات الحماية (CORS). يرجى التواصل عبر الواتساب مباشرة!', 'bot');
+                addMessage('عذراً، الخدمة غير متاحة حالياً بسبب إعدادات الحماية (CORS). يرجى التواصل عبر الواتساب مباشرة!', 'bot');
             } else {
                 addMessage(`❌ حصل خطأ: ${error.message}`, 'bot');
             }
