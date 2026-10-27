@@ -25,6 +25,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // ============================================
 const SECRET_CODE = "1234"; // كود الدخول كعضو (يفتح قائمة الطعام)
 const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
+const ADMIN_SECRET_CODE = "5678"; // (حط الكود السري اللي يعجبك هنا للأدمن)
 const AUTH_STORAGE_KEY = "mama-auth-state";
 const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
 let isLoggedIn = false;
