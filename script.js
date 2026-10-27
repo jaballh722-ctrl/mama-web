@@ -37,6 +37,7 @@ let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
 let testimonials = [];
 let selectedRating = 5;
+let editReviewId = null; // متغير لحفظ معرف الرأي المراد تعديله
 let isLoginPending = false;
 
 function normalizeDigits(value) {
@@ -139,7 +140,6 @@ async function login() {
 
     isLoginPending = true;
 
-    // 1. التحقق من كود العضو العادي (يفتح قائمة الطعام)
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = false;
@@ -151,7 +151,6 @@ async function login() {
         return;
     }
 
-    // 2. التحقق من كود المشرف (يفتح قائمة الطعام + صلاحية الإضافة)
     if (code === ADMIN_SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = true;
@@ -163,7 +162,6 @@ async function login() {
         return;
     }
 
-    // إذا كان الكود غير صحيح
     showToast("✗ كود الدخول غير صحيح", "#f44336");
     codeInput.focus();
     codeInput.select();
@@ -249,7 +247,7 @@ function initWhatsAppForm() {
 }
 
 // ============================================
-// إدارة الآراء عبر Firebase السحابية
+// إدارة الآراء عبر Firebase السحابية (إضافة، تعديل، حذف)
 // ============================================
 async function fetchTestimonialsFromCloud() {
     try {
@@ -271,13 +269,23 @@ async function fetchTestimonialsFromCloud() {
 
 async function saveTestimonialToCloud(payload) {
     try {
-        const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`, {
-            method: "POST",
+        let url = `${FIREBASE_DATABASE_URL}/opinions.json`;
+        let method = "POST";
+
+        if (editReviewId) {
+            url = `${FIREBASE_DATABASE_URL}/opinions/${editReviewId}.json`;
+            method = "PUT";
+        }
+
+        const response = await fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
+
         if (response.ok) {
-            showToast("تم نشر الرأي للجميع بنجاح!", "#4CAF50");
+            showToast(editReviewId ? "تم تعديل الرأي بنجاح!" : "تم نشر الرأي للجميع بنجاح!", "#4CAF50");
+            editReviewId = null;
             await fetchTestimonialsFromCloud();
         }
     } catch (e) {
@@ -296,6 +304,24 @@ async function deleteTestimonialFromCloud(id) {
         }
     } catch (e) {
         showToast("تعذر حذف الرأي", "#f44336");
+    }
+}
+
+// دالة لحذف كل الآراء دفعة واحدة بناءً على طلبك
+async function clearAllCloudTestimonials() {
+    if (!canManageTestimonials()) return;
+    if (confirm("هل أنت متأكد من حذف جميع الآراء من السحابة؟")) {
+        try {
+            const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`, {
+                method: "DELETE"
+            });
+            if (response.ok) {
+                showToast("تم مسح جميع الآراء بنجاح", "#FF9800");
+                await fetchTestimonialsFromCloud();
+            }
+        } catch (e) {
+            showToast("تعذر مسح الآراء", "#f44336");
+        }
     }
 }
 
@@ -324,6 +350,7 @@ function hideTestimonialForm() {
     if (clientNameInput) clientNameInput.value = "";
     if (clientReviewInput) clientReviewInput.value = "";
     setSelectedRating(5);
+    editReviewId = null;
 }
 
 function getRatingStars(rating) {
@@ -364,6 +391,7 @@ function renderTestimonials() {
             ${canManageTestimonials() ? `
             <button type="button" class="testimonial-menu-btn" onclick="toggleMenu(${index})" aria-label="خيارات">⋯</button>
             <div class="testimonial-menu" id="testimonial-menu-${index}" style="display:none;">
+                <button type="button" onclick="editReview('${item.id}', '${safeName.replace(/'/g, "\\'")}', '${safeReview.replace(/'/g, "\\'")}', ${item.rating || 5})">تعديل</button>
                 <button type="button" onclick="deleteReview('${item.id}')">حذف</button>
             </div>` : ""}
             <div class="quote-card-head">
@@ -393,9 +421,19 @@ window.deleteReview = function(id) {
     }
 };
 
+window.editReview = function(id, name, review, rating) {
+    editReviewId = id;
+    const nameInput = document.getElementById("client-name-input");
+    const reviewInput = document.getElementById("client-review-input");
+    if (nameInput) nameInput.value = name;
+    if (reviewInput) reviewInput.value = review;
+    setSelectedRating(rating);
+    showTestimonialForm();
+};
+
 function initTestimonials() {
     fetchTestimonialsFromCloud();
-    setInterval(fetchTestimonialsFromCloud, 4000); // تحديث دوري سحابي كل 4 ثواني
+    setInterval(fetchTestimonialsFromCloud, 4000);
 
     const addButton = document.getElementById("add-testimonial-btn");
     const saveButton = document.getElementById("save-testimonial-btn");
@@ -406,6 +444,7 @@ function initTestimonials() {
     if (addButton) {
         addButton.addEventListener("click", () => {
             if (!canManageTestimonials()) return;
+            editReviewId = null;
             setSelectedRating(5);
             showTestimonialForm();
         });
@@ -438,7 +477,7 @@ function initTestimonials() {
                 date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
             };
 
-            showToast("جاري نشر الرأي للجميع...", "#2196f3");
+            showToast("جاري الحفظ...", "#2196f3");
             saveTestimonialToCloud(payload);
             hideTestimonialForm();
         });
