@@ -1,46 +1,31 @@
 // ============================================
-// 🔑 ضع API Key هنا
+// 🔑 إعدادات Firebase السحابية للآراء
+// ============================================
+// ضع رابط قاعدة بيانات الـ Firebase الذي نسخته هنا بين القوسين:
+const FIREBASE_DATABASE_URL = "ضع_رابط_قاعدة_البيانات_هنا_مثل_https://xxx.firebaseio.com";
+
+// ============================================
+// معلومات الموقع والـ AI
 // ============================================
 const ANTHROPIC_API_KEY = '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';
 
-// معلومات الموقع
 const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراسية" للمرحلة الابتدائية.
+الخدمات الأساسية: تحديد المهام اليومية، استخدام مؤقتات، تقييم أكاديمي، جلسات تركيز.
+للتواصل: واتساب 201116967317`;
 
-الخدمات الأساسية:
-- تحديد المهام الدراسية اليومية ومتابعتها
-- استخدام مؤقتات زمنية
-- تقييم أكاديمي أسبوعي
-- جلسات تنمية الانتباه والتركيز
-- جلسات التخطيط والتنفيذ
-
-الباقات:
-مكتوبة بكود الhtml
-
-للتواصل: واتساب 201116967317
-
-أجب بالعربية بشكل ودود ومختصر مع استخدام الإيموجي.`;
-
-// ============================================
-// كود الموقع الأساسي
-// ============================================
-const SECRET_CODE = "1234"; // كود الدخول كعضو (يفتح قائمة الطعام)
-const ADMIN_SECRET_CODE = "5678"; // كود المشرف (يفتح قائمة الطعام + صلاحية إضافة الآراء)
+const SECRET_CODE = "1234"; // كود العضو العادي
+const ADMIN_SECRET_CODE = "5678"; // كود المشرف
 const AUTH_STORAGE_KEY = "mama-auth-state";
-const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
 let isLoggedIn = false;
 let isAdmin = false;
 let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
 let testimonials = [];
-let reviewPollingInterval = null;
-let adminSessionToken = "";
 let editIndex = null;
 let selectedRating = 5;
 let isLoginPending = false;
 
-function normalizeDigits(value) {
-    return value;
-}
+function normalizeDigits(value) { return value; }
 
 function escapeHtml(value) {
     return String(value ?? "")
@@ -51,47 +36,27 @@ function escapeHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
-function buildLocalReviewId() {
-    return `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
 function canManageTestimonials() {
     return isLoggedIn && isAdmin;
 }
 
+// ثيمات الموقع
 function applyTheme(themeName) {
     const finalTheme = themeName === "alt" ? "alt" : "default";
-    document.body.setAttribute("data-theme", finalTheme === "alt" ? "alt" : "default");
+    document.body.setAttribute("data-theme", finalTheme);
     localStorage.setItem(THEME_STORAGE_KEY, finalTheme);
-
-    const themeToggleButton = document.getElementById("theme-toggle");
-    if (themeToggleButton) {
-        const isAlt = finalTheme === "alt";
-        const nextThemeLabel = isAlt ? "الأخضر والأبيض" : "الثيم الفاتح";
-        themeToggleButton.setAttribute("aria-label", `تغيير الثيم إلى ${nextThemeLabel}`);
-        themeToggleButton.setAttribute("title", `تغيير الثيم إلى ${nextThemeLabel}`);
-    }
-}
-
-function toggleTheme() {
-    const currentTheme = document.body.getAttribute("data-theme") === "alt" ? "alt" : "default";
-    const nextTheme = currentTheme === "alt" ? "default" : "alt";
-    applyTheme(nextTheme);
-
-    const themeToggleButton = document.getElementById("theme-toggle");
-    if (themeToggleButton) {
-        themeToggleButton.setAttribute("aria-pressed", nextTheme === "alt" ? "true" : "false");
-    }
 }
 
 function initThemeToggle() {
     const themeToggleButton = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "default";
     applyTheme(savedTheme);
-
-    if (!themeToggleButton) return;
-    themeToggleButton.setAttribute("aria-pressed", savedTheme === "alt" ? "true" : "false");
-    themeToggleButton.addEventListener("click", toggleTheme);
+    if (themeToggleButton) {
+        themeToggleButton.addEventListener("click", () => {
+            const current = document.body.getAttribute("data-theme");
+            applyTheme(current === "alt" ? "default" : "alt");
+        });
+    }
 }
 
 function showToast(message, bgColor) {
@@ -102,17 +67,10 @@ function showToast(message, bgColor) {
         toast.style.visibility = "visible";
         toast.style.opacity = "1";
         toast.style.transform = "translateY(0)";
-
-        if (toastTimeout) {
-            clearTimeout(toastTimeout);
-        }
-
+        if (toastTimeout) clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
             toast.style.opacity = "0";
-            toast.style.transform = "translateY(-8px)";
-            setTimeout(() => {
-                toast.style.visibility = "hidden";
-            }, 250);
+            toast.style.visibility = "hidden";
         }, 3000);
     }
 }
@@ -136,17 +94,14 @@ async function login() {
 
     if (!code) {
         showToast("من فضلك أدخل كود الدخول أولًا", "#f44336");
-        codeInput.focus();
         return;
     }
 
     isLoginPending = true;
 
-    // 1. التحقق من كود العضو العادي (يفتح قائمة الطعام)
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = false;
-        adminSessionToken = "";
         saveAuthState();
         showToast("✓ تم الدخول كعضو بنجاح", "#4CAF50");
         updateUI();
@@ -155,11 +110,9 @@ async function login() {
         return;
     }
 
-    // 2. التحقق من كود المشرف (يفتح قائمة الطعام + صلاحية الإضافة)
     if (code === ADMIN_SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = true;
-        adminSessionToken = "local-admin-token";
         saveAuthState();
         showToast("✓ تم الدخول كمشرف بنجاح (صلاحيات كاملة)", "#4CAF50");
         updateUI();
@@ -168,10 +121,8 @@ async function login() {
         return;
     }
 
-    // إذا كان الكود غير صحيح
     showToast("✗ كود الدخول غير صحيح", "#f44336");
     codeInput.focus();
-    codeInput.select();
     isLoginPending = false;
 }
 
@@ -179,14 +130,13 @@ function logout() {
     document.getElementById("back").style.display = "none";
     isLoggedIn = false;
     isAdmin = false;
-    adminSessionToken = "";
     saveAuthState();
     showToast("تم تسجيل الخروج بنجاح", "#FF9800");
     updateUI();
 }
 
 function saveAuthState() {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ isLoggedIn, isAdmin, adminSessionToken }));
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ isLoggedIn, isAdmin }));
 }
 
 function loadAuthState() {
@@ -195,16 +145,9 @@ function loadAuthState() {
         const parsedData = rawData ? JSON.parse(rawData) : {};
         isLoggedIn = Boolean(parsedData.isLoggedIn);
         isAdmin = Boolean(parsedData.isAdmin);
-        adminSessionToken = parsedData.adminSessionToken || "";
-
-        if (isAdmin && !adminSessionToken) {
-            isLoggedIn = false;
-            isAdmin = false;
-        }
     } catch {
         isLoggedIn = false;
         isAdmin = false;
-        adminSessionToken = "";
     }
 }
 
@@ -216,7 +159,6 @@ function updateUI() {
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
-        
         if (menuLink) menuLink.style.display = "block";
         const secretDiv = document.getElementById("secret");
         if (secretDiv) secretDiv.style.display = "block";
@@ -231,7 +173,6 @@ function updateUI() {
     if (addTestimonialButton) {
         addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
     }
-
     renderTestimonials();
 }
 
@@ -239,448 +180,180 @@ function back() {
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("first-f").style.display = "block";
     document.getElementById("back").style.display = "none";
-    const codeInput = document.getElementById("code");
-    if (codeInput) codeInput.value = "";
 }
 
-function initWhatsAppForm() {
-    const whatsappForm = document.getElementById("whatsappForm");
-    if (!whatsappForm) return;
-
-    whatsappForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("email").value;
-        const message = document.getElementById("message").value;
-        const phoneNumber = "201116967317";
-        const finalMessage = `📧 الإيميل: ${email}\n\n💬 الرسالة:\n${message}`;
-        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(finalMessage)}`;
-        window.open(whatsappURL, "_blank");
-        showToast("جاري فتح واتساب...", "#25D366");
-        document.getElementById("email").value = "";
-        document.getElementById("message").value = "";
-    });
-}
-
-function normalizeReviews(rawReviews) {
-    if (!Array.isArray(rawReviews)) return [];
-    return rawReviews
-        .map((item) => ({
-            id: item?.id || item?._id || `${item?.name || "review"}-${item?.createdAt || Date.now()}`,
-            name: item?.name || "عميل",
-            review: item?.review || "",
-            rating: Math.max(1, Math.min(5, Number(item?.rating) || 5)),
-            date: item?.date || "",
-            createdAt: item?.createdAt || ""
-        }))
-        .sort((a, b) => {
-            const firstDate = new Date(a.createdAt || 0).getTime();
-            const secondDate = new Date(b.createdAt || 0).getTime();
-            return (Number.isFinite(secondDate) ? secondDate : 0) - (Number.isFinite(firstDate) ? firstDate : 0);
-        });
-}
-
-function loadLocalTestimonials() {
+// ============================================
+// نظام السحابة (Firebase Realtime Database) للآراء
+// ============================================
+async function fetchTestimonialsFromCloud() {
+    if (!FIREBASE_DATABASE_URL || FIREBASE_DATABASE_URL.includes("ضع_رابط")) return;
     try {
-        const rawData = localStorage.getItem(LOCAL_TESTIMONIALS_KEY);
-        return normalizeReviews(rawData ? JSON.parse(rawData) : []);
-    } catch {
-        return [];
-    }
-}
-
-function saveLocalTestimonials() {
-    localStorage.setItem(LOCAL_TESTIMONIALS_KEY, JSON.stringify(testimonials));
-}
-
-function upsertTestimonialLocally(reviewData, currentEditIndex = null) {
-    const nextReview = {
-        ...reviewData,
-        id: reviewData.id || buildLocalReviewId(),
-        rating: Math.max(1, Math.min(5, Number(reviewData.rating) || 5)),
-        date: reviewData.date || new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
-        createdAt: reviewData.createdAt || new Date().toISOString()
-    };
-
-    if (currentEditIndex !== null && testimonials[currentEditIndex]) {
-        testimonials[currentEditIndex] = { ...testimonials[currentEditIndex], ...nextReview };
-    } else {
-        testimonials.unshift(nextReview);
-    }
-
-    testimonials.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
-    saveLocalTestimonials();
-    renderTestimonials();
-}
-
-function fetchTestimonialsFromServer({ silent = false } = {}) {
-    const localReviews = loadLocalTestimonials();
-    if (localReviews.length) {
-        testimonials = localReviews;
+        const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`);
+        const data = await response.json();
+        if (data) {
+            testimonials = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })).reverse(); // أحدث رأي في الأول
+        } else {
+            testimonials = [];
+        }
         renderTestimonials();
+    } catch (e) {
+        console.log("خطأ في جلب الآراء من السحابة");
+    }
+}
+
+async function saveTestimonialToCloud(payload) {
+    if (!FIREBASE_DATABASE_URL || FIREBASE_DATABASE_URL.includes("ضع_رابط")) {
+        showToast("يرجى وضع رابط Firebase الصحيح أولاً", "#f44336");
+        return;
+    }
+    try {
+        const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+            showToast("تم نشر الرأي للجميع بنجاح!", "#4CAF50");
+            fetchTestimonialsFromCloud();
+        }
+    } catch (e) {
+        showToast("حدث خطأ أثناء الاتصال بالسحابة", "#f44336");
+    }
+}
+
+async function deleteTestimonialFromCloud(id) {
+    try {
+        await fetch(`${FIREBASE_DATABASE_URL}/opinions/${id}.json`, {
+            method: "DELETE"
+        });
+        showToast("تم حذف الرأي بنجاح", "#FF9800");
+        fetchTestimonialsFromCloud();
+    } catch (e) {
+        showToast("تعذر حذف الرأي", "#f44336");
     }
 }
 
 function hideAllMenus() {
-    document.querySelectorAll(".testimonial-menu").forEach((menu) => {
-        menu.style.display = "none";
-    });
+    document.querySelectorAll(".testimonial-menu").forEach(m => m.style.display = "none");
 }
 
 function showTestimonialForm() {
     if (!canManageTestimonials()) return;
     const modal = document.getElementById("testimonial-modal");
-    if (!modal) return;
-    modal.style.display = "grid";
-    modal.setAttribute("aria-hidden", "false");
+    if (modal) modal.style.display = "grid";
 }
 
 function hideTestimonialForm() {
     const modal = document.getElementById("testimonial-modal");
-    const clientNameInput = document.getElementById("client-name-input");
-    const clientReviewInput = document.getElementById("client-review-input");
-    if (modal) {
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
-    }
-    if (clientNameInput) clientNameInput.value = "";
-    if (clientReviewInput) clientReviewInput.value = "";
+    if (modal) modal.style.display = "none";
+    document.getElementById("client-name-input").value = "";
+    document.getElementById("client-review-input").value = "";
     setSelectedRating(5);
     editIndex = null;
 }
 
 function getRatingStars(rating) {
-    const safeRating = Math.max(1, Math.min(5, Number(rating) || 1));
-    return Array.from({ length: 5 }, (_, i) => (i < safeRating ? "★" : "☆")).join("");
+    const r = Math.max(1, Math.min(5, Number(rating) || 1));
+    return Array.from({ length: 5 }, (_, i) => (i < r ? "★" : "☆")).join("");
 }
 
 function setSelectedRating(rating) {
     selectedRating = Math.max(1, Math.min(5, Number(rating) || 1));
-    document.querySelectorAll(".rating-star").forEach((starButton) => {
-        const starValue = Number(starButton.dataset.rating);
-        const isActive = starValue <= selectedRating;
-        starButton.classList.toggle("active", isActive);
-        starButton.textContent = isActive ? "★" : "☆";
+    document.querySelectorAll(".rating-star").forEach((btn) => {
+        const val = Number(btn.dataset.rating);
+        btn.textContent = val <= selectedRating ? "★" : "☆";
     });
 }
 
 function renderTestimonials() {
     const grid = document.getElementById("testimonials-grid");
-    const prevButton = document.getElementById("testimonials-prev");
-    const nextButton = document.getElementById("testimonials-next");
     const countLabel = document.getElementById("testimonials-count");
     if (!grid) return;
-    if (countLabel) {
-        countLabel.textContent = `${testimonials.length} ${testimonials.length === 1 ? "رأي" : "آراء"}`;
-    }
+    if (countLabel) countLabel.textContent = `${testimonials.length} رأي`;
 
     if (!testimonials.length) {
         grid.innerHTML = '<article class="quote-card quote-card-empty">لا توجد آراء متاحة حاليًا.</article>';
-        grid.classList.remove("is-compact");
-        if (prevButton) prevButton.style.display = "none";
-        if (nextButton) nextButton.style.display = "none";
         return;
     }
 
-    grid.classList.toggle("is-compact", testimonials.length >= 2);
-    if (prevButton) prevButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
-    if (nextButton) nextButton.style.display = testimonials.length > 3 ? "inline-flex" : "none";
-
-    grid.innerHTML = testimonials.map((item, index) => {
-        const safeName = escapeHtml(item.name || "عميل");
-        const safeDate = escapeHtml(item.date || "");
-        const safeReview = escapeHtml(item.review || "");
-        const avatarLetter = escapeHtml((item.name || "ع").trim().charAt(0) || "ع");
-        return `
+    grid.innerHTML = testimonials.map((item, index) => `
         <article class="quote-card">
-            ${canManageTestimonials() ? `<button type="button" class="testimonial-menu-btn" data-menu-index="${index}" aria-label="خيارات">⋯</button>
-            <div class="testimonial-menu" id="testimonial-menu-${index}" style="display:none;">
-                <button type="button" data-action="edit" data-index="${index}">تعديل</button>
-                <button type="button" data-action="delete" data-index="${index}">حذف</button>
+            ${canManageTestimonials() ? `
+            <button type="button" class="testimonial-menu-btn" onclick="toggleMenu(${index})">⋯</button>
+            <div class="testimonial-menu" id="menu-${index}" style="display:none;">
+                <button type="button" onclick="deleteReview('${item.id}')">حذف</button>
             </div>` : ""}
             <div class="quote-card-head">
-                <span class="quote-card-avatar">${avatarLetter}</span>
+                <span class="quote-card-avatar">${escapeHtml(item.name.charAt(0))}</span>
                 <div>
-                    <h3>${safeName}</h3>
-                    <small>${safeDate}</small>
+                    <h3>${escapeHtml(item.name)}</h3>
+                    <small>${escapeHtml(item.date)}</small>
                 </div>
             </div>
-            <div class="quote-card-rating" aria-label="التقييم ${item.rating || 1} من 5">${getRatingStars(item.rating)}</div>
-            <p>${safeReview}</p>
+            <div class="quote-card-rating">${getRatingStars(item.rating)}</div>
+            <p>${escapeHtml(item.review)}</p>
         </article>
-    `;
-    }).join("");
+    `).join("");
 }
 
+window.toggleMenu = function(index) {
+    const menu = document.getElementById(`menu-${index}`);
+    hideAllMenus();
+    if (menu) menu.style.display = menu.style.display === "none" ? "flex" : "none";
+};
+
+window.deleteReview = function(id) {
+    deleteTestimonialFromCloud(id);
+};
+
 function initTestimonials() {
-    fetchTestimonialsFromServer();
+    fetchTestimonialsFromCloud();
+    // تحديث تلقائي كل 5 ثواني لجلب أي رأي جديد يضيفه المشرف
+    setInterval(fetchTestimonialsFromCloud, 5000);
 
     const addButton = document.getElementById("add-testimonial-btn");
     const saveButton = document.getElementById("save-testimonial-btn");
     const cancelButton = document.getElementById("cancel-testimonial-btn");
-    const grid = document.getElementById("testimonials-grid");
-    const prevButton = document.getElementById("testimonials-prev");
-    const nextButton = document.getElementById("testimonials-next");
     const ratingSelector = document.getElementById("rating-selector");
-    const modal = document.getElementById("testimonial-modal");
 
-    if (addButton) {
-        addButton.addEventListener("click", () => {
-            if (!canManageTestimonials()) return;
-            editIndex = null;
-            setSelectedRating(5);
-            showTestimonialForm();
-        });
-    }
-
-    if (cancelButton) {
-        cancelButton.addEventListener("click", hideTestimonialForm);
-    }
+    if (addButton) addButton.addEventListener("click", showTestimonialForm);
+    if (cancelButton) cancelButton.addEventListener("click", hideTestimonialForm);
 
     if (saveButton) {
         saveButton.addEventListener("click", () => {
-            if (!canManageTestimonials()) {
-                showToast("الإضافة متاحة للمشرف فقط", "#f44336");
-                return;
-            }
-            const nameInput = document.getElementById("client-name-input");
-            const reviewInput = document.getElementById("client-review-input");
-            const name = nameInput ? nameInput.value.trim() : "";
-            const review = reviewInput ? reviewInput.value.trim() : "";
-            const currentEditIndex = editIndex;
-
+            const name = document.getElementById("client-name-input").value.trim();
+            const review = document.getElementById("client-review-input").value.trim();
             if (!name || !review) {
-                showToast("من فضلك اكتب اسم ولي الأمر والرأي", "#f44336");
+                showToast("من فضلك اكتب الاسم والرأي", "#f44336");
                 return;
             }
-
             const payload = {
                 name,
                 review,
                 rating: selectedRating,
-                date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
-                createdAt: new Date().toISOString()
+                date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
             };
-
-            upsertTestimonialLocally(payload, currentEditIndex);
+            saveTestimonialToCloud(payload);
             hideTestimonialForm();
-            showToast("تم حفظ الرأي بنجاح!", "#4CAF50");
         });
     }
-
-    if (grid) {
-        grid.addEventListener("click", (event) => {
-            const menuButton = event.target.closest(".testimonial-menu-btn");
-            const actionButton = event.target.closest(".testimonial-menu button");
-
-            if (menuButton) {
-                const menuIndex = menuButton.dataset.menuIndex;
-                const menu = document.getElementById(`testimonial-menu-${menuIndex}`);
-                if (!menu) return;
-                const isHidden = menu.style.display === "none";
-                hideAllMenus();
-                menu.style.display = isHidden ? "flex" : "none";
-                return;
-            }
-
-            if (actionButton) {
-                if (!canManageTestimonials()) {
-                    hideAllMenus();
-                    return;
-                }
-                const action = actionButton.dataset.action;
-                const index = Number(actionButton.dataset.index);
-
-                if (action === "edit") {
-                    const selected = testimonials[index];
-                    if (!selected) return;
-                    const nameInput = document.getElementById("client-name-input");
-                    const reviewInput = document.getElementById("client-review-input");
-                    if (nameInput) nameInput.value = selected.name;
-                    if (reviewInput) reviewInput.value = selected.review;
-                    setSelectedRating(selected.rating || 1);
-                    editIndex = index;
-                    showTestimonialForm();
-                }
-
-                if (action === "delete") {
-                    testimonials.splice(index, 1);
-                    saveLocalTestimonials();
-                    renderTestimonials();
-                    showToast("تم حذف الرأي بنجاح", "#FF9800");
-                }
-
-                hideAllMenus();
-            }
-        });
-    }
-
-    document.addEventListener("click", (event) => {
-        if (!event.target.closest(".quote-card")) {
-            hideAllMenus();
-        }
-    });
 
     if (ratingSelector) {
-        ratingSelector.addEventListener("click", (event) => {
-            const starButton = event.target.closest(".rating-star");
-            if (!starButton) return;
-            setSelectedRating(starButton.dataset.rating);
+        ratingSelector.addEventListener("click", (e) => {
+            const btn = e.target.closest(".rating-star");
+            if (btn) setSelectedRating(btn.dataset.rating);
         });
     }
-
-    if (modal) {
-        modal.addEventListener("click", (event) => {
-            if (event.target.matches("[data-close-modal='true']")) {
-                hideTestimonialForm();
-            }
-        });
-    }
-
-    if (prevButton && grid) {
-        prevButton.addEventListener("click", () => {
-            grid.scrollBy({ left: -280, behavior: "smooth" });
-        });
-    }
-
-    if (nextButton && grid) {
-        nextButton.addEventListener("click", () => {
-            grid.scrollBy({ left: 280, behavior: "smooth" });
-        });
-    }
-
-    setSelectedRating(5);
 }
 
 function initApp() {
     loadAuthState();
     initThemeToggle();
-    testimonials = loadLocalTestimonials();
     initTestimonials();
     updateUI();
-    initWhatsAppForm();
 }
 
-if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", initApp);
-} else {
-    initApp();
-}
-
-// ============================================
-// AI CHATBOT
-// ============================================
-const chatButton = document.getElementById('chatbotButton');
-const chatWindow = document.getElementById('chatbotWindow');
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
-const sendButton = document.getElementById('sendButton');
-
-if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
-    chatButton.addEventListener('click', () => {
-        chatButton.classList.toggle('active');
-        chatWindow.classList.toggle('active');
-        if (chatWindow.classList.contains('active')) {
-            chatInput.focus();
-        }
-    });
-
-    async function sendMessage() {
-        const message = chatInput.value.trim();
-        if (!message) return;
-
-        addMessage(message, 'user');
-        chatInput.value = '';
-        sendButton.disabled = true;
-
-        const typingDiv = showTyping();
-
-        try {
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': ANTHROPIC_API_KEY,
-                    'anthropic-version': '2023-06-01'
-                },
-                body: JSON.stringify({
-                    model: 'claude-3-5-sonnet-20241022',
-                    max_tokens: 1024,
-                    messages: [
-                        {
-                            role: 'user',
-                            content: `${WEBSITE_INFO}\n\nسؤال العميل: ${message}`
-                        }
-                    ]
-                })
-            });
-
-            typingDiv.remove();
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `خطأ ${response.status}`);
-            }
-
-            const data = await response.json();
-            const reply = data.content[0].text;
-            addMessage(reply, 'bot');
-
-        } catch (error) {
-            typingDiv.remove();
-            if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-                addMessage('عذراً، الخدمة غير متاحة حالياً بسبب إعدادات الحماية (CORS). يرجى التواصل عبر الواتساب مباشرة!', 'bot');
-            } else {
-                addMessage(`❌ حصل خطأ: ${error.message}`, 'bot');
-            }
-        }
-
-        sendButton.disabled = false;
-        chatInput.focus();
-    }
-
-    function addMessage(text, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = sender === 'bot' ? 'AI' : 'أنت';
-        
-        const content = document.createElement('div');
-        content.className = 'message-content';
-        content.textContent = text;
-        
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(content);
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function showTyping() {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message bot`;
-        
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = 'AI';
-        
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'message-content typing-indicator active';
-        typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-        
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(typingDiv);
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        
-        return messageDiv;
-    }
-
-    sendButton.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
-}
+window.addEventListener("DOMContentLoaded", initApp);
