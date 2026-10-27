@@ -1,8 +1,7 @@
 // ============================================
-// 🔑 إعدادات Firebase السحابية للآراء
+// 🔑 إعدادات Firebase السحابية (مستخرجة من لوحة تحكمك)
 // ============================================
-// ضع رابط قاعدة بيانات الـ Firebase الذي نسخته هنا بين القوسين:
-const FIREBASE_DATABASE_URL = "ضع_رابط_قاعدة_البيانات_هنا_مثل_https://xxx.firebaseio.com";
+const FIREBASE_DATABASE_URL = "https://mama-website-7a250-default-rtdb.firebaseio.com";
 
 // ============================================
 // معلومات الموقع والـ AI
@@ -13,15 +12,14 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 الخدمات الأساسية: تحديد المهام اليومية، استخدام مؤقتات، تقييم أكاديمي، جلسات تركيز.
 للتواصل: واتساب 201116967317`;
 
-const SECRET_CODE = "1234"; // كود العضو العادي
-const ADMIN_SECRET_CODE = "5678"; // كود المشرف
+const SECRET_CODE = "1234"; // كود العضو العادي (يفتح قائمة الطعام)
+const ADMIN_SECRET_CODE = "5678"; // كود المشرف (يفتح قائمة الطعام + صلاحية إضافة الآراء)
 const AUTH_STORAGE_KEY = "mama-auth-state";
 let isLoggedIn = false;
 let isAdmin = false;
 let toastTimeout;
 const THEME_STORAGE_KEY = "mama-theme";
 let testimonials = [];
-let editIndex = null;
 let selectedRating = 5;
 let isLoginPending = false;
 
@@ -99,6 +97,7 @@ async function login() {
 
     isLoginPending = true;
 
+    // 1. كود العضو العادي
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = false;
@@ -110,6 +109,7 @@ async function login() {
         return;
     }
 
+    // 2. كود المشرف
     if (code === ADMIN_SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = true;
@@ -186,7 +186,6 @@ function back() {
 // نظام السحابة (Firebase Realtime Database) للآراء
 // ============================================
 async function fetchTestimonialsFromCloud() {
-    if (!FIREBASE_DATABASE_URL || FIREBASE_DATABASE_URL.includes("ضع_رابط")) return;
     try {
         const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`);
         const data = await response.json();
@@ -194,7 +193,7 @@ async function fetchTestimonialsFromCloud() {
             testimonials = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
-            })).reverse(); // أحدث رأي في الأول
+            })).reverse();
         } else {
             testimonials = [];
         }
@@ -205,10 +204,6 @@ async function fetchTestimonialsFromCloud() {
 }
 
 async function saveTestimonialToCloud(payload) {
-    if (!FIREBASE_DATABASE_URL || FIREBASE_DATABASE_URL.includes("ضع_رابط")) {
-        showToast("يرجى وضع رابط Firebase الصحيح أولاً", "#f44336");
-        return;
-    }
     try {
         const response = await fetch(`${FIREBASE_DATABASE_URL}/opinions.json`, {
             method: "POST",
