@@ -23,7 +23,7 @@ const WEBSITE_INFO = `أنت مساعد ذكي لموقع "متابعة دراس
 // ============================================
 // كود الموقع الأساسي
 // ============================================
-const SECRET_CODE = "1234";
+const SECRET_CODE = "1234"; // كود الدخول كعضو (يفتح قائمة الطعام)
 const REVIEWS_API_BASE_URL = "https://mama-web-reviews-api.vercel.app/api";
 const AUTH_STORAGE_KEY = "mama-auth-state";
 const LOCAL_TESTIMONIALS_KEY = "mama-local-testimonials";
@@ -39,15 +39,7 @@ let selectedRating = 5;
 let isLoginPending = false;
 
 function normalizeDigits(value) {
-    const arabicIndicMap = {
-        "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4",
-        "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9",
-        "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4",
-        "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9"
-    };
-    return String(value || "")
-        .replace(/[٠-٩۰-۹]/g, (digit) => arabicIndicMap[digit] || digit)
-        .trim();
+    return value;
 }
 
 function escapeHtml(value) {
@@ -63,6 +55,7 @@ function buildLocalReviewId() {
     return `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+// تعديل الصلاحية: إضافة الآراء مقتصرة على الأدمن فقط اللي دخل بكود المشرف
 function canManageTestimonials() {
     return isLoggedIn && isAdmin;
 }
@@ -94,12 +87,10 @@ function toggleTheme() {
 
 function initThemeToggle() {
     const themeToggleButton = document.getElementById("theme-toggle");
-
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "default";
     applyTheme(savedTheme);
 
     if (!themeToggleButton) return;
-
     themeToggleButton.setAttribute("aria-pressed", savedTheme === "alt" ? "true" : "false");
     themeToggleButton.addEventListener("click", toggleTheme);
 }
@@ -142,7 +133,7 @@ function openLogin() {
 async function login() {
     const codeInput = document.getElementById("code");
     if (!codeInput || isLoginPending) return;
-    const code = normalizeDigits(codeInput.value);
+    const code = normalizeDigits(codeInput.value.trim());
 
     if (!code) {
         showToast("من فضلك أدخل كود الدخول أولًا", "#f44336");
@@ -152,18 +143,20 @@ async function login() {
 
     isLoginPending = true;
 
+    // 1. التحقق إذا كان كود العضو العادي (يفتح قائمة الطعام)
     if (code === SECRET_CODE) {
         isLoggedIn = true;
         isAdmin = false;
         adminSessionToken = "";
         saveAuthState();
-        showToast("✓ تم الدخول بنجاح", "#4CAF50");
+        showToast("✓ تم الدخول كعضو بنجاح", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
         isLoginPending = false;
         return;
     }
 
+    // 2. إذا لم يكن كود عضو، جربه ككود مشرف (Admin) لإدارة آراء أولياء الأمور
     try {
         const response = await fetch(`${REVIEWS_API_BASE_URL}/admin-login`, {
             method: "POST",
@@ -184,18 +177,18 @@ async function login() {
         isAdmin = true;
         adminSessionToken = data.token;
         saveAuthState();
-        showToast("✓ تم الدخول كمشرف", "#4CAF50");
+        showToast("✓ تم الدخول كمشرف بنجاح (صلاحية إضافة الآراء مفعلة)", "#4CAF50");
         updateUI();
         document.getElementById("back").style.display = "none";
     } catch (error) {
         if (error?.message === "invalid-admin-code") {
-            showToast("✗ كود المشرف غير صحيح", "#f44336");
+            showToast("✗ كود الدخول غير صحيح", "#f44336");
         } else if (error?.message === "missing-admin-token") {
             showToast("تعذر تسجيل دخول المشرف، استجابة الخادم غير مكتملة", "#f44336");
         } else if (error instanceof TypeError || !navigator.onLine) {
-            showToast("تعذر تسجيل دخول المشرف، تحقق من اتصال الإنترنت ثم أعد المحاولة", "#f44336");
+            showToast("تعذر الاتصال، تحقق من اتصال الإنترنت ثم أعد المحاولة", "#f44336");
         } else {
-            showToast("تعذر تسجيل دخول المشرف، حدث خطأ بالخادم، حاول لاحقًا", "#f44336");
+            showToast("كود الدخول غير صحيح أو حدث خطأ بالخادم", "#f44336");
         }
         codeInput.focus();
         codeInput.select();
@@ -240,12 +233,17 @@ function loadAuthState() {
 function updateUI() {
     const menuLink = document.getElementById("menu-link");
     const addTestimonialButton = document.getElementById("add-testimonial-btn");
+    
     if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
+        // إذا كان مسجل دخول (سواء عضو عادي أو أدمن) يظهر زر الخروج
         document.getElementById("first-f").style.display = "none";
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("toexit").style.display = "block";
+        
+        // إذا كان كود عضو عادي أو أدمن، نظهر رابط قائمة الطعام الخاصة بالأعضاء
         if (menuLink) menuLink.style.display = "block";
+        const secretDiv = document.getElementById("secret");
+        if (secretDiv) secretDiv.style.display = "block";
     } else {
         document.getElementById("secret").style.display = "none";
         document.getElementById("first-f").style.display = "block";
@@ -254,6 +252,7 @@ function updateUI() {
         if (menuLink) menuLink.style.display = "none";
     }
 
+    // زر إضافة رأي لا يظهر إلا للأدمن فقط لمنع أي سبام من الأعضاء العاديين أو الزوار
     if (addTestimonialButton) {
         addTestimonialButton.style.display = canManageTestimonials() ? "inline-flex" : "none";
     }
@@ -262,19 +261,11 @@ function updateUI() {
 }
 
 function back() {
-    if (isLoggedIn) {
-        document.getElementById("secret").style.display = "block";
-        document.getElementById("first-f").style.display = "none";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "block";
-        document.getElementById("back").style.display = "none";
-    } else {
-        document.getElementById("secret").style.display = "none";
-        document.getElementById("first-f").style.display = "block";
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toexit").style.display = "none";
-        document.getElementById("back").style.display = "none";
-    }
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("first-f").style.display = "block";
+    document.getElementById("back").style.display = "none";
+    const codeInput = document.getElementById("code");
+    if (codeInput) codeInput.value = "";
 }
 
 function initWhatsAppForm() {
@@ -286,10 +277,7 @@ function initWhatsAppForm() {
         const email = document.getElementById("email").value;
         const message = document.getElementById("message").value;
         const phoneNumber = "201116967317";
-        const finalMessage = `📧 الإيميل: ${email}
-
-💬 الرسالة:
-${message}`;
+        const finalMessage = `📧 الإيميل: ${email}\n\n💬 الرسالة:\n${message}`;
         const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(finalMessage)}`;
         window.open(whatsappURL, "_blank");
         showToast("جاري فتح واتساب...", "#25D366");
@@ -477,9 +465,7 @@ function initTestimonials() {
 
     if (addButton) {
         addButton.addEventListener("click", () => {
-            if (!canManageTestimonials()) {
-                return;
-            }
+            if (!canManageTestimonials()) return;
             editIndex = null;
             setSelectedRating(5);
             showTestimonialForm();
@@ -504,7 +490,7 @@ function initTestimonials() {
             const currentReviewId = currentEditIndex === null ? null : testimonials[currentEditIndex]?.id;
 
             if (!name || !review) {
-                showToast("من فضلك اكتب اسم العميلـ/ـه ورأي العميله", "#f44336");
+                showToast("من فضلك اكتب اسم ولي الأمر والرأي", "#f44336");
                 return;
             }
             if (name.length > 80 || review.length > 1000) {
@@ -519,7 +505,7 @@ function initTestimonials() {
                 date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }),
                 createdAt: new Date().toISOString()
             };
-            showToast("جاري نشر الرأي...", "#2196f3");
+            showToast("جاري نشر الرأي للجميع...", "#2196f3");
 
             try {
                 if (currentEditIndex !== null && !currentReviewId) {
@@ -540,7 +526,7 @@ function initTestimonials() {
                 if (!response.ok) throw new Error("review-save-failed");
                 await fetchTestimonialsFromServer({ silent: true });
                 hideTestimonialForm();
-                showToast("تم نشر الرأي بنجاح", "#4CAF50");
+                showToast("تم نشر الرأي للجميع بنجاح!", "#4CAF50");
             } catch (error) {
                 if (error?.message === "review-save-failed") {
                     showToast("تعذر حفظ الرأي على السيرفر، أعد تسجيل دخول المشرف ثم حاول مرة أخرى", "#f44336");
@@ -674,7 +660,7 @@ if (document.readyState === "loading") {
 }
 
 // ============================================
-// AI CHATBOT - مش هيشتغل بسبب CORS
+// AI CHATBOT
 // ============================================
 const chatButton = document.getElementById('chatbotButton');
 const chatWindow = document.getElementById('chatbotWindow');
@@ -683,16 +669,11 @@ const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 
 if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
-    
     chatButton.addEventListener('click', () => {
         chatButton.classList.toggle('active');
         chatWindow.classList.toggle('active');
         if (chatWindow.classList.contains('active')) {
             chatInput.focus();
-            // رسالة توضيحية للمستخدم
-            if (chatMessages.children.length === 0) {
-                addMessage('⚠️ تنبيه: الـ AI مش هيشتغل على GitHub Pages بسبب CORS\n\n✅ الحل: ارفع الموقع على Netlify أو Vercel', 'bot');
-            }
         }
     });
 
@@ -707,7 +688,6 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
         const typingDiv = showTyping();
 
         try {
-            // محاولة الاتصال (مش هتنجح بسبب CORS)
             const response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 headers: {
@@ -740,15 +720,11 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
 
         } catch (error) {
             typingDiv.remove();
-            
-            // رسالة خطأ CORS
             if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-                addMessage('❌ مشكلة CORS!\n\n🔧 الحل:\n\n1. ارفع الموقع على Netlify\n2. اعمل ملف netlify/functions/chat.js\n3. حط فيه الـ API Key\n4. هيشتغل تمام!\n\n📺 شوف الفيديو: bit.ly/netlify-claude', 'bot');
+                addMessage('عذراً، الخدمة غير متاحة حالياً بشكل مباشر بسبب إعدادات الحماية (CORS). يرجى التواصل عبر الواتساب مباشرة!', 'bot');
             } else {
                 addMessage(`❌ حصل خطأ: ${error.message}`, 'bot');
             }
-            
-            console.error('AI Error:', error);
         }
 
         sendButton.disabled = false;
@@ -775,7 +751,7 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
 
     function showTyping() {
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot';
+        messageDiv.className = `message bot`;
         
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
@@ -800,7 +776,4 @@ if (chatButton && chatWindow && chatMessages && chatInput && sendButton) {
             sendMessage();
         }
     });
-
-    console.log('⚠️ AI Chatbot مش هيشتغل على GitHub Pages بسبب CORS');
-    console.log('✅ ارفع الموقع على Netlify عشان يشتغل');
 }
