@@ -144,6 +144,41 @@ async function login() {
 
     isLoginPending = true;
 
+    // 1. التحقق من كود العضو العادي (يفتح قائمة الطعام)
+    if (code === SECRET_CODE) {
+        isLoggedIn = true;
+        isAdmin = false;
+        adminSessionToken = "";
+        saveAuthState();
+        showToast("✓ تم الدخول كعضو بنجاح", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+        isLoginPending = false;
+        return;
+    }
+
+    // 2. التحقق من كود المشرف محلياً بدون أخطاء أو سيرفرات خارجية
+    if (code === ADMIN_SECRET_CODE) { // الكود هو 5678
+        isLoggedIn = true;
+        isAdmin = true;
+        adminSessionToken = "local-admin-token";
+        saveAuthState();
+        showToast("✓ تم الدخول كمشرف بنجاح (صلاحيات كاملة)", "#4CAF50");
+        updateUI();
+        document.getElementById("back").style.display = "none";
+        isLoginPending = false;
+        return;
+    }
+
+    // إذا كان الكود خطأ
+    showToast("✗ كود الدخول غير صحيح", "#f44336");
+    codeInput.focus();
+    codeInput.select();
+    isLoginPending = false;
+}
+
+    isLoginPending = true;
+
     // 1. التحقق إذا كان كود العضو العادي (يفتح قائمة الطعام)
     if (code === SECRET_CODE) {
         isLoggedIn = true;
