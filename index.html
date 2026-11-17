@@ -57,34 +57,64 @@
         </div>
     </nav>
 
-    <div id="page1" class="page1">
+ <div id="page1" class="page1">
         <a href="#page1" class="nav-brand">
             <img src="20260223_1936_Image_Generation_remix_01kj5s5jwfeqyr2jc7r0jsz42g-removebg-preview.png" alt="اختيار" />
         </a>
         
- <style>
-        .green {
-            color: green;
-            font-weight: bold;
-        }
-        .page1 p {
-            direction: rtl;
-            font-size: clamp(1.35rem, 2.6vw, 2rem);
-            text-align: center;
-        }
-    </style>
+        <style>
+            .green {
+                color: green;
+                font-weight: bold;
+            }
+            .page1 {
+                display: flex;
+                flex-direction: column;
+                align-items: center; /* لضمان توسط المحتوى تماماً في المنتصف */
+                justify-content: center;
+                text-align: center;
+            }
+            .page1 p {
+                direction: rtl;
+                font-size: clamp(1.35rem, 2.6vw, 2rem);
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            /* تنسيق وحجم الفيديو (من كام لكام) */
+            .page1-video-container {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 15px;
+            }
+            .page1-video-container video {
+                width: 100%;
+                max-width: 400px;  /* أقصى عرض للفيديو على الكمبيوتر (يمكنك تعديل الرقم لو أردته أكبر أو أصغر مثل 350px أو 500px) */
+                min-width: 250px;  /* أقل عرض للفيديو على الهواتف الصغيرة */
+                height: auto;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            }
+        </style>
 
+        <p>
+        <span class="green">ا</span>دارة 
+        <span class="green">خ</span>صوصية 
+        <span class="green">ت</span>تابع 
+        <span class="green">ي</span>ومياً 
+        <span class="green">ا</span>نجازات 
+        <span class="green">ر</span>امية
+        </p>     
 
-<p>
-<span class="green">ا</span>دارة 
-<span class="green">خ</span>صوصية 
-<span class="green">ت</span>تابع 
-<span class="green">ي</span>ومياً 
-<span class="green">ا</span>نجازات 
-<span class="green">ر</span>امية
-</p>    
+        <!-- الفيديو في المنتصف -->
+        <div class="page1-video-container">
+            <video controls autoplay muted loop playsinline>
+                <source src="WhatsApp Video 2026-11-17 at 4.25.15 PM.mp4" type="video/mp4">
+                متصفحك لا يدعم عرض الفيديو.
+            </video>
+        </div>
     </div>
-
     <div style="background-color: #f5f5f5; padding: 40px 0" id="page2">
         <br>
         <h1 style="text-align: center; color: #5962e8; margin-bottom: 30px">الخدمات الاساسية</h1>
